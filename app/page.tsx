@@ -1,14 +1,15 @@
 "use client"
 
 import { useEffect } from "react"
-import { useRouter } from "next/navigation"
 
 export default function Home() {
-  const router = useRouter()
-
   useEffect(() => {
-    router.replace("/dashboard")
-  }, [router])
+    window.location.assign("/dashboard")
+  }, [])
 
-  return null
+  return (
+    <div className="flex bg-background h-screen w-screen items-center justify-center font-sans">
+      <p className="text-muted-foreground animate-pulse">Cargando CIPRE...</p>
+    </div>
+  )
 }
