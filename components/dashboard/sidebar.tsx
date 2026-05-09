@@ -12,6 +12,7 @@ import {
   RotateCcw,
   DollarSign,
   LogOut,
+  Clock,
 } from "lucide-react"
 
 const navItems = [
@@ -22,6 +23,7 @@ const navItems = [
   { href: "/dashboard/historial", label: "Historial Clínico", icon: ClipboardList },
   { href: "/dashboard/devoluciones", label: "Devoluciones", icon: RotateCcw },
   { href: "/dashboard/pagos", label: "Pagos", icon: DollarSign },
+  { href: "/dashboard/asistencia", label: "Control de Acceso", icon: Clock },
 ]
 
 export function DashboardSidebar() {
