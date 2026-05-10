@@ -109,6 +109,15 @@ describe('Patient Server Actions - getPatients', () => {
       take: 5
     }))
   })
+
+  it('debería manejar errores al obtener pacientes', async () => {
+    vi.mocked(prisma.patient.findMany).mockRejectedValue(new Error('Fetch Error'))
+
+    const result = await getPatients({})
+
+    expect(result.success).toBe(false)
+    expect(result.error).toBe('Error al obtener el listado de pacientes')
+  })
 })
 
 describe('Patient Server Actions - updatePatient', () => {
@@ -141,6 +150,17 @@ describe('Patient Server Actions - updatePatient', () => {
     expect(result.success).toBe(false)
     expect(result.error).toBeDefined()
     expect(prisma.patient.update).not.toHaveBeenCalled()
+  })
+
+  it('debería manejar errores de base de datos al actualizar', async () => {
+    const formData = new FormData()
+    formData.append('fullName', 'Juan Editado')
+    vi.mocked(prisma.patient.update).mockRejectedValue(new Error('Update Error'))
+
+    const result = await updatePatient('1', formData)
+
+    expect(result.success).toBe(false)
+    expect(result.error).toBe('Error interno al intentar actualizar el paciente')
   })
 })
 
