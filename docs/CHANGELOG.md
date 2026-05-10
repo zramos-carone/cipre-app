@@ -14,6 +14,8 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 - **Auth:** Implementación de funciones seguras para hashing y comparación de contraseñas (`bcryptjs`).
 - **Auth:** Configuración del API Route handler y transición de Mock a validación real con base de datos en `authOptions`.
 - **Auth:** Creación del Server Action de Login con validación robusta mediante `Zod`.
+- [Task 3.1.5] Refinamiento de Middleware para RBAC dinámico.
+- [Task 3.1.6] Integración de perfil de usuario real y logout en Sidebar (UI + Tests).
 - **Auth:** Refinamiento del Middleware de seguridad con reglas RBAC dinámicas para proteger rutas sensibles (Historial, Usuarios).
 
 ---

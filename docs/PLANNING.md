@@ -33,14 +33,21 @@ Para asegurar la calidad del proyecto, **ninguna Tarea (Task) se marca como comp
   * [x] **Task 3.1.3:** Configurar el archivo de opciones de NextAuth y el API Route handler.
   * [x] **Task 3.1.4:** Desarrollar el Server Action para la lógica de autenticación (Login).
   * [x] **Task 3.1.5:** Actualizar el Middleware para protección de rutas basada en sesiones reales.
-  * [ ] **Task 3.1.6:** Vincular el perfil de usuario en la Sidebar con los datos de la sesión activa.
+  * [x] **Task 3.1.6:** Vincular el perfil de usuario en la Sidebar con los datos de la sesión activa.
 
 ### 👥 Feature 4: Gestión de Pacientes
 **Objetivo:** Agilizar el ingreso y directorio del día a día de la clínica.
 * **User Story 4.1:** Como recepcionista, quiero registrar y consultar pacientes.
-  * [ ] **Task 4.1.1:** Crear Server Actions CRUD (Create, Read, Update, Delete) para Pacientes.
-  * [ ] **Task 4.1.2:** Conectar la tabla del Frontend con la API de lectura.
-  * [ ] **Task 4.1.3:** Implementar paginación y búsqueda en tiempo real en la vista de pacientes.
+  * [ ] **Task 4.1.1:** Crear esquema de validación `PatientSchema` con Zod.
+  * [ ] **Task 4.1.2:** Implementar Server Action `createPatient` para registro.
+  * [ ] **Task 4.1.3:** Implementar Server Action `getPatients` con búsqueda y paginación.
+  * [ ] **Task 4.1.4:** Implementar Server Action `updatePatient` para edición.
+  * [ ] **Task 4.1.5:** Implementar Server Action `deletePatient` (desactivación).
+  * [ ] **Task 4.1.6:** Crear pruebas unitarias para Server Actions de pacientes.
+  * [ ] **Task 4.2.1:** Desarrollar componente `PatientTable` para listado.
+  * [ ] **Task 4.2.2:** Crear modal/formulario `PatientForm` para CRUD.
+  * [ ] **Task 4.2.3:** Integrar búsqueda en tiempo real y paginación en UI.
+  * [ ] **Task 4.3.1:** Añadir Skeletons y Toasts (sonner) para feedback de UX.
 
 ### 📅 Feature 5: Sistema de Citas (Agenda)
 **Objetivo:** Evitar conflictos y mejorar la visualización de tiempos para los psicólogos.
