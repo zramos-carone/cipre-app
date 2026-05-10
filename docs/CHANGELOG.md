@@ -1,0 +1,32 @@
+# Changelog - CIPRE
+
+Todos los cambios notables de este proyecto serán documentados en este archivo.
+
+El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/) y este proyecto se adhiere a nuestra convención local definida en `docs/COMMIT.md`.
+
+## [Unreleased]
+*(Las tareas en proceso irán aquí antes de "empaquetarlas" en una nueva versión)*
+
+---
+
+## [0.1.0] - 2026-05-09
+### Added (Añadido)
+- **QA:** Integración del *Definition of Done* y directrices estrictas de Testing Unitario (`TESTING.md`).
+- **UI:** Construcción de la vista de login personalizada `/login` y conexión dinámica de la sesión en la barra lateral del Dashboard.
+- **Auth:** Integración nativa de NextAuth con un Middleware para protección de rutas basada en roles (RBAC) usando perfiles estáticos (Mock).
+- **Core:** Creación del módulo completo de Asistencia con soporte para coordenadas geográficas (Geolocalización).
+- **Docs:** Consolidación de la arquitectura del sistema, diagramas Entidad-Relación (`DATABASE.md`) y plan de trabajo Ágil (`PLANNING.md`).
+
+### Changed (Modificado)
+- **Deps:** Instalación de dependencias críticas de seguridad y manejo de sesiones (`next-auth`).
+- **UI:** Actualización del menú lateral para incluir el nuevo acceso al módulo de asistencia.
+
+---
+
+## [0.0.1] - 2026-04-25
+### Added (Añadido)
+- **Core:** Inicialización base del proyecto web (Next.js 16 App Router, React 19, Tailwind CSS v4).
+- **Deploy:** Despliegue inicial de la arquitectura en Vercel.
+
+### Fixed (Corregido)
+- **Routing:** Solución del problema de redirección en la ruta raíz (`/`) migrando a *Client-Side Navigation* para sortear la limitación de middleware en Vercel Edge (Fix 404 Error).
