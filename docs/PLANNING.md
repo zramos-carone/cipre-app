@@ -31,7 +31,7 @@ Para asegurar la calidad del proyecto, **ninguna Tarea (Task) se marca como comp
   * [x] **Task 3.1.1:** Instalar y configurar el adaptador de base de datos (`@next-auth/prisma-adapter`).
   * [x] **Task 3.1.2:** Implementar utilidades de cifrado de contraseñas con `bcryptjs`.
   * [x] **Task 3.1.3:** Configurar el archivo de opciones de NextAuth y el API Route handler.
-  * [ ] **Task 3.1.4:** Desarrollar el Server Action para la lógica de autenticación (Login).
+  * [x] **Task 3.1.4:** Desarrollar el Server Action para la lógica de autenticación (Login).
   * [ ] **Task 3.1.5:** Actualizar el Middleware para protección de rutas basada en sesiones reales.
   * [ ] **Task 3.1.6:** Vincular el perfil de usuario en la Sidebar con los datos de la sesión activa.
 
