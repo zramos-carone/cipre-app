@@ -28,7 +28,7 @@ Para asegurar la calidad del proyecto, **ninguna Tarea (Task) se marca como comp
 ### 🔒 Feature 3: Autenticación Real (NextAuth + BD)
 **Objetivo:** Establecer la seguridad y control de acceso definitivo.
 * **User Story 3.1:** Como administrador, quiero que los usuarios inicien sesión con credenciales reales y cifradas.
-  * [ ] **Task 3.1.1:** Instalar y configurar el adaptador de base de datos (`@next-auth/prisma-adapter`).
+  * [x] **Task 3.1.1:** Instalar y configurar el adaptador de base de datos (`@next-auth/prisma-adapter`).
   * [ ] **Task 3.1.2:** Implementar utilidades de cifrado de contraseñas con `bcryptjs`.
   * [ ] **Task 3.1.3:** Configurar el archivo de opciones de NextAuth y el API Route handler.
   * [ ] **Task 3.1.4:** Desarrollar el Server Action para la lógica de autenticación (Login).

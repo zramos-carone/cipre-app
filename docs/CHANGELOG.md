@@ -10,6 +10,7 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 - **DB:** Definición completa del esquema de base de datos en `schema.prisma` (Modelos RBAC, Pacientes, Citas, Notas, Pagos, Asistencia).
 - **QA:** Instalación y configuración de Vitest para pruebas unitarias automatizadas.
 - **QA:** Implementación de la primera prueba de validación estructural (Prisma Client).
+- **Auth:** Integración del adaptador de base de datos (`@next-auth/prisma-adapter`) para NextAuth.
 
 ---
 
