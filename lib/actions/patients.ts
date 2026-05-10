@@ -108,3 +108,50 @@ export async function getPatients({
     }
   }
 }
+
+/**
+ * Server Action para actualizar los datos de un paciente existente.
+ */
+export async function updatePatient(id: string, formData: FormData): Promise<ActionResponse> {
+  const rawData = {
+    fullName: (formData.get("fullName") as string) || "",
+    email: (formData.get("email") as string) || "",
+    phone: (formData.get("phone") as string) || "",
+  }
+
+  // 1. Validar datos con Zod
+  const validation = patientSchema.safeParse(rawData)
+
+  if (!validation.success) {
+    return {
+      success: false,
+      error: validation.error.errors[0].message
+    }
+  }
+
+  try {
+    // 2. Actualizar en la base de datos
+    const patient = await prisma.patient.update({
+      where: { id },
+      data: {
+        fullName: validation.data.fullName,
+        email: validation.data.email || null,
+        phone: validation.data.phone || null,
+      }
+    })
+
+    // 3. Revalidar la ruta del dashboard
+    revalidatePath("/dashboard/pacientes")
+
+    return {
+      success: true,
+      data: patient
+    }
+  } catch (error) {
+    console.error("Error updating patient:", error)
+    return {
+      success: false,
+      error: "Error interno al intentar actualizar el paciente"
+    }
+  }
+}

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { createPatient, getPatients } from './patients'
+import { createPatient, getPatients, updatePatient } from './patients'
 import prisma from '@/lib/prisma'
 
 // Mock de Prisma
@@ -9,6 +9,7 @@ vi.mock('@/lib/prisma', () => ({
       create: vi.fn(),
       findMany: vi.fn(),
       count: vi.fn(),
+      update: vi.fn(),
     },
   },
 }))
@@ -106,5 +107,38 @@ describe('Patient Server Actions - getPatients', () => {
       skip: 5,
       take: 5
     }))
+  })
+})
+
+describe('Patient Server Actions - updatePatient', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('debería actualizar un paciente exitosamente', async () => {
+    const formData = new FormData()
+    formData.append('fullName', 'Juan Editado')
+    
+    const mockPatient = { id: '1', fullName: 'Juan Editado' }
+    vi.mocked(prisma.patient.update).mockResolvedValue(mockPatient as any)
+
+    const result = await updatePatient('1', formData)
+
+    expect(result.success).toBe(true)
+    expect(result.data.fullName).toBe('Juan Editado')
+    expect(prisma.patient.update).toHaveBeenCalledWith(expect.objectContaining({
+      where: { id: '1' }
+    }))
+  })
+
+  it('debería fallar si los datos de actualización son inválidos', async () => {
+    const formData = new FormData()
+    formData.append('fullName', 'J') // Muy corto
+
+    const result = await updatePatient('1', formData)
+
+    expect(result.success).toBe(false)
+    expect(result.error).toBeDefined()
+    expect(prisma.patient.update).not.toHaveBeenCalled()
   })
 })
