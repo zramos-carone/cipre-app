@@ -17,6 +17,7 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 - [Task 3.1.5] Refinamiento de Middleware para RBAC dinámico.
 - [Task 3.1.6] Integración de perfil de usuario real y logout en Sidebar (UI + Tests).
 - [Task 4.1.1] Creación de esquema de validación `PatientSchema` con Zod.
+- [Task 4.1.2] Implementación de Server Action `createPatient` para registro de pacientes.
 - **Auth:** Refinamiento del Middleware de seguridad con reglas RBAC dinámicas para proteger rutas sensibles (Historial, Usuarios).
 
 ---

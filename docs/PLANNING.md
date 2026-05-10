@@ -39,7 +39,7 @@ Para asegurar la calidad del proyecto, **ninguna Tarea (Task) se marca como comp
 **Objetivo:** Agilizar el ingreso y directorio del día a día de la clínica.
 * **User Story 4.1:** Como recepcionista, quiero registrar y consultar pacientes.
   * [x] **Task 4.1.1:** Crear esquema de validación `PatientSchema` con Zod.
-  * [ ] **Task 4.1.2:** Implementar Server Action `createPatient` para registro.
+  * [x] **Task 4.1.2:** Implementar Server Action `createPatient` para registro.
   * [ ] **Task 4.1.3:** Implementar Server Action `getPatients` con búsqueda y paginación.
   * [ ] **Task 4.1.4:** Implementar Server Action `updatePatient` para edición.
   * [ ] **Task 4.1.5:** Implementar Server Action `deletePatient` (desactivación).
