@@ -28,10 +28,12 @@ Para asegurar la calidad del proyecto, **ninguna Tarea (Task) se marca como comp
 ### 🔒 Feature 3: Autenticación Real (NextAuth + BD)
 **Objetivo:** Establecer la seguridad y control de acceso definitivo.
 * **User Story 3.1:** Como administrador, quiero que los usuarios inicien sesión con credenciales reales y cifradas.
-  * [ ] **Task 3.1.1:** Configurar el adaptador de base de datos para NextAuth.
-  * [ ] **Task 3.1.2:** Implementar encriptación de contraseñas con `bcryptjs`.
-  * [ ] **Task 3.1.3:** Eliminar el mock temporal de `lib/auth.ts` y conectar la validación a la base de datos.
-  * [ ] **Task 3.1.4:** Definir Server Actions para la gestión de sesiones y protección de rutas.
+  * [ ] **Task 3.1.1:** Instalar y configurar el adaptador de base de datos (`@next-auth/prisma-adapter`).
+  * [ ] **Task 3.1.2:** Implementar utilidades de cifrado de contraseñas con `bcryptjs`.
+  * [ ] **Task 3.1.3:** Configurar el archivo de opciones de NextAuth y el API Route handler.
+  * [ ] **Task 3.1.4:** Desarrollar el Server Action para la lógica de autenticación (Login).
+  * [ ] **Task 3.1.5:** Actualizar el Middleware para protección de rutas basada en sesiones reales.
+  * [ ] **Task 3.1.6:** Vincular el perfil de usuario en la Sidebar con los datos de la sesión activa.
 
 ### 👥 Feature 4: Gestión de Pacientes
 **Objetivo:** Agilizar el ingreso y directorio del día a día de la clínica.
