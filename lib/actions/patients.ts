@@ -10,6 +10,12 @@ export type ActionResponse<T = any> = {
   error?: string
 }
 
+export type GetPatientsParams = {
+  query?: string
+  page?: number
+  pageSize?: number
+}
+
 /**
  * Server Action para registrar un nuevo paciente.
  */
@@ -52,6 +58,53 @@ export async function createPatient(formData: FormData): Promise<ActionResponse>
     return {
       success: false,
       error: "Error interno al intentar registrar el paciente"
+    }
+  }
+}
+
+/**
+ * Server Action para obtener el listado de pacientes con soporte para búsqueda y paginación.
+ */
+export async function getPatients({ 
+  query = "", 
+  page = 1, 
+  pageSize = 10 
+}: GetPatientsParams): Promise<ActionResponse> {
+  const skip = (page - 1) * pageSize
+
+  try {
+    const where = query ? {
+      OR: [
+        { fullName: { contains: query, mode: "insensitive" as const } },
+        { email: { contains: query, mode: "insensitive" as const } },
+        { phone: { contains: query, mode: "insensitive" as const } },
+      ]
+    } : {}
+
+    const [patients, totalCount] = await Promise.all([
+      prisma.patient.findMany({
+        where: (where as any),
+        skip,
+        take: pageSize,
+        orderBy: { createdAt: "desc" }
+      }),
+      prisma.patient.count({ where: (where as any) })
+    ])
+
+    return {
+      success: true,
+      data: {
+        patients,
+        totalCount,
+        totalPages: Math.ceil(totalCount / pageSize),
+        currentPage: page
+      }
+    }
+  } catch (error) {
+    console.error("Error fetching patients:", error)
+    return {
+      success: false,
+      error: "Error al obtener el listado de pacientes"
     }
   }
 }
