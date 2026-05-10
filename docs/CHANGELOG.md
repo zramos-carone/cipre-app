@@ -9,6 +9,7 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 - **DB:** Inicialización del ORM Prisma en el proyecto (`prisma/schema.prisma` y dependencias base).
 - **DB:** Definición completa del esquema de base de datos en `schema.prisma` (Modelos RBAC, Pacientes, Citas, Notas, Pagos, Asistencia).
 - **QA:** Instalación y configuración de Vitest para pruebas unitarias automatizadas.
+- **QA:** Implementación de la primera prueba de validación estructural (Prisma Client).
 
 ---
 

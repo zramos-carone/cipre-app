@@ -23,7 +23,7 @@ Para asegurar la calidad del proyecto, **ninguna Tarea (Task) se marca como comp
 **Objetivo:** Establecer el entorno automatizado para cumplir con el Definition of Done.
 * **User Story 2.1:** Como desarrollador, quiero tener un framework de pruebas unitarias instalado y configurado.
   * [x] **Task 2.1.1:** Instalar y configurar Vitest en el entorno de Next.js.
-  * [ ] **Task 2.1.2:** Crear una prueba de validación estructural inicial para verificar que el framework funciona correctamente.
+  * [x] **Task 2.1.2:** Crear una prueba de validación estructural inicial para verificar que el framework funciona correctamente.
 
 ### 🔒 Feature 3: Autenticación Real (NextAuth + BD)
 **Objetivo:** Establecer la seguridad y control de acceso definitivo.
