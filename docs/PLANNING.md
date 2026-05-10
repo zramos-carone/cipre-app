@@ -6,10 +6,11 @@ Este documento centraliza el roadmap del proyecto bajo una estructura ágil (Scr
 El ciclo de vida del desarrollo seguirá esta jerarquía estricta y orden de ejecución:
 `Backlog -> Feature -> User Story -> Task -> Code -> Test -> Commit -> Changelog`
 
----
+### ✅ Definition of Done (DoD)
+Para asegurar la calidad del proyecto, **ninguna Tarea (Task) se marca como completada `[x]` a menos que cuente con su respectiva prueba unitaria o validación funcional**. Consulta el documento `docs/TESTING.md` para conocer la estrategia. Todo código nuevo debe venir acompañado de su Test correspondiente.
+
 
 ## 📦 BACKLOG DE PRODUCTO
-
 
 ### 🚀 Feature 1: Base de Datos y ORM
 **Objetivo:** Establecer la infraestructura de persistencia de datos del sistema.
