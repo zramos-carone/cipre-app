@@ -15,7 +15,7 @@ Para asegurar la calidad del proyecto, **ninguna Tarea (Task) se marca como comp
 ### 🚀 Feature 1: Base de Datos y ORM
 **Objetivo:** Establecer la infraestructura de persistencia de datos del sistema.
 * **User Story 1.1:** Como desarrollador, quiero tener un ORM configurado para gestionar la base de datos.
-  * [ ] **Task 1.1.1:** Inicializar Prisma (o Drizzle) en el proyecto.
+  * [x] **Task 1.1.1:** Inicializar Prisma (o Drizzle) en el proyecto.
   * [ ] **Task 1.1.2:** Traducir `DATABASE.md` a un archivo `schema.prisma` real con modelos RBAC (`User`, `Role`, `Permission`).
   * [ ] **Task 1.1.3:** Ejecutar la primera migración hacia la base de datos (PostgreSQL/MySQL).
 
@@ -81,3 +81,9 @@ Para asegurar la calidad del proyecto, **ninguna Tarea (Task) se marca como comp
   * [ ] **Task 10.1.1:** Integrar esquemas de validación estricta con `Zod` en todos los modales.
   * [ ] **Task 10.1.2:** Implementar archivos `loading.tsx` (Skeletons) para disimular tiempos de carga.
   * [ ] **Task 10.1.3:** Añadir Toasts (ej. `sonner`) para dar feedback visual de éxito/error en cada petición.
+
+### 🧪 Feature 11: Infraestructura de QA y Testing
+**Objetivo:** Establecer el entorno automatizado para cumplir con el Definition of Done.
+* **User Story 11.1:** Como desarrollador, quiero tener un framework de pruebas unitarias instalado y configurado.
+  * [ ] **Task 11.1.1:** Instalar y configurar Vitest en el entorno de Next.js.
+  * [ ] **Task 11.1.2:** Crear una prueba de validación estructural inicial para verificar que el framework funciona correctamente.
