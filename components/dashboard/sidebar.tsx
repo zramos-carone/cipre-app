@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { signOut, useSession } from "next-auth/react"
 import { cn } from "@/lib/utils"
 import {
   Home,
@@ -28,6 +29,7 @@ const navItems = [
 
 export function DashboardSidebar() {
   const pathname = usePathname()
+  const { data: session } = useSession()
 
   return (
     <aside className="flex h-screen w-64 flex-col border-r border-sidebar-border bg-sidebar">
@@ -44,8 +46,8 @@ export function DashboardSidebar() {
 
       {/* Profile */}
       <div className="px-6 py-2">
-        <p className="text-xs text-muted-foreground">Perfil actual</p>
-        <p className="text-sm font-semibold text-sidebar-foreground">Administración</p>
+        <p className="text-xs font-semibold text-sidebar-foreground">{session?.user?.name || "Cargando..."}</p>
+        <p className="text-xs text-muted-foreground">{(session?.user as any)?.role || "Sin rol"}</p>
       </div>
 
       {/* Navigation */}
@@ -75,7 +77,10 @@ export function DashboardSidebar() {
 
       {/* Logout */}
       <div className="border-t border-sidebar-border px-3 py-4">
-        <button className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-destructive transition-colors hover:bg-destructive/10">
+        <button 
+          onClick={() => signOut({ callbackUrl: '/login' })}
+          className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-destructive transition-colors hover:bg-destructive/10"
+        >
           <LogOut className="h-5 w-5" />
           Cerrar Sesión
         </button>
