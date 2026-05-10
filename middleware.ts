@@ -6,9 +6,16 @@ export default withAuth(
     const token = req.nextauth.token
     const path = req.nextUrl.pathname
 
-    // Ejemplo de RBAC: Proteger la ruta historial para que Recepción no pueda entrar
-    if (path.startsWith("/dashboard/historial")) {
-      if (token?.role === "Recepción") {
+    // Rutas que requieren permisos específicos (RBAC)
+    const roleBasedRoutes = [
+      { path: "/dashboard/historial", restrictedFor: ["Recepción"] },
+      { path: "/dashboard/usuarios", restrictedFor: ["Recepción", "Psicólogo"] },
+    ]
+
+    const currentRoute = roleBasedRoutes.find(route => path.startsWith(route.path))
+
+    if (currentRoute) {
+      if (currentRoute.restrictedFor.includes(token?.role as string)) {
         return NextResponse.redirect(new URL("/dashboard", req.url))
       }
     }
