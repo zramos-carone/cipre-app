@@ -11,6 +11,7 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 - **QA:** Instalación y configuración de Vitest para pruebas unitarias automatizadas.
 - **QA:** Implementación de la primera prueba de validación estructural (Prisma Client).
 - **Auth:** Integración del adaptador de base de datos (`@next-auth/prisma-adapter`) para NextAuth.
+- **Auth:** Implementación de funciones seguras para hashing y comparación de contraseñas (`bcryptjs`).
 
 ---
 
