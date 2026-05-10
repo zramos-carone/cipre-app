@@ -1,13 +1,111 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
-  provider = "prisma-client"
-  output   = "../lib/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+model User {
+  id                   String               @id @default(uuid())
+  email                String               @unique
+  password             String
+  fullName             String
+  roleId               String
+  active               Boolean              @default(true)
+  createdAt            DateTime             @default(now())
+  role                 Role                 @relation(fields: [roleId], references: [id])
+  appointments         Appointment[]
+  clinicalNotes        ClinicalNote[]
+  attendanceRegistries AttendanceRegistry[]
+}
+
+model Role {
+  id          String       @id @default(uuid())
+  name        String       @unique
+  description String?
+  users       User[]
+  permissions Permission[] // Implicit many-to-many
+}
+
+model Permission {
+  id       String @id @default(uuid())
+  action   String
+  resource String
+  roles    Role[] // Implicit many-to-many
+}
+
+model Patient {
+  id              String           @id @default(uuid())
+  fullName        String
+  email           String?
+  phone           String?
+  lastVisit       DateTime?
+  nextAppointment DateTime?
+  createdAt       DateTime         @default(now())
+  appointments    Appointment[]
+  informedConsent InformedConsent?
+  clinicalNotes   ClinicalNote[]
+  payments        Payment[]
+}
+
+model Appointment {
+  id             String   @id @default(uuid())
+  patientId      String
+  psychologistId String
+  scheduledAt    DateTime
+  status         String   @default("Pendiente")
+  notes          String?
+  patient        Patient  @relation(fields: [patientId], references: [id])
+  psychologist   User     @relation(fields: [psychologistId], references: [id])
+}
+
+model InformedConsent {
+  id          String    @id @default(uuid())
+  patientId   String    @unique
+  documentUrl String
+  isSigned    Boolean   @default(false)
+  signedAt    DateTime?
+  patient     Patient   @relation(fields: [patientId], references: [id])
+}
+
+model ClinicalNote {
+  id             String   @id @default(uuid())
+  patientId      String
+  psychologistId String
+  content        String   @db.Text
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  patient        Patient  @relation(fields: [patientId], references: [id])
+  psychologist   User     @relation(fields: [psychologistId], references: [id])
+}
+
+model Payment {
+  id        String   @id @default(uuid())
+  patientId String
+  amount    Float
+  method    String
+  status    String   @default("Pendiente")
+  createdAt DateTime @default(now())
+  patient   Patient  @relation(fields: [patientId], references: [id])
+  refund    Refund?
+}
+
+model Refund {
+  id          String   @id @default(uuid())
+  paymentId   String   @unique
+  amount      Float
+  reason      String
+  processedAt DateTime @default(now())
+  payment     Payment  @relation(fields: [paymentId], references: [id])
+}
+
+model AttendanceRegistry {
+  id        String   @id @default(uuid())
+  userId    String
+  type      String
+  timestamp DateTime @default(now())
+  latitude  Float?
+  longitude Float?
+  user      User     @relation(fields: [userId], references: [id])
 }

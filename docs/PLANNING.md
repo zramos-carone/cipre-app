@@ -16,7 +16,7 @@ Para asegurar la calidad del proyecto, **ninguna Tarea (Task) se marca como comp
 **Objetivo:** Establecer la infraestructura de persistencia de datos del sistema.
 * **User Story 1.1:** Como desarrollador, quiero tener un ORM configurado para gestionar la base de datos.
   * [x] **Task 1.1.1:** Inicializar Prisma (o Drizzle) en el proyecto.
-  * [ ] **Task 1.1.2:** Traducir `DATABASE.md` a un archivo `schema.prisma` real con modelos RBAC (`User`, `Role`, `Permission`).
+  * [x] **Task 1.1.2:** Traducir `DATABASE.md` a un archivo `schema.prisma` real con modelos RBAC (`User`, `Role`, `Permission`).
   * [ ] **Task 1.1.3:** Ejecutar la primera migración hacia la base de datos (PostgreSQL/MySQL).
 
 ### 🔒 Feature 2: Autenticación Real (NextAuth + BD)
