@@ -4,6 +4,39 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import prisma from "./prisma"
 import { comparePassword } from "./password"
 
+/**
+ * Lógica pura de autorización para NextAuth.
+ * Extraída para permitir pruebas unitarias sin dependencias complejas.
+ */
+export async function authorizeUser(credentials: Record<string, string> | undefined) {
+  if (!credentials?.email || !credentials?.password) return null;
+  
+  // Buscar usuario en la BD real, incluyendo su rol
+  const user = await prisma.user.findUnique({
+    where: { email: credentials.email },
+    include: { role: true }
+  });
+
+  if (!user || !user.password) {
+    return null;
+  }
+
+  // Comparar contraseña cifrada
+  const isPasswordValid = await comparePassword(credentials.password, user.password);
+
+  if (!isPasswordValid) {
+    return null;
+  }
+  
+  // Retornar objeto de usuario para la sesión
+  return { 
+    id: user.id, 
+    name: user.name, 
+    email: user.email, 
+    role: user.role.name 
+  };
+}
+
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
@@ -13,34 +46,7 @@ export const authOptions: NextAuthOptions = {
         email: { label: "Correo Institucional", type: "email", placeholder: "usuario@cipre.mx" },
         password: { label: "Contraseña", type: "password" }
       },
-      async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) return null;
-        
-        // Buscar usuario en la BD real, incluyendo su rol
-        const user = await prisma.user.findUnique({
-          where: { email: credentials.email },
-          include: { role: true }
-        });
-
-        if (!user || !user.password) {
-          return null;
-        }
-
-        // Comparar contraseña cifrada
-        const isPasswordValid = await comparePassword(credentials.password, user.password);
-
-        if (!isPasswordValid) {
-          return null;
-        }
-        
-        // Retornar objeto de usuario para la sesión
-        return { 
-          id: user.id, 
-          name: user.name, 
-          email: user.email, 
-          role: user.role.name 
-        };
-      }
+      authorize: authorizeUser
     })
   ],
   callbacks: {

@@ -24,4 +24,22 @@ describe('NextAuth Configuration Structural Validation', () => {
     expect(authOptions.callbacks?.jwt).toBeDefined()
     expect(authOptions.callbacks?.session).toBeDefined()
   })
+
+  describe('Callbacks Logic', () => {
+    it('jwt callback should inject role from user into token', async () => {
+      const token = {}
+      const user = { id: '1', role: 'Administrador' }
+      
+      const result = await (authOptions.callbacks?.jwt as any)({ token, user })
+      expect(result.role).toBe('Administrador')
+    })
+
+    it('session callback should expose role from token to session user', async () => {
+      const session = { user: { name: 'Test' } }
+      const token = { role: 'Psicólogo' }
+      
+      const result = await (authOptions.callbacks?.session as any)({ session, token })
+      expect(result.user.role).toBe('Psicólogo')
+    })
+  })
 })
