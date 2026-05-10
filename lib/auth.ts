@@ -1,7 +1,11 @@
 import { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
+import { PrismaAdapter } from "@next-auth/prisma-adapter"
+import prisma from "./prisma"
+import { comparePassword } from "./password"
 
 export const authOptions: NextAuthOptions = {
+  adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
       name: "Credenciales",
@@ -12,33 +16,44 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
         
-        // MOCK DE USUARIOS PARA CIPRE
-        const users = [
-          { id: "1", name: "Admin CIPRE", email: "admin@cipre.mx", password: "password", role: "Administración" },
-          { id: "2", name: "Dra. Psicóloga", email: "psicologa@cipre.mx", password: "password", role: "Psicólogo" },
-          { id: "3", name: "Recepción", email: "recepcion@cipre.mx", password: "password", role: "Recepción" },
-        ];
+        // Buscar usuario en la BD real, incluyendo su rol
+        const user = await prisma.user.findUnique({
+          where: { email: credentials.email },
+          include: { role: true }
+        });
 
-        const user = users.find(u => u.email === credentials.email && u.password === credentials.password);
-        
-        if (user) {
-          return { id: user.id, name: user.name, email: user.email, role: user.role };
+        if (!user || !user.password) {
+          return null;
         }
-        return null;
+
+        // Comparar contraseña cifrada
+        const isPasswordValid = await comparePassword(credentials.password, user.password);
+
+        if (!isPasswordValid) {
+          return null;
+        }
+        
+        // Retornar objeto de usuario para la sesión
+        return { 
+          id: user.id, 
+          name: user.name, 
+          email: user.email, 
+          role: user.role.name 
+        };
       }
     })
   ],
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        // Inyectar el rol en el token JWT
+        // Inyectar el nombre del rol en el token JWT
         token.role = (user as any).role;
       }
       return token;
     },
     async session({ session, token }) {
       if (session?.user) {
-        // Exponer el rol en el objeto de la sesión en el cliente
+        // Exponer el nombre del rol en el objeto de la sesión en el cliente
         (session.user as any).role = token.role;
       }
       return session;
