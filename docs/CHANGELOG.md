@@ -20,6 +20,7 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 - [Task 4.1.2] Implementación de Server Action `createPatient` para registro de pacientes.
 - [Task 4.1.3] Implementación de Server Action `getPatients` con soporte para búsqueda y paginación.
 - [Task 4.1.4] Implementación de Server Action `updatePatient` para edición de pacientes.
+- [Task 4.1.5] Implementación de Server Action `deletePatient` (desactivación lógica/soft delete).
 - **Auth:** Refinamiento del Middleware de seguridad con reglas RBAC dinámicas para proteger rutas sensibles (Historial, Usuarios).
 
 ---

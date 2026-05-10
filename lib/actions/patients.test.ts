@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { createPatient, getPatients, updatePatient } from './patients'
+import { createPatient, getPatients, updatePatient, deletePatient } from './patients'
 import prisma from '@/lib/prisma'
 
 // Mock de Prisma
@@ -90,6 +90,7 @@ describe('Patient Server Actions - getPatients', () => {
 
     expect(prisma.patient.findMany).toHaveBeenCalledWith(expect.objectContaining({
       where: expect.objectContaining({
+        active: true,
         OR: expect.arrayContaining([
           expect.objectContaining({ fullName: expect.any(Object) })
         ])
@@ -140,5 +141,33 @@ describe('Patient Server Actions - updatePatient', () => {
     expect(result.success).toBe(false)
     expect(result.error).toBeDefined()
     expect(prisma.patient.update).not.toHaveBeenCalled()
+  })
+})
+
+describe('Patient Server Actions - deletePatient', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('debería desactivar un paciente exitosamente (soft delete)', async () => {
+    const mockPatient = { id: '1', fullName: 'Juan', active: false }
+    vi.mocked(prisma.patient.update).mockResolvedValue(mockPatient as any)
+
+    const result = await deletePatient('1')
+
+    expect(result.success).toBe(true)
+    expect(prisma.patient.update).toHaveBeenCalledWith({
+      where: { id: '1' },
+      data: { active: false }
+    })
+  })
+
+  it('debería manejar errores al intentar desactivar', async () => {
+    vi.mocked(prisma.patient.update).mockRejectedValue(new Error('Delete Error'))
+
+    const result = await deletePatient('1')
+
+    expect(result.success).toBe(false)
+    expect(result.error).toBe('Error interno al intentar desactivar el paciente')
   })
 })

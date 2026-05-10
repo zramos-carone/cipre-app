@@ -73,13 +73,16 @@ export async function getPatients({
   const skip = (page - 1) * pageSize
 
   try {
-    const where = query ? {
-      OR: [
-        { fullName: { contains: query, mode: "insensitive" as const } },
-        { email: { contains: query, mode: "insensitive" as const } },
-        { phone: { contains: query, mode: "insensitive" as const } },
-      ]
-    } : {}
+    const where = {
+      active: true,
+      ...(query ? {
+        OR: [
+          { fullName: { contains: query, mode: "insensitive" as const } },
+          { email: { contains: query, mode: "insensitive" as const } },
+          { phone: { contains: query, mode: "insensitive" as const } },
+        ]
+      } : {})
+    }
 
     const [patients, totalCount] = await Promise.all([
       prisma.patient.findMany({
@@ -152,6 +155,31 @@ export async function updatePatient(id: string, formData: FormData): Promise<Act
     return {
       success: false,
       error: "Error interno al intentar actualizar el paciente"
+    }
+  }
+}
+
+/**
+ * Server Action para desactivar un paciente (borrado lógico).
+ */
+export async function deletePatient(id: string): Promise<ActionResponse> {
+  try {
+    const patient = await prisma.patient.update({
+      where: { id },
+      data: { active: false }
+    })
+
+    revalidatePath("/dashboard/pacientes")
+
+    return {
+      success: true,
+      data: patient
+    }
+  } catch (error) {
+    console.error("Error deleting patient:", error)
+    return {
+      success: false,
+      error: "Error interno al intentar desactivar el paciente"
     }
   }
 }
