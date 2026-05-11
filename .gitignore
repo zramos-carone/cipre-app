@@ -9,12 +9,11 @@ next.user-config.*
 
 # Environment variables
 .env
-.env*.local
+.env.production
 
 # Common ignores
 node_modules
 .next/
 .DS_Store
 .vercel
-
 /lib/generated/prisma
