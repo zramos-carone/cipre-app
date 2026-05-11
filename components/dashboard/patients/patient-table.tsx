@@ -88,6 +88,7 @@ export function PatientTable({ patients, onEdit, onDelete }: PatientTableProps) 
                     variant="ghost"
                     size="icon"
                     onClick={() => onEdit?.(patient)}
+                    aria-label="Editar paciente"
                     className="hover:bg-blue-500/20 hover:text-blue-500 transition-all rounded-full h-9 w-9"
                   >
                     <Edit className="h-4 w-4" />
@@ -96,6 +97,7 @@ export function PatientTable({ patients, onEdit, onDelete }: PatientTableProps) 
                     variant="ghost"
                     size="icon"
                     onClick={() => onDelete?.(patient.id)}
+                    aria-label="Eliminar paciente"
                     className="hover:bg-red-500/20 hover:text-red-500 transition-all rounded-full h-9 w-9"
                   >
                     <Trash2 className="h-4 w-4" />

@@ -46,7 +46,7 @@ Para asegurar la calidad del proyecto, **ninguna Tarea (Task) se marca como comp
   * [x] **Task 4.1.6:** Crear pruebas unitarias para Server Actions de pacientes.
   * [x] **Task 4.2.1:** Desarrollar componente `PatientTable` para listado.
   * [x] **Task 4.2.2:** Crear modal/formulario `PatientForm` para CRUD.
-  * [ ] **Task 4.2.3:** Integrar búsqueda en tiempo real y paginación en UI.
+  * [x] **Task 4.2.3:** Integrar búsqueda en tiempo real y paginación en UI.
   * [ ] **Task 4.3.1:** Añadir Skeletons y Toasts (sonner) para feedback de UX.
 
 ### 📅 Feature 5: Sistema de Citas (Agenda)
