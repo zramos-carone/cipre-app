@@ -23,6 +23,7 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 - [Task 4.1.5] Implementación de Server Action `deletePatient` (desactivación lógica/soft delete).
 - [Task 4.1.6] Finalización de cobertura de pruebas unitarias para Server Actions de pacientes (12 casos de prueba).
 - [Task 4.2.1] Desarrollo del componente `PatientTable` con diseño premium y soporte responsivo.
+- [Task 4.2.2] Creación del formulario `PatientForm` y el modal `PatientDialog` con validaciones integradas.
 - **Auth:** Refinamiento del Middleware de seguridad con reglas RBAC dinámicas para proteger rutas sensibles (Historial, Usuarios).
 
 ---
