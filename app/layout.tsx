@@ -4,6 +4,8 @@ import { Analytics } from '@vercel/analytics/next'
 import { NextAuthProvider } from '@/components/auth/Providers'
 import './globals.css'
 
+import { Toaster } from "@/components/ui/sonner"
+
 const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
@@ -42,6 +44,7 @@ export default function RootLayout({
           {children}
           {process.env.NODE_ENV === 'production' && <Analytics />}
         </NextAuthProvider>
+        <Toaster position="top-right" richColors closeButton />
       </body>
     </html>
   )

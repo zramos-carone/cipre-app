@@ -47,7 +47,7 @@ Para asegurar la calidad del proyecto, **ninguna Tarea (Task) se marca como comp
   * [x] **Task 4.2.1:** Desarrollar componente `PatientTable` para listado.
   * [x] **Task 4.2.2:** Crear modal/formulario `PatientForm` para CRUD.
   * [x] **Task 4.2.3:** Integrar búsqueda en tiempo real y paginación en UI.
-  * [ ] **Task 4.3.1:** Añadir Skeletons y Toasts (sonner) para feedback de UX.
+  * [x] **Task 4.3.1:** Añadir Skeletons y Toasts (sonner) para feedback de UX.
 
 ### 📅 Feature 5: Sistema de Citas (Agenda)
 **Objetivo:** Evitar conflictos y mejorar la visualización de tiempos para los psicólogos.

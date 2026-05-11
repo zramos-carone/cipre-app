@@ -25,6 +25,7 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 - [Task 4.2.1] Desarrollo del componente `PatientTable` con diseño premium y soporte responsivo.
 - [Task 4.2.2] Creación del formulario `PatientForm` y el modal `PatientDialog` con validaciones integradas.
 - [Task 4.2.3] Integración de búsqueda en tiempo real (debounced) y paginación en la UI de pacientes.
+- [Task 4.3.1] Implementación de Skeletons de carga y sistema de notificaciones (Toasts) con Sonner.
 - **Auth:** Refinamiento del Middleware de seguridad con reglas RBAC dinámicas para proteger rutas sensibles (Historial, Usuarios).
 
 ---
