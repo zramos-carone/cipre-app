@@ -12,20 +12,27 @@ Este documento detalla los pasos y configuraciones necesarias para desplegar la 
 
 ## 🛠️ Configuración de Infraestructura
 
-### 1. Base de Datos (Prisma)
-Vercel no puede conectar a un `localhost`. Debes obtener una cadena de conexión `postgresql://` de tu proveedor cloud.
+### 1. Base de Datos Cloud (Vercel Postgres)
+Vercel ofrece bases de datos administradas que se integran automáticamente.
 
-> [!IMPORTANT]
-> Si usas **Prisma Postgres** (protocolo `prisma+postgres://`), asegúrate de que el entorno de despliegue sea compatible con Prisma 7.
+**A. Vía Vercel CLI (Recomendado):**
+1. Ejecuta el comando para conectar el almacenamiento:
+   ```bash
+   vercel storage connect
+   ```
+2. Sigue las instrucciones para crear una nueva "Postgres Database".
+3. Esto inyectará automáticamente variables como `POSTGRES_PRISMA_URL` en tu proyecto.
 
-### 2. Variables de Entorno Críticas
-Deben configurarse en el Dashboard de Vercel (**Settings > Environment Variables**):
+**B. Vía Dashboard:**
+1. Ve a la pestaña **Storage** en tu proyecto de Vercel y crea una base de datos **Postgres**.
 
-| Variable | Descripción | Ejemplo |
-| :--- | :--- | :--- |
-| `DATABASE_URL` | URL de la base de datos cloud. | `postgres://user:pass@host:5432/db` |
-| `NEXTAUTH_SECRET` | Clave para cifrar tokens (mínimo 32 caracteres). | `73a28490a51b42568423b4c6e82618c8` |
-| `NEXTAUTH_URL` | URL base del despliegue. | `https://cipre.arpalogic.site` |
+### 2. Generación de Valores Críticos
+
+| Variable | Cómo obtenerla / generarla |
+| :--- | :--- |
+| `DATABASE_URL` | Si usas Vercel Postgres, usa el valor de `POSTGRES_PRISMA_URL`. |
+| `NEXTAUTH_SECRET` | Generar con: `node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"` |
+| `NEXTAUTH_URL` | Es la URL de producción (ej. `https://tu-app.vercel.app`). |
 
 ---
 
