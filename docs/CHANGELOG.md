@@ -31,6 +31,9 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
     - [Task 3.2.2] Migración a Driver Adapter (`pg`) para compatibilidad total con Prisma 7 y TCP directo.
     - [Task 3.2.3] Sincronización de usuarios base (Admin, Psicóloga, Recepción) en la base de datos.
     - [Task 3.2.4] Configuración y validación de variables de entorno de seguridad (`NEXTAUTH_SECRET`).
+- **Despliegue & DevOps:**
+    - Creación de `docs/DEPLOYMENT.md` con guía completa para Vercel.
+    - Configuración de script `postinstall` en `package.json` para generación automática de Prisma en CI/CD.
 - **Auth:** Refinamiento del Middleware de seguridad con reglas RBAC dinámicas para proteger rutas sensibles (Historial, Usuarios).
 
 ---
