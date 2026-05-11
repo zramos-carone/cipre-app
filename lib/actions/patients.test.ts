@@ -22,6 +22,12 @@ vi.mock('next/cache', () => ({
 describe('Patient Server Actions - createPatient', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    // Silenciamos console.error para que los tests de error no ensucien la terminal
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+  })
+
+  afterAll(() => {
+    vi.restoreAllMocks()
   })
 
   it('debería crear un paciente exitosamente con datos válidos', async () => {
@@ -67,6 +73,12 @@ describe('Patient Server Actions - createPatient', () => {
 describe('Patient Server Actions - getPatients', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    // Silenciamos console.error para que los tests de error no ensucien la terminal
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+  })
+
+  afterAll(() => {
+    vi.restoreAllMocks()
   })
 
   it('debería retornar el listado de pacientes y el conteo total', async () => {
@@ -123,6 +135,12 @@ describe('Patient Server Actions - getPatients', () => {
 describe('Patient Server Actions - updatePatient', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    // Silenciamos console.error para que los tests de error no ensucien la terminal
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+  })
+
+  afterAll(() => {
+    vi.restoreAllMocks()
   })
 
   it('debería actualizar un paciente exitosamente', async () => {
@@ -167,6 +185,12 @@ describe('Patient Server Actions - updatePatient', () => {
 describe('Patient Server Actions - deletePatient', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    // Silenciamos console.error para que los tests de error no ensucien la terminal
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+  })
+
+  afterAll(() => {
+    vi.restoreAllMocks()
   })
 
   it('debería desactivar un paciente exitosamente (soft delete)', async () => {
