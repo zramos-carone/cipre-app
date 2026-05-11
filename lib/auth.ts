@@ -10,7 +10,6 @@ import { comparePassword } from "./password"
  */
 export async function authorizeUser(credentials: Record<string, string> | undefined) {
   if (!credentials?.email || !credentials?.password) return null;
-  
   // Buscar usuario en la BD real, incluyendo su rol
   const user = await prisma.user.findUnique({
     where: { email: credentials.email },
@@ -31,7 +30,7 @@ export async function authorizeUser(credentials: Record<string, string> | undefi
   // Retornar objeto de usuario para la sesión
   return { 
     id: user.id, 
-    name: user.name, 
+    name: user.fullName, 
     email: user.email, 
     role: user.role.name 
   };

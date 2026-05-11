@@ -34,6 +34,10 @@ Para asegurar la calidad del proyecto, **ninguna Tarea (Task) se marca como comp
   * [x] **Task 3.1.4:** Desarrollar el Server Action para la lógica de autenticación (Login).
   * [x] **Task 3.1.5:** Actualizar el Middleware para protección de rutas basada en sesiones reales.
   * [x] **Task 3.1.6:** Vincular el perfil de usuario en la Sidebar con los datos de la sesión activa.
+  * [x] **Task 3.2.1:** Sincronizar campos de esquema Prisma con lógica de NextAuth (fullName).
+  * [x] **Task 3.2.2:** Implementar Driver Adapter (`pg`) para estabilidad de conexión en Prisma 7.
+  * [x] **Task 3.2.3:** Crear script de seeding para usuarios administrativos iniciales.
+  * [x] **Task 3.2.4:** Validar variables de entorno críticas (`NEXTAUTH_SECRET`).
 
 ### 👥 Feature 4: Gestión de Pacientes
 **Objetivo:** Agilizar el ingreso y directorio del día a día de la clínica.

@@ -26,6 +26,11 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 - [Task 4.2.2] Creación del formulario `PatientForm` y el modal `PatientDialog` con validaciones integradas.
 - [Task 4.2.3] Integración de búsqueda en tiempo real (debounced) y paginación en la UI de pacientes.
 - [Task 4.3.1] Implementación de Skeletons de carga y sistema de notificaciones (Toasts) con Sonner.
+- **Infraestructura & Hardening (Retroactivo Feature 3):**
+    - [Task 3.2.1] Corrección de bug de sincronización de nombres en la sesión (`fullName`).
+    - [Task 3.2.2] Migración a Driver Adapter (`pg`) para compatibilidad total con Prisma 7 y TCP directo.
+    - [Task 3.2.3] Sincronización de usuarios base (Admin, Psicóloga, Recepción) en la base de datos.
+    - [Task 3.2.4] Configuración y validación de variables de entorno de seguridad (`NEXTAUTH_SECRET`).
 - **Auth:** Refinamiento del Middleware de seguridad con reglas RBAC dinámicas para proteger rutas sensibles (Historial, Usuarios).
 
 ---

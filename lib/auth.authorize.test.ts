@@ -62,7 +62,7 @@ describe('authorizeUser Unit Test', () => {
   it('should return user object if credentials are valid', async () => {
     vi.mocked(prisma.user.findUnique).mockResolvedValue({
       id: '1',
-      name: 'Juan Pérez',
+      fullName: 'Juan Pérez',
       email: 'test@cipre.mx',
       password: 'hashedPassword',
       role: { name: 'Administrador' }
