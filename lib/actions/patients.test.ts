@@ -22,8 +22,6 @@ vi.mock('next/cache', () => ({
 describe('Patient Server Actions - createPatient', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    // Silenciamos console.error para que los tests de error no ensucien la terminal
-    vi.spyOn(console, 'error').mockImplementation(() => {})
   })
 
   afterAll(() => {
@@ -58,6 +56,7 @@ describe('Patient Server Actions - createPatient', () => {
   })
 
   it('debería manejar errores de la base de datos', async () => {
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
     const formData = new FormData()
     formData.append('fullName', 'Juan Pérez')
 
@@ -67,14 +66,14 @@ describe('Patient Server Actions - createPatient', () => {
 
     expect(result.success).toBe(false)
     expect(result.error).toBe('Error interno al intentar registrar el paciente')
+    expect(consoleSpy).toHaveBeenCalled()
+    consoleSpy.mockRestore()
   })
 })
 
 describe('Patient Server Actions - getPatients', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    // Silenciamos console.error para que los tests de error no ensucien la terminal
-    vi.spyOn(console, 'error').mockImplementation(() => {})
   })
 
   afterAll(() => {
@@ -123,20 +122,21 @@ describe('Patient Server Actions - getPatients', () => {
   })
 
   it('debería manejar errores al obtener pacientes', async () => {
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
     vi.mocked(prisma.patient.findMany).mockRejectedValue(new Error('Fetch Error'))
 
     const result = await getPatients({})
 
     expect(result.success).toBe(false)
     expect(result.error).toBe('Error al obtener el listado de pacientes')
+    expect(consoleSpy).toHaveBeenCalled()
+    consoleSpy.mockRestore()
   })
 })
 
 describe('Patient Server Actions - updatePatient', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    // Silenciamos console.error para que los tests de error no ensucien la terminal
-    vi.spyOn(console, 'error').mockImplementation(() => {})
   })
 
   afterAll(() => {
@@ -171,6 +171,7 @@ describe('Patient Server Actions - updatePatient', () => {
   })
 
   it('debería manejar errores de base de datos al actualizar', async () => {
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
     const formData = new FormData()
     formData.append('fullName', 'Juan Editado')
     vi.mocked(prisma.patient.update).mockRejectedValue(new Error('Update Error'))
@@ -179,6 +180,8 @@ describe('Patient Server Actions - updatePatient', () => {
 
     expect(result.success).toBe(false)
     expect(result.error).toBe('Error interno al intentar actualizar el paciente')
+    expect(consoleSpy).toHaveBeenCalled()
+    consoleSpy.mockRestore()
   })
 })
 
@@ -207,11 +210,14 @@ describe('Patient Server Actions - deletePatient', () => {
   })
 
   it('debería manejar errores al intentar desactivar', async () => {
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
     vi.mocked(prisma.patient.update).mockRejectedValue(new Error('Delete Error'))
 
     const result = await deletePatient('1')
 
     expect(result.success).toBe(false)
     expect(result.error).toBe('Error interno al intentar desactivar el paciente')
+    expect(consoleSpy).toHaveBeenCalled()
+    consoleSpy.mockRestore()
   })
 })
