@@ -11,9 +11,15 @@ import { toast } from "sonner"
 
 interface Patient {
   id: string
-  fullName: string
+  name: string
+  lastName: string
   email: string | null
   phone: string | null
+  birthDate?: Date | string | null
+  age?: number | null
+  gender?: string | null
+  address?: string | null
+  emergencyContact?: string | null
   createdAt: Date
 }
 
@@ -50,9 +56,15 @@ export function PatientsClient({ patients }: PatientsClientProps) {
   const handleSubmit = async (data: PatientInput) => {
     setIsSubmitting(true)
     const formData = new FormData()
-    formData.append("fullName", data.fullName)
-    if (data.email) formData.append("email", data.email)
+    formData.append("name", data.name)
+    formData.append("lastName", data.lastName)
+    if (data.birthDate) formData.append("birthDate", data.birthDate)
+    if (data.age !== undefined && data.age !== null) formData.append("age", String(data.age))
+    if (data.gender) formData.append("gender", data.gender)
+    if (data.address) formData.append("address", data.address)
     if (data.phone) formData.append("phone", data.phone)
+    if (data.email) formData.append("email", data.email)
+    if (data.emergencyContact) formData.append("emergencyContact", data.emergencyContact)
 
     try {
       let result
@@ -98,9 +110,15 @@ export function PatientsClient({ patients }: PatientsClientProps) {
         open={isDialogOpen}
         onOpenChange={setIsDialogOpen}
         initialData={editingPatient ? {
-          fullName: editingPatient.fullName,
-          email: editingPatient.email || "",
+          name: editingPatient.name,
+          lastName: editingPatient.lastName,
+          birthDate: editingPatient.birthDate ? (editingPatient.birthDate instanceof Date ? editingPatient.birthDate.toISOString().split('T')[0] : String(editingPatient.birthDate).split('T')[0]) : "",
+          age: editingPatient.age !== undefined && editingPatient.age !== null ? editingPatient.age : undefined,
+          gender: editingPatient.gender || "",
+          address: editingPatient.address || "",
           phone: editingPatient.phone || "",
+          email: editingPatient.email || "",
+          emergencyContact: editingPatient.emergencyContact || "",
         } : undefined}
         onSubmit={handleSubmit}
         isSubmitting={isSubmitting}

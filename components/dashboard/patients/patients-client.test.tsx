@@ -27,7 +27,8 @@ global.ResizeObserver = vi.fn().mockImplementation(() => ({
 const mockPatients = [
   {
     id: '1',
-    fullName: 'Juan Pérez',
+    name: 'Juan',
+    lastName: 'Pérez',
     email: 'juan@example.com',
     phone: '1234567890',
     createdAt: new Date(),
@@ -58,7 +59,8 @@ describe('PatientsClient Integration', () => {
     
     await waitFor(() => {
       expect(screen.getByText('Editar Paciente')).toBeDefined()
-      expect(screen.getByDisplayValue('Juan Pérez')).toBeDefined()
+      expect(screen.getByDisplayValue('Juan')).toBeDefined()
+      expect(screen.getByDisplayValue('Pérez')).toBeDefined()
     })
   })
 })

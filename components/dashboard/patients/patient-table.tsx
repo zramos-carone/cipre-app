@@ -14,9 +14,15 @@ import { Badge } from "@/components/ui/badge"
 
 interface Patient {
   id: string
-  fullName: string
+  name: string
+  lastName: string
   email: string | null
   phone: string | null
+  birthDate?: Date | string | null
+  age?: number | null
+  gender?: string | null
+  address?: string | null
+  emergencyContact?: string | null
   createdAt: Date
 }
 
@@ -56,9 +62,9 @@ export function PatientTable({ patients, onEdit, onDelete }: PatientTableProps) 
               <TableCell className="font-medium">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold group-hover:scale-110 transition-transform">
-                    {patient.fullName.charAt(0).toUpperCase()}
+                    {patient.name.charAt(0).toUpperCase()}
                   </div>
-                  <span>{patient.fullName}</span>
+                  <span>{patient.name} {patient.lastName}</span>
                 </div>
               </TableCell>
               <TableCell>

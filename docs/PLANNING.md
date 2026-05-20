@@ -57,8 +57,8 @@ Para asegurar la calidad del proyecto, **ninguna Tarea (Task) se marca como comp
   * [x] **Task 4.4.2:** Modificar el esquema de validación `PatientSchema` con Zod en `lib/validations/patient.ts` y actualizar sus pruebas unitarias en `lib/validations/patient.test.ts`.
   * [x] **Task 4.4.3:** Adaptar los Server Actions `createPatient`, `updatePatient` y `getPatients` en `lib/actions/patients.ts` para manejar y persistir los nuevos campos del paciente (incluyendo la lógica de búsqueda integrada).
   * [x] **Task 4.4.4:** Rediseñar el formulario `PatientForm` en `components/dashboard/patients/patient-form.tsx` con el nuevo diseño y campos (Nombre(s), Apellidos, Fecha de Nacimiento, Edad, Género, Dirección, Teléfono, Email y Contacto de Emergencia).
-  * [ ] **Task 4.4.5:** Actualizar los componentes de visualización `PatientTable`, `PatientDialog` y `PatientsClient` en `components/dashboard/patients/` para desplegar y pasar la información actualizada del paciente.
-  * [ ] **Task 4.4.6:** Corregir y validar todas las pruebas unitarias y de integración del módulo de pacientes para asegurar el cumplimiento del Definition of Done (DoD).
+  * [x] **Task 4.4.5:** Actualizar los componentes de visualización `PatientTable`, `PatientDialog` y `PatientsClient` en `components/dashboard/patients/` para desplegar y pasar la información actualizada del paciente.
+  * [x] **Task 4.4.6:** Corregir y validar todas las pruebas unitarias y de integración del módulo de pacientes para asegurar el cumplimiento del Definition of Done (DoD).
 
 ### 📅 Feature 5: Sistema de Citas (Agenda)
 **Objetivo:** Evitar conflictos y mejorar la visualización de tiempos para los psicólogos.

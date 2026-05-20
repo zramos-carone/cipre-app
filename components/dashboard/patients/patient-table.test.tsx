@@ -5,7 +5,8 @@ import { describe, it, expect, vi } from 'vitest'
 const mockPatients = [
   {
     id: '1',
-    fullName: 'Juan Pérez',
+    name: 'Juan',
+    lastName: 'Pérez',
     email: 'juan@example.com',
     phone: '1234567890',
     createdAt: new Date('2024-01-01'),
