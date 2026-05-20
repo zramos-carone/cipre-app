@@ -14,7 +14,7 @@ async function main() {
     },
   })
 
-  await prisma.role.upsert({
+  const psychologyRole = await prisma.role.upsert({
     where: { name: 'Psicología' },
     update: {},
     create: {
@@ -23,7 +23,7 @@ async function main() {
     },
   })
 
-  await prisma.role.upsert({
+  const receptionRole = await prisma.role.upsert({
     where: { name: 'Recepción' },
     update: {},
     create: {
@@ -50,6 +50,36 @@ async function main() {
   })
 
   console.log('✅ Usuario Administrador (admin@psipre.mx) creado.')
+
+  // 3. Crear Psicólogos Base
+  const psyPassword = await hashPassword('Psipre1!')
+  await prisma.user.upsert({
+    where: { email: 'fernando.gomez@psipre.mx' },
+    update: {
+      password: psyPassword,
+    },
+    create: {
+      email: 'fernando.gomez@psipre.mx',
+      fullName: 'Dr. Fernando Gómez',
+      password: psyPassword,
+      roleId: psychologyRole.id,
+    },
+  })
+
+  await prisma.user.upsert({
+    where: { email: 'laura.torres@psipre.mx' },
+    update: {
+      password: psyPassword,
+    },
+    create: {
+      email: 'laura.torres@psipre.mx',
+      fullName: 'Dra. Laura Torres',
+      password: psyPassword,
+      roleId: psychologyRole.id,
+    },
+  })
+
+  console.log('✅ Psicólogos base (Dr. Fernando Gómez, Dra. Laura Torres) creados.')
   console.log('🚀 Seeding completado con éxito.')
 }
 
