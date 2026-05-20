@@ -6,8 +6,8 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 
 ## [Unreleased]
 
-### [2026-05-20]
-#### Added (Añadido)
+## [0.3.0] - 2026-05-20
+### Added (Añadido)
 - **DB:** [Task 5.1.1] Reestructuración del modelo de citas (`Appointment`) en base de datos agregando campos `type`, `modality`, `duration` y `sendReminder`.
 - **Agenda:** [Task 5.1.2] Creación del esquema de validación `AppointmentSchema` con Zod y sus correspondientes pruebas unitarias con cobertura del 100%.
 - **Agenda:** [Task 5.1.3] Implementación del Server Action de validación de disponibilidad `checkPsychologistAvailability` con algoritmo de solapamiento dinámico y sus pruebas unitarias.
@@ -21,13 +21,13 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 - **QA:** [Task 5.1.12] Ejecución y validación del 100% de la suite de pruebas del proyecto (101 pruebas exitosas) garantizando cero regresiones y cumplimiento estricto del Definition of Done (DoD).
 - **DB:** Incorporación de psicólogos base de alta fidelidad ("Dr. Fernando Gómez" y "Dra. Laura Torres") en el script de siembra local `prisma/seed-local.ts` para posibilitar la asignación de profesionales en las citas de la agenda.
 
-#### Changed (Modificado)
+### Changed (Modificado)
 - **UI:** Rediseño completo de la estructura y dimensiones del formulario de citas (`AppointmentForm`) implementando la rejilla de alta fidelidad de 2 columnas (para Paciente/Psicólogo, Tipo/Modalidad y Estado/Recordatorios) y 3 columnas (para Fecha/Hora/Duración), agregando iconos azules premium en cada etiqueta y encapsulando el switch de recordatorios en una tarjeta con descripción detallada.
 - **UI:** Estandarización del botón de acción principal de la agenda ("Guardar Cita" / "Actualizar Cita" con icono `Save`) para ocupar el 100% del ancho (`w-full`), aplicando estilos premium consistentes con el formulario de pacientes (altura `h-11`, negrita, sombra azul de acento `shadow-primary/20` y micro-animación `active:scale-95`), junto con la remoción del botón secundario redundante "Cancelar" para optimizar el flujo del formulario.
 - **QA:** Validación de los flujos de interacción y actualización de las pruebas de integración en `appointment-dialog.test.tsx` para garantizar que la remoción del botón de cancelación y la reestructuración del botón principal mantengan la estabilidad del sistema al 100%.
 - **UI:** Corrección del comportamiento de desplazamiento del menú lateral (`DashboardSidebar`) en el panel principal [layout.tsx], reestructurando el contenedor con las clases `h-screen overflow-hidden` y el panel de contenido a `overflow-y-auto bg-background` para asegurar que la barra lateral permanezca completamente fija y estática a la izquierda mientras que el contenido principal (como el calendario) se desplaza de forma independiente.
 
-#### Fixed (Corregido)
+### Fixed (Corregido)
 - **UI:** Corrección del ancho por defecto del componente selector (`SelectTrigger`) en `components/ui/select.tsx`, reemplazando la clase restrictiva `w-fit` con `w-full` para permitir que todos los elementos de selección del sistema se expandan correctamente al ancho total de sus columnas de la rejilla (50% en el formulario de citas), logrando una simetría y alineación visual perfectas con respecto al campo de paciente y otros campos de texto.
 ---
 
