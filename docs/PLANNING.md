@@ -63,9 +63,18 @@ Para asegurar la calidad del proyecto, **ninguna Tarea (Task) se marca como comp
 ### 📅 Feature 5: Sistema de Citas (Agenda)
 **Objetivo:** Evitar conflictos y mejorar la visualización de tiempos para los psicólogos.
 * **User Story 5.1:** Como recepcionista/psicólogo, quiero agendar citas evitando choques de horarios.
-  * [ ] **Task 5.1.1:** Crear API para validación de disponibilidad de psicólogos.
-  * [ ] **Task 5.1.2:** Desarrollar mutación para crear, actualizar y cancelar citas.
-  * [ ] **Task 5.1.3:** Sincronizar el componente del calendario interactivo del Frontend con la base de datos.
+  * [ ] **Task 5.1.1:** Actualizar el esquema de Prisma (`schema.prisma`) para agregar los nuevos campos al modelo `Appointment` (`type` para tipo de cita, `modality` para modalidad, `duration` para duración de la cita en minutos, y `sendReminder` para habilitar el recordatorio por SMS/Email), generar y aplicar la sincronización con la base de datos.
+  * [ ] **Task 5.1.2:** Crear el esquema de validación `AppointmentSchema` con Zod en `lib/validations/appointment.ts` (con validación de campos `patientId`, `psychologistId`, `scheduledAt` (fecha y hora combinadas), `type`, `modality`, `duration`, `status`, `notes` y `sendReminder`), y diseñar sus correspondientes pruebas unitarias en `lib/validations/appointment.test.ts`.
+  * [ ] **Task 5.1.3:** Implementar el Server Action de validación de disponibilidad `checkPsychologistAvailability` para detectar conflictos de agenda activa en base al solapamiento de intervalos de tiempo calculados dinámicamente según la duración (`duration`) de las citas (excluyendo la cita actual en edición).
+  * [ ] **Task 5.1.4:** Desarrollar los Server Actions `createAppointment` y `updateAppointment` en `lib/actions/appointments.ts`, integrando la verificación de disponibilidad y retornando respuestas de error oportunas en caso de conflicto.
+  * [ ] **Task 5.1.5:** Implementar los Server Actions `cancelAppointment` (actualización de estado a `"Cancelada"`) y `getAppointments` (con filtros de psicólogo, tipo de cita y rango de fechas para el calendario, y soporte de búsqueda de paciente integrada).
+  * [ ] **Task 5.1.6:** Desarrollar el Server Action auxiliar `getPsychologists` para recuperar todos los usuarios activos con rol `'Psicología'`.
+  * [ ] **Task 5.1.7:** Crear pruebas unitarias completas con Vitest para todos los Server Actions de citas en `lib/actions/appointments.test.ts` simulando la base de datos con mocks de Prisma.
+  * [ ] **Task 5.1.8:** Desarrollar el componente de formulario `AppointmentForm` en `components/dashboard/agenda/appointment-form.tsx` implementando todos los campos de la interfaz visual: **Paciente** (búsqueda interactiva combobox/autocomplete), **Psicólogo Asignado**, **Tipo de Cita**, **Modalidad** (Presencial, En línea), **Fecha**, **Hora**, **Duración** (en minutos), **Estado**, **Notas Adicionales** y el toggle/checkbox de **Enviar recordatorio por SMS/Email al paciente**.
+  * [ ] **Task 5.1.9:** Implementar el modal interactivo `AppointmentDialog` en `components/dashboard/agenda/appointment-dialog.tsx` para encapsular la lógica de creación y edición.
+  * [ ] **Task 5.1.10:** Rediseñar y sincronizar la vista principal `AgendaPage` en `app/dashboard/agenda/page.tsx` para cargar citas reales desde la base de datos, refrescar dinámicamente según filtros de búsqueda y psicólogo, y reaccionar a clics sobre días y citas.
+  * [ ] **Task 5.1.11:** Integrar Skeletons para estados de carga y Toasts (`sonner`) en el Frontend para alertar éxitos, errores o choques de horarios de manera visual y premium.
+  * [ ] **Task 5.1.12:** Ejecutar y asegurar que el 100% de la suite de pruebas del proyecto pase limpiamente, cumpliendo estrictamente con el Definition of Done (DoD).
 
 ### 📊 Feature 6: Dashboard Principal
 **Objetivo:** Centralizar los indicadores más importantes de la clínica.
