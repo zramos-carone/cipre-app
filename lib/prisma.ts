@@ -1,19 +1,21 @@
+import 'dotenv/config'
 import { PrismaClient } from '@prisma/client'
 import { PrismaPg } from '@prisma/adapter-pg'
-import pg from 'pg'
-import 'dotenv/config'
+import { Pool } from 'pg'
 
+/**
+ * Cliente de Prisma con adaptador PostgreSQL nativo para Prisma 7.
+ */
 const prismaClientSingleton = () => {
-  const connectionString = process.env.DATABASE_URL
-  
-  if (!connectionString) {
-    throw new Error('DATABASE_URL is not defined')
-  }
-
-  const pool = new pg.Pool({ connectionString })
+  const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+  })
   const adapter = new PrismaPg(pool)
 
-  return new PrismaClient({ adapter })
+  return new PrismaClient({
+    adapter,
+    log: process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
+  })
 }
 
 declare global {
