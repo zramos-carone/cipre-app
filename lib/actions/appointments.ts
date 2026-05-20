@@ -2,6 +2,8 @@
 
 import prisma from "@/lib/prisma"
 import { ActionResponse } from "./patients"
+import { appointmentSchema } from "../validations/appointment"
+import { revalidatePath } from "next/cache"
 
 /**
  * Valida la disponibilidad de un psicólogo en un intervalo de tiempo específico.
@@ -69,6 +71,167 @@ export async function checkPsychologistAvailability(
     return {
       success: false,
       error: "Ocurrió un error inesperado al verificar la disponibilidad"
+    }
+  }
+}
+
+/**
+ * Server Action para registrar una nueva cita.
+ */
+export async function createAppointment(formData: FormData): Promise<ActionResponse> {
+  try {
+    const rawData = {
+      patientId: (formData.get("patientId") as string) || "",
+      psychologistId: (formData.get("psychologistId") as string) || "",
+      scheduledAt: (formData.get("scheduledAt") as string) || "",
+      type: (formData.get("type") as string) || undefined,
+      modality: (formData.get("modality") as string) || undefined,
+      duration: formData.get("duration") !== null && formData.get("duration") !== "" ? (formData.get("duration") as string) : undefined,
+      status: (formData.get("status") as string) || undefined,
+      notes: (formData.get("notes") as string) || "",
+      sendReminder: formData.get("sendReminder") === "true" || formData.get("sendReminder") === "on",
+    }
+
+    // 1. Validar campos con Zod
+    const validation = appointmentSchema.safeParse(rawData)
+    if (!validation.success) {
+      return {
+        success: false,
+        error: validation.error.errors[0].message
+      }
+    }
+
+    const { patientId, psychologistId, scheduledAt, type, modality, duration, status, notes, sendReminder } = validation.data
+
+    // 2. Verificar la disponibilidad del psicólogo
+    const availabilityResult = await checkPsychologistAvailability(psychologistId, scheduledAt, duration)
+    if (!availabilityResult.success) {
+      return {
+        success: false,
+        error: availabilityResult.error || "No se pudo verificar la disponibilidad del psicólogo"
+      }
+    }
+
+    if (!availabilityResult.data) {
+      return {
+        success: false,
+        error: "El psicólogo no está disponible en el horario seleccionado (choque de agenda)"
+      }
+    }
+
+    // 3. Crear cita en la base de datos
+    const appointment = await prisma.appointment.create({
+      data: {
+        patientId,
+        psychologistId,
+        scheduledAt,
+        type,
+        modality,
+        duration,
+        status,
+        notes,
+        sendReminder
+      }
+    })
+
+    revalidatePath("/dashboard/agenda")
+
+    return {
+      success: true,
+      data: appointment
+    }
+  } catch (error: any) {
+    console.error("Error creating appointment:", error)
+    return {
+      success: false,
+      error: "Error interno al intentar registrar la cita"
+    }
+  }
+}
+
+/**
+ * Server Action para actualizar una cita existente.
+ */
+export async function updateAppointment(id: string, formData: FormData): Promise<ActionResponse> {
+  try {
+    if (!id) {
+      return { success: false, error: "El ID de la cita es requerido" }
+    }
+
+    // 1. Verificar si la cita existe
+    const existing = await prisma.appointment.findUnique({
+      where: { id }
+    })
+    if (!existing) {
+      return { success: false, error: "La cita a actualizar no existe" }
+    }
+
+    const rawData = {
+      patientId: (formData.get("patientId") as string) || "",
+      psychologistId: (formData.get("psychologistId") as string) || "",
+      scheduledAt: (formData.get("scheduledAt") as string) || "",
+      type: (formData.get("type") as string) || undefined,
+      modality: (formData.get("modality") as string) || undefined,
+      duration: formData.get("duration") !== null && formData.get("duration") !== "" ? (formData.get("duration") as string) : undefined,
+      status: (formData.get("status") as string) || undefined,
+      notes: (formData.get("notes") as string) || "",
+      sendReminder: formData.get("sendReminder") === "true" || formData.get("sendReminder") === "on",
+    }
+
+    // 2. Validar campos con Zod
+    const validation = appointmentSchema.safeParse(rawData)
+    if (!validation.success) {
+      return {
+        success: false,
+        error: validation.error.errors[0].message
+      }
+    }
+
+    const { patientId, psychologistId, scheduledAt, type, modality, duration, status, notes, sendReminder } = validation.data
+
+    // 3. Verificar disponibilidad (excluyendo la cita actual en edición)
+    const availabilityResult = await checkPsychologistAvailability(psychologistId, scheduledAt, duration, id)
+    if (!availabilityResult.success) {
+      return {
+        success: false,
+        error: availabilityResult.error || "No se pudo verificar la disponibilidad del psicólogo"
+      }
+    }
+
+    if (!availabilityResult.data) {
+      return {
+        success: false,
+        error: "El psicólogo no está disponible en el horario seleccionado (choque de agenda)"
+      }
+    }
+
+    // 4. Actualizar cita en la base de datos
+    const appointment = await prisma.appointment.update({
+      where: { id },
+      data: {
+        patientId,
+        psychologistId,
+        scheduledAt,
+        type,
+        modality,
+        duration,
+        status,
+        notes,
+        sendReminder
+      }
+    })
+
+    revalidatePath("/dashboard/agenda")
+
+    return {
+      success: true,
+      data: appointment
+    }
+  } catch (error: any) {
+    console.error("Error updating appointment:", error)
+    return {
+      success: false,
+      error: "Error interno al intentar actualizar la cita"
     }
   }
 }
