@@ -33,6 +33,7 @@ import {
   FileIcon
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { consentFormSchema } from "@/lib/validations/consent"
 
 export interface PatientOption {
   id: string
@@ -77,18 +78,14 @@ export function InformedConsentForm({
     e.preventDefault()
     setValidationError("")
 
-    if (!patientId) {
-      setValidationError("Por favor, seleccione un paciente")
-      return
-    }
+    const validation = consentFormSchema.safeParse({
+      patientId,
+      templateId,
+      date,
+    })
 
-    if (!templateId) {
-      setValidationError("Por favor, seleccione una plantilla de consentimiento")
-      return
-    }
-
-    if (!date) {
-      setValidationError("Por favor, seleccione una fecha válida")
+    if (!validation.success) {
+      setValidationError(validation.error.errors[0].message)
       return
     }
 

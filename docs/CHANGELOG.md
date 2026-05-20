@@ -4,7 +4,13 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/) y este proyecto se adhiere a nuestra convención local definida en `docs/COMMIT.md`.
 
-## [Unreleased]
+## [0.4.4] - 2026-05-20
+### Added (Añadido)
+- **Consent:** [Task 6.2.2] Creación del esquema de validación `consentFormSchema` con Zod en `lib/validations/consent.ts` para garantizar la integridad de los datos del formulario de consentimiento informado (ID de paciente obligatorio, plantilla de tipo enum válida y fecha de emisión válida).
+- **QA:** Cobertura de pruebas unitarias con Vitest agregando 4 nuevos tests exitosos en `lib/validations/consent.test.ts` para validar las restricciones del esquema Zod bajo múltiples escenarios de éxito y fallo (para un total de 125 tests exitosos en la suite).
+
+### Changed (Modificado)
+- **Consent:** Refactorización del controlador `handleSubmit` en el componente frontend `InformedConsentForm` para validar los campos a través del esquema Zod `consentFormSchema.safeParse` y desplegar de forma reactiva el primer error de validación detectado.
 
 ## [0.4.3] - 2026-05-20
 ### Added (Añadido)
