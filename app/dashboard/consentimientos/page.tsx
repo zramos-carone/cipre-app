@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import {
@@ -13,7 +13,8 @@ import {
 import { FileText, Eye, Download, Plus, CheckCircle, Clock, FileIcon } from "lucide-react"
 import { Switch } from "@/components/ui/switch"
 import { toast } from "sonner"
-import { toggleConsentSignature } from "@/lib/actions/consent"
+import { getPatients } from "@/lib/actions/patients"
+import { toggleConsentSignature, getInformedConsents, generateInformedConsent } from "@/lib/actions/consent"
 import { InformedConsentDialog } from "@/components/dashboard/consentimientos/informed-consent-dialog"
 
 type ConsentStatus = "firmado" | "pendiente"
@@ -83,31 +84,99 @@ function getFormattedDate() {
 
 export default function ConsentimientosPage() {
   const [consents, setConsents] = useState<Consent[]>(consentsData)
+  const [patients, setPatients] = useState<{ id: string; name: string; lastName: string }[]>(mockPatients)
   const [patientFilter, setPatientFilter] = useState<string>("all")
   const [isDialogOpen, setIsDialogOpen] = useState(false)
-
-  const handleCreateConsent = async (data: { patientId: string; templateId: string; date: string }) => {
-    const selectedPatient = mockPatients.find((p) => p.id === data.patientId)
-    const templateTitle = data.templateId === "tratamiento" 
-      ? "Tratamiento Psicológico"
-      : data.templateId === "datos"
-      ? "Manejo de Datos Personales"
-      : "Evaluación Psicológica"
-
-    const newConsent: Consent = {
-      id: Date.now(),
-      title: templateTitle,
-      patient: selectedPatient ? `${selectedPatient.name} ${selectedPatient.lastName}` : "Paciente Nuevo",
-      date: data.date,
-      status: "pendiente",
-    }
-
-    setConsents((prev) => [newConsent, ...prev])
-    toast.success("Consentimiento generado correctamente (Simulado)")
-  }
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [typeFilter, setTypeFilter] = useState<string>("all")
   const [statusFilter, setStatusFilter] = useState<string>("all")
   const formattedDate = getFormattedDate()
+
+  useEffect(() => {
+    async function loadData() {
+      // 1. Cargar pacientes reales de la base de datos
+      const patientsRes = await getPatients({ pageSize: 1000 })
+      if (patientsRes.success && patientsRes.data?.patients) {
+        const dbPatients = patientsRes.data.patients.map((p: any) => ({
+          id: p.id,
+          name: p.name,
+          lastName: p.lastName,
+        }))
+        // Combinamos mock con reales sin duplicar por ID
+        setPatients((prev) => {
+          const existingIds = new Set(dbPatients.map((x: any) => x.id))
+          const filteredMocks = mockPatients.filter((x) => !existingIds.has(x.id))
+          return [...dbPatients, ...filteredMocks]
+        })
+      }
+
+      // 2. Cargar consentimientos reales de la base de datos
+      const consentsRes = await getInformedConsents()
+      if (consentsRes.success && consentsRes.data) {
+        const dbConsents = consentsRes.data.map((c: any) => {
+          const isSigned = c.isSigned
+          let title = "Tratamiento Psicológico"
+          if (c.documentUrl.includes("datos")) {
+            title = "Manejo de Datos Personales"
+          } else if (c.documentUrl.includes("evaluacion")) {
+            title = "Evaluación Psicológica"
+          }
+          
+          return {
+            id: c.id,
+            title,
+            patient: `${c.patient.name} ${c.patient.lastName}`,
+            date: c.signedAt 
+              ? new Date(c.signedAt).toISOString().split('T')[0] 
+              : new Date().toISOString().split('T')[0],
+            status: isSigned ? ("firmado" as const) : ("pendiente" as const),
+          }
+        })
+
+        setConsents((prev) => {
+          const existingIds = new Set(dbConsents.map((x: any) => x.id))
+          const filteredMocks = consentsData.filter((x) => !existingIds.has(x.id))
+          return [...dbConsents, ...filteredMocks]
+        })
+      }
+    }
+    loadData()
+  }, [])
+
+  const handleCreateConsent = async (data: { patientId: string; templateId: string; date: string }) => {
+    setIsSubmitting(true)
+    try {
+      const res = await generateInformedConsent(data)
+      if (res.success && res.data) {
+        const templateTitle = data.templateId === "tratamiento" 
+          ? "Tratamiento Psicológico"
+          : data.templateId === "datos"
+          ? "Manejo de Datos Personales"
+          : "Evaluación Psicológica"
+
+        const selectedPatient = patients.find((p) => p.id === data.patientId)
+
+        const newConsent: Consent = {
+          id: res.data.id,
+          title: templateTitle,
+          patient: selectedPatient ? `${selectedPatient.name} ${selectedPatient.lastName}` : "Paciente Nuevo",
+          date: data.date,
+          status: "pendiente",
+        }
+
+        setConsents((prev) => [newConsent, ...prev])
+        toast.success("Consentimiento generado correctamente")
+        setIsDialogOpen(false)
+      } else {
+        toast.error(res.error || "No se pudo generar el consentimiento informado")
+      }
+    } catch (err) {
+      console.error(err)
+      toast.error("Error al conectar con el servidor")
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
 
   const handleToggleSignature = async (id: string | number, checked: boolean) => {
     // Update local state first for instant UI feedback (optimistic update)
@@ -323,8 +392,9 @@ export default function ConsentimientosPage() {
       <InformedConsentDialog
         open={isDialogOpen}
         onOpenChange={setIsDialogOpen}
-        patients={mockPatients}
+        patients={patients}
         onSubmit={handleCreateConsent}
+        isSubmitting={isSubmitting}
       />
     </div>
   )

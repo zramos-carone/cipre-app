@@ -4,6 +4,13 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/) y este proyecto se adhiere a nuestra convención local definida en `docs/COMMIT.md`.
 
+## [0.4.5] - 2026-05-20
+### Added (Añadido)
+- **Consent:** [Task 6.2.3] Creación del Server Action `generateInformedConsent` en `lib/actions/consent.ts` para persistir nuevos registros de consentimiento informado validados con Zod, enlazados de forma exclusiva (1 a 1) al paciente correspondiente en la base de datos de Prisma.
+
+### Changed (Modificado)
+- **Consent:** Integración del flujo de base de datos en la página de consentimientos (`app/dashboard/consentimientos/page.tsx`), cargando dinámicamente pacientes y consentimientos de la base de datos a través de Server Actions (`getPatients`, `getInformedConsents`) y enlazando el envío del formulario con la base de datos mediante `generateInformedConsent`.
+
 ## [0.4.4] - 2026-05-20
 ### Added (Añadido)
 - **Consent:** [Task 6.2.2] Creación del esquema de validación `consentFormSchema` con Zod en `lib/validations/consent.ts` para garantizar la integridad de los datos del formulario de consentimiento informado (ID de paciente obligatorio, plantilla de tipo enum válida y fecha de emisión válida).

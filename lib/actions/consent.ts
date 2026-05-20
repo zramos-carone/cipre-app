@@ -3,6 +3,7 @@
 import prisma from "@/lib/prisma"
 import { uploadFile } from "@/lib/storage"
 import { revalidatePath } from "next/cache"
+import { consentFormSchema } from "@/lib/validations/consent"
 
 export type ActionResponse<T = any> = {
   success: boolean
@@ -144,6 +145,73 @@ export async function toggleConsentSignature(id: string, isSigned: boolean): Pro
     return {
       success: false,
       error: "Error interno al actualizar el estado de firma"
+    }
+  }
+}
+
+/**
+ * Server Action para generar un consentimiento informado en la base de datos de Prisma.
+ */
+export async function generateInformedConsent(data: {
+  patientId: string
+  templateId: string
+  date: string
+}): Promise<ActionResponse> {
+  // 1. Validar usando consentFormSchema
+  const validation = consentFormSchema.safeParse(data)
+  if (!validation.success) {
+    return {
+      success: false,
+      error: validation.error.errors[0].message,
+    }
+  }
+
+  const { patientId, templateId } = validation.data
+
+  try {
+    // 2. Verificar que el paciente exista
+    const patient = await prisma.patient.findUnique({
+      where: { id: patientId },
+      include: { informedConsent: true }
+    })
+
+    if (!patient) {
+      return {
+        success: false,
+        error: "El paciente especificado no existe en el sistema"
+      }
+    }
+
+    // 3. Verificar si el paciente ya tiene un consentimiento
+    if (patient.informedConsent) {
+      return {
+        success: false,
+        error: "El paciente ya tiene un consentimiento informado registrado"
+      }
+    }
+
+    // 4. Crear el registro en la base de datos
+    // Usamos la plantilla en el path para poder deducir el título
+    const consent = await prisma.informedConsent.create({
+      data: {
+        patientId,
+        documentUrl: `/uploads/${templateId}.pdf`,
+        isSigned: false,
+      }
+    })
+
+    revalidatePath("/dashboard/consentimientos")
+    revalidatePath("/dashboard/pacientes")
+
+    return {
+      success: true,
+      data: consent
+    }
+  } catch (error) {
+    console.error("Error in generateInformedConsent:", error)
+    return {
+      success: false,
+      error: "Error interno al generar el consentimiento informado"
     }
   }
 }
