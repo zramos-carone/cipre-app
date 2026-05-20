@@ -10,6 +10,7 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 #### Added (Añadido)
 - **DB:** [Task 5.1.1] Reestructuración del modelo de citas (`Appointment`) en base de datos agregando campos `type`, `modality`, `duration` y `sendReminder`.
 - **Agenda:** [Task 5.1.2] Creación del esquema de validación `AppointmentSchema` con Zod y sus correspondientes pruebas unitarias con cobertura del 100%.
+- **Agenda:** [Task 5.1.3] Implementación del Server Action de validación de disponibilidad `checkPsychologistAvailability` con algoritmo de solapamiento dinámico y sus pruebas unitarias.
 ---
 
 ## [0.2.0] - 2026-05-10
