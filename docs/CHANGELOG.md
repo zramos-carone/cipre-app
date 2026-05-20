@@ -6,6 +6,11 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-05-20
+### Added (Añadido)
+- **Storage:** [Task 6.1.1] Configuración del proveedor de almacenamiento cloud con Vercel Blob y desarrollo de un fallback local robusto para entornos de desarrollo y testing.
+- **QA:** Cobertura de pruebas unitarias al 100% en `lib/storage.test.ts` agregando 3 nuevos tests exitosos a la suite.
+
 ## [0.3.0] - 2026-05-20
 ### Added (Añadido)
 - **DB:** [Task 5.1.1] Reestructuración del modelo de citas (`Appointment`) en base de datos agregando campos `type`, `modality`, `duration` y `sendReminder`.
