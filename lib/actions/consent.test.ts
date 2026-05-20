@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterAll } from "vitest"
-import { uploadInformedConsent, getInformedConsents, toggleConsentSignature } from "./consent"
+import { uploadInformedConsent, getInformedConsents, toggleConsentSignature, generateInformedConsent } from "./consent"
 import prisma from "@/lib/prisma"
 import { uploadFile } from "@/lib/storage"
 
@@ -13,6 +13,7 @@ vi.mock("@/lib/prisma", () => ({
       upsert: vi.fn(),
       findMany: vi.fn(),
       update: vi.fn(),
+      create: vi.fn(),
     },
   },
 }))
@@ -225,6 +226,134 @@ describe("Consent Server Actions - toggleConsentSignature", () => {
 
     expect(result.success).toBe(false)
     expect(result.error).toBe("Error interno al actualizar el estado de firma")
+    expect(consoleSpy).toHaveBeenCalled()
+
+    consoleSpy.mockRestore()
+  })
+})
+
+describe("Consent Server Actions - generateInformedConsent", () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  afterAll(() => {
+    vi.restoreAllMocks()
+  })
+
+  it("debería generar un consentimiento informado exitosamente", async () => {
+    const data = {
+      patientId: "patient-123",
+      templateId: "tratamiento",
+      date: "2026-05-20"
+    }
+
+    vi.mocked(prisma.patient.findUnique).mockResolvedValue({
+      id: "patient-123",
+      name: "Juan",
+      lastName: "Pérez",
+      informedConsent: null
+    } as any)
+
+    const mockConsent = {
+      id: "consent-456",
+      patientId: "patient-123",
+      documentUrl: "/uploads/tratamiento.pdf",
+      isSigned: false,
+      signedAt: null
+    }
+
+    vi.mocked(prisma.informedConsent.create).mockResolvedValue(mockConsent as any)
+
+    const result = await generateInformedConsent(data)
+
+    expect(result.success).toBe(true)
+    expect(result.data).toEqual(mockConsent)
+    expect(prisma.patient.findUnique).toHaveBeenCalledWith({
+      where: { id: "patient-123" },
+      include: { informedConsent: true }
+    })
+    expect(prisma.informedConsent.create).toHaveBeenCalledWith({
+      data: {
+        patientId: "patient-123",
+        documentUrl: "/uploads/tratamiento.pdf",
+        isSigned: false
+      }
+    })
+  })
+
+  it("debería fallar si falla la validación del esquema de Zod (ej: templateId inválido)", async () => {
+    const data = {
+      patientId: "patient-123",
+      templateId: "invalida" as any,
+      date: "2026-05-20"
+    }
+
+    const result = await generateInformedConsent(data)
+
+    expect(result.success).toBe(false)
+    expect(result.error).toBe("Por favor, seleccione una plantilla de consentimiento válida")
+    expect(prisma.patient.findUnique).not.toHaveBeenCalled()
+  })
+
+  it("debería fallar si el paciente no existe en el sistema", async () => {
+    const data = {
+      patientId: "patient-nonexistent",
+      templateId: "tratamiento",
+      date: "2026-05-20"
+    }
+
+    vi.mocked(prisma.patient.findUnique).mockResolvedValue(null)
+
+    const result = await generateInformedConsent(data)
+
+    expect(result.success).toBe(false)
+    expect(result.error).toBe("El paciente especificado no existe en el sistema")
+    expect(prisma.informedConsent.create).not.toHaveBeenCalled()
+  })
+
+  it("debería fallar si el paciente ya cuenta con un consentimiento (1-1)", async () => {
+    const data = {
+      patientId: "patient-123",
+      templateId: "tratamiento",
+      date: "2026-05-20"
+    }
+
+    vi.mocked(prisma.patient.findUnique).mockResolvedValue({
+      id: "patient-123",
+      name: "Juan",
+      lastName: "Pérez",
+      informedConsent: { id: "consent-existing", documentUrl: "url" }
+    } as any)
+
+    const result = await generateInformedConsent(data)
+
+    expect(result.success).toBe(false)
+    expect(result.error).toBe("El paciente ya tiene un consentimiento informado registrado")
+    expect(prisma.informedConsent.create).not.toHaveBeenCalled()
+  })
+
+  it("debería manejar errores de base de datos de manera segura", async () => {
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {})
+    const data = {
+      patientId: "patient-123",
+      templateId: "tratamiento",
+      date: "2026-05-20"
+    }
+
+    vi.mocked(prisma.patient.findUnique).mockResolvedValue({
+      id: "patient-123",
+      name: "Juan",
+      lastName: "Pérez",
+      informedConsent: null
+    } as any)
+
+    vi.mocked(prisma.informedConsent.create).mockRejectedValue(new Error("Prisma client connection lost"))
+
+    const result = await generateInformedConsent(data)
+
+    expect(result.success).toBe(false)
+    expect(result.error).toBe("Error interno al generar el consentimiento informado")
     expect(consoleSpy).toHaveBeenCalled()
 
     consoleSpy.mockRestore()

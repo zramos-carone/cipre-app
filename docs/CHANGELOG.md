@@ -4,6 +4,10 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/) y este proyecto se adhiere a nuestra convención local definida en `docs/COMMIT.md`.
 
+## [0.4.6] - 2026-05-20
+### Added (Añadido)
+- **QA:** [Task 6.2.4] Cobertura de pruebas unitarias completas con Vitest para el Server Action `generateInformedConsent` en `lib/actions/consent.test.ts`, incorporando 5 nuevos casos de prueba exitosos para verificar de forma robusta la generación correcta, errores de validación de Zod, no existencia del paciente, rechazo de duplicados (1 a 1) y control de excepciones internas.
+
 ## [0.4.5] - 2026-05-20
 ### Added (Añadido)
 - **Consent:** [Task 6.2.3] Creación del Server Action `generateInformedConsent` en `lib/actions/consent.ts` para persistir nuevos registros de consentimiento informado validados con Zod, enlazados de forma exclusiva (1 a 1) al paciente correspondiente en la base de datos de Prisma.
