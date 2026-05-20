@@ -87,10 +87,26 @@ Para sincronizar de manera segura la base de datos de producción (Neon/Vercel P
 > [!IMPORTANT]
 > **Definición de valores por defecto**: Asegúrate siempre de definir valores por defecto en el esquema (ej. `@default("seguimiento")` o `@default(false)`) para cualquier columna nueva. Esto permite que Prisma actualice automáticamente todos los registros preexistentes en producción sin producir errores de integridad ni pérdida de datos.
 
-### 3. Middleware de Next.js
+### 3. Semillado (Seeding) de Datos Base en Producción
+Para inicializar o sincronizar los roles base (`Administración`, `Psicología`, `Recepción`), el administrador inicial (`admin@psipre.mx`) y los psicólogos base (`Dr. Fernando Gómez` y `Dra. Laura Torres`) en la base de datos de producción, ejecuta el script de siembra inyectando la cadena de conexión de producción:
+
+*   **En Windows (PowerShell):**
+    ```powershell
+    $env:DATABASE_URL="tu_url_de_conexion_de_produccion"; npx tsx prisma/seed-local.ts
+    ```
+
+*   **En Linux / Mac (Bash o Zsh):**
+    ```bash
+    DATABASE_URL="tu_url_de_conexion_de_produccion" npx tsx prisma/seed-local.ts
+    ```
+
+> [!NOTE]
+> Este script utiliza operaciones `upsert`, lo que significa que es seguro ejecutarlo múltiples veces; creará los registros faltantes y actualizará los existentes sin duplicar la información ni causar errores de clave duplicada.
+
+### 4. Middleware de Next.js
 En la versión actual de Next.js (15/16), asegúrate de que el `middleware.ts` no intente realizar operaciones pesadas de base de datos que puedan ralentizar el Edge Runtime.
 
-### 4. Driver Adapter
+### 5. Driver Adapter
 Debido a restricciones en entornos Serverless (como Vercel Functions), el uso del **Driver Adapter (`pg`)** que implementamos es la opción más estable para evitar errores de inicialización del motor binario de Prisma.
 
 ---
