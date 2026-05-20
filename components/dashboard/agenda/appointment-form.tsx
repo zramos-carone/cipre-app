@@ -454,30 +454,22 @@ export function AppointmentForm({
           />
         </div>
 
-        {/* Fila 6: Botones de Acción */}
-        <div className="flex justify-end gap-3 pt-4 border-t border-border/60 mt-6">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={onCancel}
-            className="h-10 px-6 font-semibold text-foreground/80 border-input hover:bg-muted transition-all"
-          >
-            Cancelar
-          </Button>
+        {/* Fila 6: Botón de Acción Principal */}
+        <div className="pt-4 border-t border-border/60 mt-6">
           <Button
             type="submit"
             disabled={isSubmitting}
-            className="h-10 px-6 font-semibold bg-primary hover:bg-primary/95 text-primary-foreground transition-all flex items-center gap-2"
+            className="w-full h-11 bg-primary hover:bg-primary/90 text-primary-foreground font-bold shadow-lg shadow-primary/20 transition-all active:scale-95 cursor-pointer flex items-center justify-center"
           >
             {isSubmitting ? (
               <>
-                <Loader2 className="w-4 h-4 animate-spin" />
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Guardando...
               </>
             ) : (
               <>
-                <Save className="w-4 h-4 shrink-0" />
-                Guardar Cita
+                <Save className="mr-2 h-4 w-4" />
+                {initialData?.id ? "Actualizar Cita" : "Guardar Cita"}
               </>
             )}
           </Button>
