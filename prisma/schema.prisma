@@ -36,18 +36,24 @@ model Permission {
 }
 
 model Patient {
-  id              String           @id @default(uuid())
-  fullName        String
-  email           String?
-  phone           String?
-  lastVisit       DateTime?
-  nextAppointment DateTime?
-  active          Boolean          @default(true)
-  createdAt       DateTime         @default(now())
-  appointments    Appointment[]
-  informedConsent InformedConsent?
-  clinicalNotes   ClinicalNote[]
-  payments        Payment[]
+  id               String           @id @default(uuid())
+  name             String
+  lastName         String
+  birthDate        DateTime?
+  age              Int?
+  gender           String?
+  address          String?
+  phone            String?
+  email            String?
+  emergencyContact String?
+  lastVisit        DateTime?
+  nextAppointment  DateTime?
+  active           Boolean          @default(true)
+  createdAt        DateTime         @default(now())
+  appointments     Appointment[]
+  informedConsent  InformedConsent?
+  clinicalNotes    ClinicalNote[]
+  payments         Payment[]
 }
 
 model Appointment {
