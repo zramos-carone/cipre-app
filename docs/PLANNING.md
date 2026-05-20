@@ -73,8 +73,8 @@ Para asegurar la calidad del proyecto, **ninguna Tarea (Task) se marca como comp
   * [x] **Task 5.1.8:** Desarrollar el componente de formulario `AppointmentForm` en `components/dashboard/agenda/appointment-form.tsx` implementando todos los campos de la interfaz visual: **Paciente** (búsqueda interactiva combobox/autocomplete), **Psicólogo Asignado**, **Tipo de Cita**, **Modalidad** (Presencial, En línea), **Fecha**, **Hora**, **Duración** (en minutos), **Estado**, **Notas Adicionales** y el toggle/checkbox de **Enviar recordatorio por SMS/Email al paciente**.
   * [x] **Task 5.1.9:** Implementar el modal interactivo `AppointmentDialog` en `components/dashboard/agenda/appointment-dialog.tsx` para encapsular la lógica de creación y edición.
   * [x] **Task 5.1.10:** Rediseñar y sincronizar la vista principal `AgendaPage` en `app/dashboard/agenda/page.tsx` para cargar citas reales desde la base de datos, refrescar dinámicamente según filtros de búsqueda y psicólogo, y reaccionar a clics sobre días y citas.
-  * [ ] **Task 5.1.11:** Integrar Skeletons para estados de carga y Toasts (`sonner`) en el Frontend para alertar éxitos, errores o choques de horarios de manera visual y premium.
-  * [ ] **Task 5.1.12:** Ejecutar y asegurar que el 100% de la suite de pruebas del proyecto pase limpiamente, cumpliendo estrictamente con el Definition of Done (DoD).
+  * [x] **Task 5.1.11:** Integrar Skeletons para estados de carga y Toasts (`sonner`) en el Frontend para alertar éxitos, errores o choques de horarios de manera visual y premium.
+  * [x] **Task 5.1.12:** Ejecutar y asegurar que el 100% de la suite de pruebas del proyecto pase limpiamente, cumpliendo estrictamente con el Definition of Done (DoD).
 
 ### 📊 Feature 6: Dashboard Principal
 **Objetivo:** Centralizar los indicadores más importantes de la clínica.

@@ -21,6 +21,7 @@ import {
 } from "lucide-react"
 import { toast } from "sonner"
 import { AppointmentDialog } from "@/components/dashboard/agenda/appointment-dialog"
+import { Skeleton } from "@/components/ui/skeleton"
 import { 
   getAppointments, 
   getPsychologists, 
@@ -588,36 +589,45 @@ export default function AgendaPage() {
 
                     {/* Contenedor de citas del dia */}
                     <div className="flex-1 flex flex-col gap-1 overflow-hidden justify-start">
-                      {displayAppointments.map((appt) => {
-                        const style = appointmentTypeColors[appt.type] || appointmentTypeColors.seguimiento
-                        const apptDate = new Date(appt.scheduledAt)
-                        const time = apptDate.toLocaleTimeString("es-ES", {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                          hour12: false
-                        })
+                      {isLoading ? (
+                        <>
+                          <Skeleton className="h-4 w-full rounded bg-primary/10" />
+                          <Skeleton className="h-4 w-4/5 rounded bg-primary/10" />
+                        </>
+                      ) : (
+                        <>
+                          {displayAppointments.map((appt) => {
+                            const style = appointmentTypeColors[appt.type] || appointmentTypeColors.seguimiento
+                            const apptDate = new Date(appt.scheduledAt)
+                            const time = apptDate.toLocaleTimeString("es-ES", {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                              hour12: false
+                            })
 
-                        return (
-                          <div
-                            key={appt.id}
-                            onClick={(e) => handleAppointmentClick(appt, e)}
-                            className={`rounded px-1.5 py-0.5 text-[10px] font-semibold border flex flex-col gap-0.5 truncate transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm ${style.bg} ${style.border}`}
-                            title={`${time} - ${appt.patient.name} ${appt.patient.lastName}`}
-                          >
-                            <div className="flex items-center justify-between gap-1">
-                              <span className="font-bold text-foreground/90">{time}</span>
-                              <span className="w-1.5 h-1.5 rounded-full bg-current opacity-70"></span>
+                            return (
+                              <div
+                                key={appt.id}
+                                onClick={(e) => handleAppointmentClick(appt, e)}
+                                className={`rounded px-1.5 py-0.5 text-[10px] font-semibold border flex flex-col gap-0.5 truncate transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm ${style.bg} ${style.border}`}
+                                title={`${time} - ${appt.patient.name} ${appt.patient.lastName}`}
+                              >
+                                <div className="flex items-center justify-between gap-1">
+                                  <span className="font-bold text-foreground/90">{time}</span>
+                                  <span className="w-1.5 h-1.5 rounded-full bg-current opacity-70"></span>
+                                </div>
+                                <span className="truncate max-w-full text-foreground/80">
+                                  {appt.patient.name}
+                                </span>
+                              </div>
+                            )
+                          })}
+                          {extraCount > 0 && (
+                            <div className="text-[10px] font-bold text-primary/80 pl-1 mt-0.5 flex items-center gap-1 group-hover:text-primary">
+                              <span>+{extraCount} más</span>
                             </div>
-                            <span className="truncate max-w-full text-foreground/80">
-                              {appt.patient.name}
-                            </span>
-                          </div>
-                        )
-                      })}
-                      {extraCount > 0 && (
-                        <div className="text-[10px] font-bold text-primary/80 pl-1 mt-0.5 flex items-center gap-1 group-hover:text-primary">
-                          <span>+{extraCount} más</span>
-                        </div>
+                          )}
+                        </>
                       )}
                     </div>
                   </div>
@@ -652,7 +662,46 @@ export default function AgendaPage() {
               </div>
 
               {/* Listado de citas de hoy */}
-              {dailyAppointments.length === 0 ? (
+              {isLoading ? (
+                <div className="space-y-4">
+                  {[1, 2, 3].map((i) => (
+                    <div
+                      key={i}
+                      className="p-4 rounded-xl border border-muted/50 bg-card/85 flex flex-col md:flex-row md:items-center justify-between gap-4 border-l-4 border-l-muted-foreground/25 animate-pulse"
+                    >
+                      <div className="flex items-start gap-4 w-full">
+                        {/* Bloque de hora skeleton */}
+                        <div className="flex flex-col items-center bg-muted/40 py-2 px-3 rounded-lg border border-muted/30 w-16 shrink-0 space-y-1.5">
+                          <Skeleton className="h-3.5 w-3.5 rounded-full" />
+                          <Skeleton className="h-4 w-10 rounded" />
+                          <Skeleton className="h-3 w-8 rounded" />
+                        </div>
+                        {/* Datos del Paciente skeleton */}
+                        <div className="space-y-2.5 flex-1">
+                          <div className="flex items-center gap-1.5">
+                            <Skeleton className="h-5 w-44 rounded" />
+                            <Skeleton className="h-4 w-20 rounded-full" />
+                          </div>
+                          <div className="flex flex-wrap gap-x-4 gap-y-1.5">
+                            <div className="flex items-center gap-1">
+                              <Skeleton className="h-3 w-3 rounded-full" />
+                              <Skeleton className="h-3.5 w-28 rounded" />
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <Skeleton className="h-3 w-3 rounded-full" />
+                              <Skeleton className="h-3.5 w-20 rounded" />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      {/* Derecha: Botón Editar skeleton */}
+                      <div className="shrink-0 flex items-center justify-end">
+                        <Skeleton className="h-9 w-28 rounded-md" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : dailyAppointments.length === 0 ? (
                 <div className="py-16 text-center flex flex-col items-center justify-center border-2 border-dashed border-muted/50 rounded-xl bg-muted/5">
                   <div className="bg-muted/40 p-4 rounded-full mb-3 text-muted-foreground">
                     <ClipboardList className="w-8 h-8" />
@@ -750,7 +799,6 @@ export default function AgendaPage() {
                   })}
                 </div>
               )}
-
             </div>
           )}
 
