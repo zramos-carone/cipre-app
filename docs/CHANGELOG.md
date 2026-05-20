@@ -17,6 +17,7 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 - **Agenda:** [Task 5.1.7] Cobertura completa de pruebas unitarias con Vitest para todos los Server Actions de citas (22 pruebas exitosas en total).
 - **UI:** [Task 5.1.8] Desarrollo del componente de formulario premium `AppointmentForm` con combobox autocompletable para pacientes y campos de fecha, hora, duración, modalidad y toggle de recordatorio.
 - **UI:** [Task 5.1.9] Implementación del diálogo modal premium `AppointmentDialog` en la agenda para encapsular la creación y edición de citas con sus respectivas pruebas de integración.
+- **UI:** [Task 5.1.10] Rediseño y sincronización dinámica de la página de la agenda (`app/dashboard/agenda/page.tsx`) integrando carga real de base de datos, filtros interactivos de búsqueda, mes/día views y gestión por modales.
 ---
 
 ## [0.2.0] - 2026-05-10
