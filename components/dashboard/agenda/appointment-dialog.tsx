@@ -51,6 +51,7 @@ export function AppointmentDialog({
             psychologists={psychologists}
             onSubmit={onSubmit}
             isSubmitting={isSubmitting}
+            onCancel={() => onOpenChange(false)}
           />
         </div>
       </DialogContent>

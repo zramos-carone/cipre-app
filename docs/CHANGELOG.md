@@ -19,6 +19,10 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 - **UI:** [Task 5.1.9] Implementación del diálogo modal premium `AppointmentDialog` en la agenda para encapsular la creación y edición de citas con sus respectivas pruebas de integración.
 - **UI:** [Task 5.1.11] Integración de componentes Skeletons y Toasts animadas (`sonner`) en la vista de Agenda para alertar éxitos, errores o choques de horarios de manera visual y de alta fidelidad.
 - **QA:** [Task 5.1.12] Ejecución y validación del 100% de la suite de pruebas del proyecto (101 pruebas exitosas) garantizando cero regresiones y cumplimiento estricto del Definition of Done (DoD).
+
+#### Changed (Modificado)
+- **UI:** Rediseño completo de la estructura y dimensiones del formulario de citas (`AppointmentForm`) implementando la rejilla de alta fidelidad de 2 columnas (para Paciente/Psicólogo, Tipo/Modalidad y Estado/Recordatorios) y 3 columnas (para Fecha/Hora/Duración), agregando iconos azules premium en cada etiqueta y encapsulando el switch de recordatorios en una tarjeta con descripción detallada.
+- **QA:** Corrección del texto y diseño del botón de guardado ("Guardar Cita" con icono `Save`) alineado a la derecha, garantizando la consistencia visual y logrando que el 100% de las pruebas de integración en `appointment-dialog.test.tsx` pasen de forma exitosa.
 ---
 
 ## [0.2.0] - 2026-05-10

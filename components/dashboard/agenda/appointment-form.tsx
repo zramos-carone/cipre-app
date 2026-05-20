@@ -82,6 +82,7 @@ interface AppointmentFormProps {
   psychologists: { id: string; fullName: string }[]
   onSubmit: (data: AppointmentInput) => Promise<void>
   isSubmitting?: boolean
+  onCancel?: () => void
 }
 
 export function AppointmentForm({
@@ -90,6 +91,7 @@ export function AppointmentForm({
   psychologists,
   onSubmit,
   isSubmitting = false,
+  onCancel,
 }: AppointmentFormProps) {
   const [openPatientPopover, setOpenPatientPopover] = useState(false)
 
@@ -154,15 +156,15 @@ export function AppointmentForm({
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
         <div className="space-y-4">
           
-          {/* Fila 1: Paciente (Combobox) y Psicólogo Asignado */}
+          {/* Fila 1: Paciente y Psicólogo Asignado - 50% / 50% */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               control={form.control}
               name="patientId"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel className="flex items-center gap-2 text-sm font-medium">
-                    <User className="w-4 h-4 text-primary" />
+                  <FormLabel className="flex items-center gap-2 text-sm font-semibold text-foreground/80 mb-1">
+                    <User className="w-4 h-4 text-primary shrink-0" />
                     Paciente
                   </FormLabel>
                   <Popover open={openPatientPopover} onOpenChange={setOpenPatientPopover}>
@@ -173,21 +175,21 @@ export function AppointmentForm({
                           role="combobox"
                           aria-expanded={openPatientPopover}
                           className={cn(
-                            "w-full justify-between bg-background/50 text-left font-normal border-input hover:bg-background/80",
+                            "w-full h-10 justify-between bg-background text-left font-normal border-input hover:bg-background/80",
                             !field.value && "text-muted-foreground"
                           )}
                         >
                           {field.value
                             ? (() => {
                                 const patient = patients.find((p) => p.id === field.value)
-                                return patient ? `${patient.name} ${patient.lastName}` : "Seleccionar paciente"
+                                return patient ? `${patient.name} ${patient.lastName}` : "Buscar o seleccionar paciente..."
                               })()
-                            : "Seleccionar paciente"}
+                            : "Buscar o seleccionar paciente..."}
                           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
-                    <PopoverContent className="w-[300px] p-0" align="start">
+                    <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
                       <Command>
                         <CommandInput placeholder="Buscar paciente..." className="h-9" />
                         <CommandList>
@@ -225,14 +227,14 @@ export function AppointmentForm({
               control={form.control}
               name="psychologistId"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="flex items-center gap-2 text-sm font-medium">
-                    <User className="w-4 h-4 text-primary" />
+                <FormItem className="flex flex-col">
+                  <FormLabel className="flex items-center gap-2 text-sm font-semibold text-foreground/80 mb-1">
+                    <User className="w-4 h-4 text-primary shrink-0" />
                     Psicólogo Asignado
                   </FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                      <SelectTrigger className="bg-background/50">
+                      <SelectTrigger className="bg-background h-10 border-input">
                         <SelectValue placeholder="Seleccionar psicólogo" />
                       </SelectTrigger>
                     </FormControl>
@@ -250,20 +252,20 @@ export function AppointmentForm({
             />
           </div>
 
-          {/* Fila 2: Tipo de Cita y Modalidad */}
+          {/* Fila 2: Tipo de Cita y Modalidad - 50% / 50% */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               control={form.control}
               name="type"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="flex items-center gap-2 text-sm font-medium">
-                    <Activity className="w-4 h-4 text-primary" />
+                <FormItem className="flex flex-col">
+                  <FormLabel className="flex items-center gap-2 text-sm font-semibold text-foreground/80 mb-1">
+                    <Activity className="w-4 h-4 text-primary shrink-0" />
                     Tipo de Cita
                   </FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                      <SelectTrigger className="bg-background/50">
+                      <SelectTrigger className="bg-background h-10 border-input">
                         <SelectValue placeholder="Seleccionar tipo" />
                       </SelectTrigger>
                     </FormControl>
@@ -282,14 +284,14 @@ export function AppointmentForm({
               control={form.control}
               name="modality"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="flex items-center gap-2 text-sm font-medium">
-                    <Video className="w-4 h-4 text-primary" />
+                <FormItem className="flex flex-col">
+                  <FormLabel className="flex items-center gap-2 text-sm font-semibold text-foreground/80 mb-1">
+                    <Video className="w-4 h-4 text-primary shrink-0" />
                     Modalidad
                   </FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                      <SelectTrigger className="bg-background/50">
+                      <SelectTrigger className="bg-background h-10 border-input">
                         <SelectValue placeholder="Seleccionar modalidad" />
                       </SelectTrigger>
                     </FormControl>
@@ -304,21 +306,21 @@ export function AppointmentForm({
             />
           </div>
 
-          {/* Fila 3: Fecha, Hora y Duración */}
+          {/* Fila 3: Fecha, Hora y Duración - 33.3% / 33.3% / 33.3% */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <FormField
               control={form.control}
               name="date"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="flex items-center gap-2 text-sm font-medium">
-                    <Calendar className="w-4 h-4 text-primary" />
+                <FormItem className="flex flex-col">
+                  <FormLabel className="flex items-center gap-2 text-sm font-semibold text-foreground/80 mb-1">
+                    <Calendar className="w-4 h-4 text-primary shrink-0" />
                     Fecha
                   </FormLabel>
                   <FormControl>
                     <Input 
                       type="date"
-                      className="bg-background/50 focus-visible:ring-primary/50" 
+                      className="bg-background h-10 border-input focus-visible:ring-primary/50" 
                       {...field} 
                     />
                   </FormControl>
@@ -331,15 +333,15 @@ export function AppointmentForm({
               control={form.control}
               name="time"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="flex items-center gap-2 text-sm font-medium">
-                    <Clock className="w-4 h-4 text-primary" />
+                <FormItem className="flex flex-col">
+                  <FormLabel className="flex items-center gap-2 text-sm font-semibold text-foreground/80 mb-1">
+                    <Clock className="w-4 h-4 text-primary shrink-0" />
                     Hora
                   </FormLabel>
                   <FormControl>
                     <Input 
                       type="time"
-                      className="bg-background/50 focus-visible:ring-primary/50" 
+                      className="bg-background h-10 border-input focus-visible:ring-primary/50" 
                       {...field} 
                     />
                   </FormControl>
@@ -352,16 +354,16 @@ export function AppointmentForm({
               control={form.control}
               name="duration"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="flex items-center gap-2 text-sm font-medium">
-                    <Clock className="w-4 h-4 text-primary" />
+                <FormItem className="flex flex-col">
+                  <FormLabel className="flex items-center gap-2 text-sm font-semibold text-foreground/80 mb-1">
+                    <Clock className="w-4 h-4 text-primary shrink-0" />
                     Duración (minutos)
                   </FormLabel>
                   <FormControl>
                     <Input 
                       type="number"
                       placeholder="Ej. 60" 
-                      className="bg-background/50 focus-visible:ring-primary/50" 
+                      className="bg-background h-10 border-input focus-visible:ring-primary/50" 
                       {...field} 
                     />
                   </FormControl>
@@ -371,20 +373,20 @@ export function AppointmentForm({
             />
           </div>
 
-          {/* Fila 4: Estado y Recordatorios */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+          {/* Fila 4: Estado y Enviar recordatorios - 50% / 50% */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               control={form.control}
               name="status"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="flex items-center gap-2 text-sm font-medium">
-                    <Activity className="w-4 h-4 text-primary" />
+                <FormItem className="flex flex-col">
+                  <FormLabel className="flex items-center gap-2 text-sm font-semibold text-foreground/80 mb-1">
+                    <Activity className="w-4 h-4 text-primary shrink-0" />
                     Estado
                   </FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                      <SelectTrigger className="bg-background/50">
+                      <SelectTrigger className="bg-background h-10 border-input">
                         <SelectValue placeholder="Seleccionar estado" />
                       </SelectTrigger>
                     </FormControl>
@@ -404,41 +406,44 @@ export function AppointmentForm({
               control={form.control}
               name="sendReminder"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm bg-background/30 mt-6">
-                  <div className="space-y-0.5">
-                    <FormLabel className="flex items-center gap-2 text-sm font-medium">
-                      <Bell className="w-4 h-4 text-primary" />
-                      Enviar recordatorios
-                    </FormLabel>
-                    <span className="text-xs text-muted-foreground">
-                      Enviar SMS/Email al paciente
-                    </span>
+                <FormItem className="flex flex-col justify-end h-full">
+                  {/* Espacio para alinear con la etiqueta del campo de la izquierda en desktop */}
+                  <div className="hidden md:block h-6 mb-1" />
+                  <div className="border border-border/60 rounded-xl p-3 bg-muted/10 dark:bg-card/30 flex items-center justify-between h-10 md:h-[42px] select-none">
+                    <div className="flex items-center gap-2 text-left">
+                      <Bell className="w-4 h-4 text-primary shrink-0" />
+                      <div className="flex flex-col">
+                        <span className="text-sm font-semibold text-foreground/90 leading-tight">Enviar recordatorios</span>
+                        <span className="text-[10px] text-muted-foreground leading-none">Enviar SMS/Email al paciente</span>
+                      </div>
+                    </div>
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
                   </div>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />
           </div>
 
-          {/* Fila 5: Notas Adicionales */}
+          {/* Fila 5: Notas Adicionales - 100% Ancho */}
           <FormField
             control={form.control}
             name="notes"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel className="flex items-center gap-2 text-sm font-medium">
-                  <FileText className="w-4 h-4 text-primary" />
+              <FormItem className="flex flex-col">
+                <FormLabel className="flex items-center gap-2 text-sm font-semibold text-foreground/80 mb-1">
+                  <FileText className="w-4 h-4 text-primary shrink-0" />
                   Notas Adicionales
                 </FormLabel>
                 <FormControl>
                   <Textarea
                     placeholder="Detalles sobre el motivo de consulta, observaciones iniciales o indicaciones..."
-                    className="bg-background/50 resize-none h-24 focus-visible:ring-primary/50"
+                    className="bg-background resize-none h-24 border-input focus-visible:ring-primary/50"
                     maxLength={500}
                     {...field}
                   />
@@ -449,21 +454,29 @@ export function AppointmentForm({
           />
         </div>
 
-        {/* Botón de envío */}
-        <div className="flex justify-end gap-3 pt-2">
+        {/* Fila 6: Botones de Acción */}
+        <div className="flex justify-end gap-3 pt-4 border-t border-border/60 mt-6">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onCancel}
+            className="h-10 px-6 font-semibold text-foreground/80 border-input hover:bg-muted transition-all"
+          >
+            Cancelar
+          </Button>
           <Button
             type="submit"
             disabled={isSubmitting}
-            className="w-full md:w-auto px-6 font-semibold"
+            className="h-10 px-6 font-semibold bg-primary hover:bg-primary/95 text-primary-foreground transition-all flex items-center gap-2"
           >
             {isSubmitting ? (
               <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                <Loader2 className="w-4 h-4 animate-spin" />
                 Guardando...
               </>
             ) : (
               <>
-                <Save className="w-4 h-4 mr-2" />
+                <Save className="w-4 h-4 shrink-0" />
                 Guardar Cita
               </>
             )}
