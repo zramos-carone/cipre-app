@@ -53,10 +53,10 @@ Para asegurar la calidad del proyecto, **ninguna Tarea (Task) se marca como comp
   * [x] **Task 4.2.3:** Integrar búsqueda en tiempo real y paginación en UI.
   * [x] **Task 4.3.1:** Añadir Skeletons y Toasts (sonner) para feedback de UX.
 * **User Story 4.4:** Como recepcionista, quiero capturar información detallada del paciente (nombre, apellidos, fecha de nacimiento, edad, género, dirección y contacto de emergencia) para tener un expediente clínico completo.
-  * [ ] **Task 4.4.1:** Actualizar el esquema de Prisma (`schema.prisma`) para reestructurar la tabla `Patient` (dividir `fullName` en `name` y `lastName`, y agregar `birthDate`, `age`, `gender`, `address` y `emergencyContact`), generar y aplicar la migración.
-  * [ ] **Task 4.4.2:** Modificar el esquema de validación `PatientSchema` con Zod en `lib/validations/patient.ts` y actualizar sus pruebas unitarias en `lib/validations/patient.test.ts`.
-  * [ ] **Task 4.4.3:** Adaptar los Server Actions `createPatient`, `updatePatient` y `getPatients` en `lib/actions/patients.ts` para manejar y persistir los nuevos campos del paciente (incluyendo la lógica de búsqueda integrada).
-  * [ ] **Task 4.4.4:** Rediseñar el formulario `PatientForm` en `components/dashboard/patients/patient-form.tsx` con el nuevo diseño y campos (Nombre(s), Apellidos, Fecha de Nacimiento, Edad, Género, Dirección, Teléfono, Email y Contacto de Emergencia).
+  * [x] **Task 4.4.1:** Actualizar el esquema de Prisma (`schema.prisma`) para reestructurar la tabla `Patient` (dividir `fullName` en `name` y `lastName`, y agregar `birthDate`, `age`, `gender`, `address` y `emergencyContact`), generar y aplicar la migración.
+  * [x] **Task 4.4.2:** Modificar el esquema de validación `PatientSchema` con Zod en `lib/validations/patient.ts` y actualizar sus pruebas unitarias en `lib/validations/patient.test.ts`.
+  * [x] **Task 4.4.3:** Adaptar los Server Actions `createPatient`, `updatePatient` y `getPatients` en `lib/actions/patients.ts` para manejar y persistir los nuevos campos del paciente (incluyendo la lógica de búsqueda integrada).
+  * [x] **Task 4.4.4:** Rediseñar el formulario `PatientForm` en `components/dashboard/patients/patient-form.tsx` con el nuevo diseño y campos (Nombre(s), Apellidos, Fecha de Nacimiento, Edad, Género, Dirección, Teléfono, Email y Contacto de Emergencia).
   * [ ] **Task 4.4.5:** Actualizar los componentes de visualización `PatientTable`, `PatientDialog` y `PatientsClient` en `components/dashboard/patients/` para desplegar y pasar la información actualizada del paciente.
   * [ ] **Task 4.4.6:** Corregir y validar todas las pruebas unitarias y de integración del módulo de pacientes para asegurar el cumplimiento del Definition of Done (DoD).
 
