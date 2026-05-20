@@ -24,6 +24,9 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 #### Changed (Modificado)
 - **UI:** Rediseño completo de la estructura y dimensiones del formulario de citas (`AppointmentForm`) implementando la rejilla de alta fidelidad de 2 columnas (para Paciente/Psicólogo, Tipo/Modalidad y Estado/Recordatorios) y 3 columnas (para Fecha/Hora/Duración), agregando iconos azules premium en cada etiqueta y encapsulando el switch de recordatorios en una tarjeta con descripción detallada.
 - **QA:** Corrección del texto y diseño del botón de guardado ("Guardar Cita" con icono `Save`) alineado a la derecha, garantizando la consistencia visual y logrando que el 100% de las pruebas de integración en `appointment-dialog.test.tsx` pasen de forma exitosa.
+
+#### Fixed (Corregido)
+- **UI:** Corrección del ancho por defecto del componente selector (`SelectTrigger`) en `components/ui/select.tsx`, reemplazando la clase restrictiva `w-fit` con `w-full` para permitir que todos los elementos de selección del sistema se expandan correctamente al ancho total de sus columnas de la rejilla (50% en el formulario de citas), logrando una simetría y alineación visual perfectas con respecto al campo de paciente y otros campos de texto.
 ---
 
 ## [0.2.0] - 2026-05-10

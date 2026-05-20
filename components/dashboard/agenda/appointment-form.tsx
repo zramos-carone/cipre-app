@@ -234,7 +234,7 @@ export function AppointmentForm({
                   </FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                      <SelectTrigger className="bg-background h-10 border-input">
+                      <SelectTrigger className="w-full bg-background h-10 border-input">
                         <SelectValue placeholder="Seleccionar psicólogo" />
                       </SelectTrigger>
                     </FormControl>
@@ -265,7 +265,7 @@ export function AppointmentForm({
                   </FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                      <SelectTrigger className="bg-background h-10 border-input">
+                      <SelectTrigger className="w-full bg-background h-10 border-input">
                         <SelectValue placeholder="Seleccionar tipo" />
                       </SelectTrigger>
                     </FormControl>
@@ -291,7 +291,7 @@ export function AppointmentForm({
                   </FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                      <SelectTrigger className="bg-background h-10 border-input">
+                      <SelectTrigger className="w-full bg-background h-10 border-input">
                         <SelectValue placeholder="Seleccionar modalidad" />
                       </SelectTrigger>
                     </FormControl>
@@ -386,7 +386,7 @@ export function AppointmentForm({
                   </FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                      <SelectTrigger className="bg-background h-10 border-input">
+                      <SelectTrigger className="w-full bg-background h-10 border-input">
                         <SelectValue placeholder="Seleccionar estado" />
                       </SelectTrigger>
                     </FormControl>
