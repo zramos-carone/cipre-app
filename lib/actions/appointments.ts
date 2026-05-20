@@ -235,3 +235,129 @@ export async function updateAppointment(id: string, formData: FormData): Promise
     }
   }
 }
+
+/**
+ * Server Action para cancelar una cita existente (soft delete / cambio de estado a "Cancelada").
+ */
+export async function cancelAppointment(id: string): Promise<ActionResponse> {
+  try {
+    if (!id) {
+      return { success: false, error: "El ID de la cita es requerido" }
+    }
+
+    // Verificar si la cita existe
+    const existing = await prisma.appointment.findUnique({
+      where: { id }
+    })
+    if (!existing) {
+      return { success: false, error: "La cita a cancelar no existe" }
+    }
+
+    // Actualizar estado a "Cancelada"
+    const appointment = await prisma.appointment.update({
+      where: { id },
+      data: { status: "Cancelada" }
+    })
+
+    revalidatePath("/dashboard/agenda")
+
+    return {
+      success: true,
+      data: appointment
+    }
+  } catch (error: any) {
+    console.error("Error cancelling appointment:", error)
+    return {
+      success: false,
+      error: "Error interno al intentar cancelar la cita"
+    }
+  }
+}
+
+/**
+ * Server Action para obtener la lista de citas aplicando filtros.
+ */
+export async function getAppointments(filters?: {
+  psychologistId?: string
+  type?: string
+  startDate?: string | Date
+  endDate?: string | Date
+  query?: string
+}): Promise<ActionResponse<any[]>> {
+  try {
+    const where: any = {}
+
+    if (filters?.psychologistId) {
+      where.psychologistId = filters.psychologistId
+    }
+
+    if (filters?.type) {
+      where.type = filters.type
+    }
+
+    if (filters?.startDate || filters?.endDate) {
+      where.scheduledAt = {}
+      if (filters.startDate) {
+        const start = new Date(filters.startDate)
+        if (!isNaN(start.getTime())) {
+          where.scheduledAt.gte = start
+        }
+      }
+      if (filters.endDate) {
+        const end = new Date(filters.endDate)
+        if (!isNaN(end.getTime())) {
+          where.scheduledAt.lte = end
+        }
+      }
+    }
+
+    if (filters?.query) {
+      const cleanQuery = filters.query.trim()
+      if (cleanQuery) {
+        where.patient = {
+          OR: [
+            { name: { contains: cleanQuery, mode: "insensitive" } },
+            { lastName: { contains: cleanQuery, mode: "insensitive" } },
+          ],
+        }
+      }
+    }
+
+    const appointments = await prisma.appointment.findMany({
+      where,
+      include: {
+        patient: {
+          select: {
+            id: true,
+            name: true,
+            lastName: true,
+            phone: true,
+            email: true,
+          },
+        },
+        psychologist: {
+          select: {
+            id: true,
+            fullName: true,
+            email: true,
+          },
+        },
+      },
+      orderBy: {
+        scheduledAt: "asc",
+      },
+    })
+
+    return {
+      success: true,
+      data: appointments,
+    }
+  } catch (error: any) {
+    console.error("Error fetching appointments:", error)
+    return {
+      success: false,
+      error: "Error interno al intentar recuperar las citas",
+    }
+  }
+}
+
