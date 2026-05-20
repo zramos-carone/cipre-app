@@ -27,22 +27,22 @@ export function PatientDialog({
 }: PatientDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px] bg-card/90 backdrop-blur-xl border-primary/20">
+      <DialogContent className="sm:max-w-[640px] bg-card/90 backdrop-blur-xl border-primary/20">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-primary">
             {initialData ? "Editar Paciente" : "Nuevo Paciente"}
           </DialogTitle>
           <DialogDescription>
-            {initialData 
-              ? "Modifica los datos del paciente a continuación." 
+            {initialData
+              ? "Modifica los datos del paciente a continuación."
               : "Completa el formulario para registrar un nuevo paciente en el sistema."}
           </DialogDescription>
         </DialogHeader>
         <div className="py-4">
-          <PatientForm 
-            initialData={initialData} 
-            onSubmit={onSubmit} 
-            isSubmitting={isSubmitting} 
+          <PatientForm
+            initialData={initialData}
+            onSubmit={onSubmit}
+            isSubmitting={isSubmitting}
           />
         </div>
       </DialogContent>

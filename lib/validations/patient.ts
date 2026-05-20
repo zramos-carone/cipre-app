@@ -17,7 +17,7 @@ export const patientSchema = z.object({
     (val) => (val === "" || val === undefined || val === null ? undefined : Number(val)),
     z.number().int().min(0, "La edad no puede ser negativa").max(120, "La edad es inválida").optional()
   ),
-  gender: z.string()
+  gender: z.enum(["Masculino", "Femenino", "Género No Binario", ""])
     .optional()
     .or(z.literal("")),
   address: z.string()

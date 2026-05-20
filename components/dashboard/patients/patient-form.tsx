@@ -13,6 +13,13 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Loader2, Save, User, Mail, Phone, Calendar, Clock, UserCheck, MapPin, Users } from "lucide-react"
 
 interface PatientFormProps {
@@ -144,13 +151,21 @@ export function PatientForm({ initialData, onSubmit, isSubmitting }: PatientForm
                     <UserCheck className="w-4 h-4 text-primary" />
                     Género
                   </FormLabel>
-                  <FormControl>
-                    <Input 
-                      placeholder="Ej. Masculino, Femenino" 
-                      className="bg-background/50 focus-visible:ring-primary/50" 
-                      {...field} 
-                    />
-                  </FormControl>
+                  <Select 
+                    onValueChange={field.onChange} 
+                    value={field.value || ""}
+                  >
+                    <FormControl>
+                      <SelectTrigger className="bg-background/50 border-input w-full dark:bg-input/30 dark:hover:bg-input/50 focus-visible:ring-primary/50 text-sm h-9">
+                        <SelectValue placeholder="Selecciona el género" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent className="bg-card border-primary/20 backdrop-blur-xl">
+                      <SelectItem value="Masculino">Masculino</SelectItem>
+                      <SelectItem value="Femenino">Femenino</SelectItem>
+                      <SelectItem value="Género No Binario">Género No Binario</SelectItem>
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}

@@ -110,4 +110,19 @@ describe('Patient Validation Schema', () => {
     const resultExcessive = patientSchema.safeParse(dataExcessiveAge)
     expect(resultExcessive.success).toBe(false)
   })
+
+  it('debería validar correctamente los valores permitidos de género y fallar en otros', () => {
+    const dataMasculino = { name: 'Juan', lastName: 'Pérez', gender: 'Masculino' }
+    const dataFemenino = { name: 'Juan', lastName: 'Pérez', gender: 'Femenino' }
+    const dataNoBinario = { name: 'Juan', lastName: 'Pérez', gender: 'Género No Binario' }
+    const dataVacio = { name: 'Juan', lastName: 'Pérez', gender: '' }
+
+    expect(patientSchema.safeParse(dataMasculino).success).toBe(true)
+    expect(patientSchema.safeParse(dataFemenino).success).toBe(true)
+    expect(patientSchema.safeParse(dataNoBinario).success).toBe(true)
+    expect(patientSchema.safeParse(dataVacio).success).toBe(true)
+
+    const dataInvalido = { name: 'Juan', lastName: 'Pérez', gender: 'Otro' }
+    expect(patientSchema.safeParse(dataInvalido).success).toBe(false)
+  })
 })
