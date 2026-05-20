@@ -83,7 +83,7 @@ Para asegurar la calidad del proyecto, **ninguna Tarea (Task) se marca como comp
   * [x] **Task 6.1.2:** Crear API para subir y enlazar la URL de los documentos a un paciente.
   * [x] **Task 6.1.3:** Desarrollar un Switch/Toggle en el Frontend para actualizar el campo `isSigned`.
 * **User Story 6.2:** Como administración, quiero generar un nuevo consentimiento informado en la interfaz completando un formulario con el paciente, la plantilla y la fecha (según la maqueta visual `nuevo_consentimiento.png`).
-  * [ ] **Task 6.2.1:** Desarrollar el modal interactivo `InformedConsentForm` en el Frontend con selectores para Paciente (autocomplete), Plantilla (select) y Fecha (datepicker), aplicando botones premium con sombras y micro-animaciones dinámicas (`active:scale-95`).
+  * [x] **Task 6.2.1:** Desarrollar el modal interactivo `InformedConsentForm` en el Frontend con selectores para Paciente (autocomplete), Plantilla (select) y Fecha (datepicker), aplicando botones premium con sombras y micro-animaciones dinámicas (`active:scale-95`).
   * [ ] **Task 6.2.2:** Validar los campos del formulario en el Frontend usando un esquema de Zod.
   * [ ] **Task 6.2.3:** Crear el Server Action `generateInformedConsent` para guardar el registro de consentimiento vinculado al paciente en la base de datos de Prisma.
   * [ ] **Task 6.2.4:** Programar pruebas unitarias completas con Vitest en `lib/actions/consent.test.ts` para verificar la robustez de las reglas de negocio del Server Action.

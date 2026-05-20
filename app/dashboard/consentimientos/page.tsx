@@ -14,11 +14,12 @@ import { FileText, Eye, Download, Plus, CheckCircle, Clock, FileIcon } from "luc
 import { Switch } from "@/components/ui/switch"
 import { toast } from "sonner"
 import { toggleConsentSignature } from "@/lib/actions/consent"
+import { InformedConsentDialog } from "@/components/dashboard/consentimientos/informed-consent-dialog"
 
 type ConsentStatus = "firmado" | "pendiente"
 
 interface Consent {
-  id: number
+  id: number | string
   title: string
   patient: string
   date: string
@@ -62,6 +63,13 @@ const templates = [
   { id: 3, title: "Evaluación Psicológica", icon: "blue" },
 ]
 
+const mockPatients = [
+  { id: "p1", name: "María", lastName: "González" },
+  { id: "p2", name: "Juan", lastName: "Pérez" },
+  { id: "p3", name: "Ana", lastName: "Martínez" },
+  { id: "p4", name: "Carlos", lastName: "López" },
+]
+
 function getFormattedDate() {
   const options: Intl.DateTimeFormatOptions = {
     weekday: "long",
@@ -76,6 +84,27 @@ function getFormattedDate() {
 export default function ConsentimientosPage() {
   const [consents, setConsents] = useState<Consent[]>(consentsData)
   const [patientFilter, setPatientFilter] = useState<string>("all")
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+
+  const handleCreateConsent = async (data: { patientId: string; templateId: string; date: string }) => {
+    const selectedPatient = mockPatients.find((p) => p.id === data.patientId)
+    const templateTitle = data.templateId === "tratamiento" 
+      ? "Tratamiento Psicológico"
+      : data.templateId === "datos"
+      ? "Manejo de Datos Personales"
+      : "Evaluación Psicológica"
+
+    const newConsent: Consent = {
+      id: Date.now(),
+      title: templateTitle,
+      patient: selectedPatient ? `${selectedPatient.name} ${selectedPatient.lastName}` : "Paciente Nuevo",
+      date: data.date,
+      status: "pendiente",
+    }
+
+    setConsents((prev) => [newConsent, ...prev])
+    toast.success("Consentimiento generado correctamente (Simulado)")
+  }
   const [typeFilter, setTypeFilter] = useState<string>("all")
   const [statusFilter, setStatusFilter] = useState<string>("all")
   const formattedDate = getFormattedDate()
@@ -145,7 +174,7 @@ export default function ConsentimientosPage() {
           <h2 className="text-2xl font-semibold text-foreground">Consentimientos Informados</h2>
           <p className="text-muted-foreground">Gestión de documentos de autorización</p>
         </div>
-        <Button className="bg-primary hover:bg-primary/90">
+        <Button className="bg-primary hover:bg-primary/90 active:scale-95 transition-all shadow-md shadow-primary/20 rounded-xl" onClick={() => setIsDialogOpen(true)}>
           <FileText className="mr-2 h-4 w-4" />
           Nuevo Consentimiento
         </Button>
@@ -290,6 +319,13 @@ export default function ConsentimientosPage() {
           ))}
         </div>
       </div>
+
+      <InformedConsentDialog
+        open={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+        patients={mockPatients}
+        onSubmit={handleCreateConsent}
+      />
     </div>
   )
 }

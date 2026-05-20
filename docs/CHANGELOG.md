@@ -6,6 +6,12 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 
 ## [Unreleased]
 
+## [0.4.3] - 2026-05-20
+### Added (Añadido)
+- **Consent:** [Task 6.2.1] Creación del modal interactivo `InformedConsentForm` y su contenedor `InformedConsentDialog` en el Frontend, con selectores avanzados para Paciente (autocompletado interactivo con Popover y Command), Plantilla (Select) y Fecha (datepicker), aplicando botones de diseño premium con sombras, transiciones y micro-animaciones dinámicas (`active:scale-95`).
+- **Consent:** Integración del modal de creación de consentimientos informados en el dashboard principal (`app/dashboard/consentimientos/page.tsx`) con soporte para inserciones simuladas locales y notificaciones animadas de éxito de `sonner`.
+- **QA:** Cobertura de pruebas unitarias con Vitest agregando 6 nuevos tests exitosos para verificar el renderizado, validación visual y estados del formulario y diálogo en `components/dashboard/consentimientos/informed-consent.test.tsx` (para un total de 121 tests exitosos en la suite).
+
 ## [0.4.2] - 2026-05-20
 ### Added (Añadido)
 - **Consent:** [Task 6.1.3] Desarrollo de un control Switch interactivo y animado en el Frontend (`app/dashboard/consentimientos/page.tsx`) para alternar dinámicamente el estado de firma del consentimiento informado, con soporte para actualizaciones optimistas del cliente, integración asíncrona del Server Action `toggleConsentSignature` y notificaciones Toast animadas de `sonner`.
