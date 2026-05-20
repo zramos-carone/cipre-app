@@ -13,6 +13,7 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 - **Agenda:** [Task 5.1.3] Implementación del Server Action de validación de disponibilidad `checkPsychologistAvailability` con algoritmo de solapamiento dinámico y sus pruebas unitarias.
 - **Agenda:** [Task 5.1.4] Implementación de los Server Actions `createAppointment` y `updateAppointment` con Zod y validación de disponibilidad integrada.
 - **Agenda:** [Task 5.1.5] Implementación de los Server Actions `cancelAppointment` y `getAppointments` con filtros avanzados y búsqueda en tiempo real de pacientes.
+- **Agenda:** [Task 5.1.6] Desarrollo del Server Action auxiliar `getPsychologists` para recuperar usuarios activos con rol 'Psicología'.
 ---
 
 ## [0.2.0] - 2026-05-10

@@ -361,3 +361,37 @@ export async function getAppointments(filters?: {
   }
 }
 
+/**
+ * Server Action auxiliar para obtener todos los usuarios activos con el rol de 'Psicología'.
+ */
+export async function getPsychologists(): Promise<ActionResponse<any[]>> {
+  try {
+    const psychologists = await prisma.user.findMany({
+      where: {
+        active: true,
+        role: {
+          name: "Psicología",
+        },
+      },
+      select: {
+        id: true,
+        fullName: true,
+        email: true,
+      },
+      orderBy: {
+        fullName: "asc",
+      },
+    })
+
+    return {
+      success: true,
+      data: psychologists,
+    }
+  } catch (error: any) {
+    console.error("Error fetching psychologists:", error)
+    return {
+      success: false,
+      error: "Error interno al intentar recuperar los psicólogos",
+    }
+  }
+}
