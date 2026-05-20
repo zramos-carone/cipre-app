@@ -10,6 +10,17 @@ import { comparePassword } from "./password"
  */
 export async function authorizeUser(credentials: Record<string, string> | undefined) {
   if (!credentials?.email || !credentials?.password) return null;
+
+  // BYPASS PARA DESARROLLO LOCAL
+  if (process.env.NODE_ENV === 'development' && credentials.email === 'admin@psipre.mx' && credentials.password === 'Psipre1!') {
+    return { 
+      id: 'dev-admin-id', 
+      name: 'Administrador (Modo Dev)', 
+      email: 'admin@psipre.mx', 
+      role: 'Administración' 
+    };
+  }
+
   // Buscar usuario en la BD real, incluyendo su rol
   const user = await prisma.user.findUnique({
     where: { email: credentials.email },
@@ -42,8 +53,8 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: "Credenciales",
       credentials: {
-        email: { label: "Correo Institucional", type: "email", placeholder: "usuario@cipre.mx" },
-        password: { label: "Contraseña", type: "password" }
+        email: { label: "Correo Institucional", type: "email", placeholder: "usuario@psipre.mx" },
+        password: { label: "Contraseña", type: "Psipre1!" }
       },
       authorize: authorizeUser
     })
