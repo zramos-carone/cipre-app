@@ -4,6 +4,16 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/) y este proyecto se adhiere a nuestra convención local definida en `docs/COMMIT.md`.
 
+## [0.4.7] - 2026-05-20
+### Changed (Modificado)
+- **UI:** Rediseño estético y de márgenes del módulo de consentimientos informados basado en el mockup visual:
+  - Creación de un encabezado de ancho completo (*Full Width Top Bar*) con línea divisoria fina (`border-b`).
+  - Rediseño de las tarjetas del listado de consentimientos (removiendo el switch de firma y agregando badges limpios de estado "Firmado" en verde y "Pendiente" en naranja, alineados perfectamente con la fecha).
+  - Preservación de la interactividad de firma haciendo que los propios badges de estado sean botones cliqueables para alternar la firma con respuestas visuales instantáneas (*Toasts*).
+  - Estilización del botón "Nuevo Consentimiento" (color azul sólido premium, bordes redondeados estándar `rounded-lg`, sombras y transiciones premium).
+  - Ajuste de color del tercer tipo de plantilla disponible ("Evaluación Psicológica") a morado, logrando simetría e identidad con el diseño del mockup.
+  - Implementación de un fondo de página gris premium (`#f8fafc`) que acentúa las tarjetas y componentes blancos.
+
 ## [0.4.6] - 2026-05-20
 ### Added (Añadido)
 - **QA:** [Task 6.2.4] Cobertura de pruebas unitarias completas con Vitest para el Server Action `generateInformedConsent` en `lib/actions/consent.test.ts`, incorporando 5 nuevos casos de prueba exitosos para verificar de forma robusta la generación correcta, errores de validación de Zod, no existencia del paciente, rechazo de duplicados (1 a 1) y control de excepciones internas.

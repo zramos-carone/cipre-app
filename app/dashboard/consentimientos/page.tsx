@@ -11,7 +11,6 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { FileText, Eye, Download, Plus, CheckCircle, Clock, FileIcon } from "lucide-react"
-import { Switch } from "@/components/ui/switch"
 import { toast } from "sonner"
 import { getPatients } from "@/lib/actions/patients"
 import { toggleConsentSignature, getInformedConsents, generateInformedConsent } from "@/lib/actions/consent"
@@ -61,7 +60,7 @@ const consentsData: Consent[] = [
 const templates = [
   { id: 1, title: "Tratamiento Psicológico", icon: "blue" },
   { id: 2, title: "Manejo de Datos Personales", icon: "green" },
-  { id: 3, title: "Evaluación Psicológica", icon: "blue" },
+  { id: 3, title: "Evaluación Psicológica", icon: "purple" },
 ]
 
 const mockPatients = [
@@ -228,164 +227,177 @@ export default function ConsentimientosPage() {
   const uniqueTypes = [...new Set(consents.map((c) => c.title))]
 
   return (
-    <div className="p-6 lg:p-8">
-      {/* Clinic Header */}
-      <header className="mb-8 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+    <div className="min-h-screen bg-[#f8fafc] flex flex-col">
+      {/* Clinic Header (Full Width Top Bar) */}
+      <header className="border-b border-slate-200/80 bg-white px-6 py-4 lg:px-8 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between shrink-0">
         <div>
-          <h1 className="text-lg font-semibold text-foreground">Clínica Preventiva CIPRE</h1>
+          <h1 className="text-md font-semibold text-slate-800">Clínica Preventiva CIPRE</h1>
         </div>
-        <p className="text-sm capitalize text-muted-foreground">{formattedDate}</p>
+        <p className="text-sm capitalize text-slate-500 font-medium">{formattedDate}</p>
       </header>
 
-      {/* Title */}
-      <div className="mb-6 flex items-start justify-between">
-        <div>
-          <h2 className="text-2xl font-semibold text-foreground">Consentimientos Informados</h2>
-          <p className="text-muted-foreground">Gestión de documentos de autorización</p>
-        </div>
-        <Button className="bg-primary hover:bg-primary/90 active:scale-95 transition-all shadow-md shadow-primary/20 rounded-xl" onClick={() => setIsDialogOpen(true)}>
-          <FileText className="mr-2 h-4 w-4" />
-          Nuevo Consentimiento
-        </Button>
-      </div>
-
-      {/* Filters */}
-      <div className="flex flex-col gap-6">
-      <Card>
-        <CardContent className="p-4">
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground">Paciente</label>
-              <Select value={patientFilter} onValueChange={setPatientFilter}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Todos los pacientes" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todos los pacientes</SelectItem>
-                  {uniquePatients.map((patient) => (
-                    <SelectItem key={patient} value={patient}>
-                      {patient}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground">Tipo de Consentimiento</label>
-              <Select value={typeFilter} onValueChange={setTypeFilter}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Todos los tipos" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todos los tipos</SelectItem>
-                  {uniqueTypes.map((type) => (
-                    <SelectItem key={type} value={type}>
-                      {type}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground">Estado</label>
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Todos los estados" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todos los estados</SelectItem>
-                  <SelectItem value="firmado">Firmado</SelectItem>
-                  <SelectItem value="pendiente">Pendiente</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+      {/* Main Content Container */}
+      <div className="p-6 lg:p-8 space-y-6 max-w-[1400px] w-full mx-auto flex-1">
+        {/* Title */}
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between mb-2">
+          <div>
+            <h2 className="text-2xl font-bold text-slate-800 tracking-tight">Consentimientos Informados</h2>
+            <p className="text-sm text-slate-500 mt-1">Gestión de documentos de autorización</p>
           </div>
-        </CardContent>
-      </Card>
-      </div>
+          <Button 
+            className="bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm transition-all hover:shadow active:scale-95 px-4 h-10 gap-2 shrink-0 self-start sm:self-auto"
+            onClick={() => setIsDialogOpen(true)}
+          >
+            <FileText className="h-4 w-4" />
+            Nuevo Consentimiento
+          </Button>
+        </div>
 
-      {/* Consents List */}
-      <div className="space-y-3">
-        {filteredConsents.map((consent) => (
-          <Card key={consent.id}>
-            <CardContent className="flex items-center justify-between p-4">
-              <div className="flex items-center gap-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-50">
-                  <FileText className="h-6 w-6 text-primary" />
-                </div>
-                <div>
-                  <h3 className="font-medium text-foreground">{consent.title}</h3>
-                  <p className="text-sm text-muted-foreground">Paciente: {consent.patient}</p>
-                  <div className="mt-1.5 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-                    <span>Fecha: {consent.date}</span>
-                    <span className="text-muted-foreground/30">•</span>
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs text-muted-foreground">Firma:</span>
-                      <Switch
-                        checked={consent.status === "firmado"}
-                        onCheckedChange={(checked) => handleToggleSignature(consent.id, checked)}
-                        className="scale-90"
-                      />
+        {/* Filters */}
+        <Card className="rounded-xl border border-slate-200/60 shadow-sm bg-white overflow-hidden">
+          <CardContent className="p-5">
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-slate-500 tracking-wider uppercase">Paciente</label>
+                <Select value={patientFilter} onValueChange={setPatientFilter}>
+                  <SelectTrigger className="w-full bg-white border border-slate-200 rounded-lg text-slate-700 h-10 px-3">
+                    <SelectValue placeholder="Todos los pacientes" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos los pacientes</SelectItem>
+                    {uniquePatients.map((patient) => (
+                      <SelectItem key={patient} value={patient}>
+                        {patient}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-slate-500 tracking-wider uppercase">Tipo de Consentimiento</label>
+                <Select value={typeFilter} onValueChange={setTypeFilter}>
+                  <SelectTrigger className="w-full bg-white border border-slate-200 rounded-lg text-slate-700 h-10 px-3">
+                    <SelectValue placeholder="Todos los tipos" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos los tipos</SelectItem>
+                    {uniqueTypes.map((type) => (
+                      <SelectItem key={type} value={type}>
+                        {type}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-slate-500 tracking-wider uppercase">Estado</label>
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                  <SelectTrigger className="w-full bg-white border border-slate-200 rounded-lg text-slate-700 h-10 px-3">
+                    <SelectValue placeholder="Todos los estados" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos los estados</SelectItem>
+                    <SelectItem value="firmado">Firmado</SelectItem>
+                    <SelectItem value="pendiente">Pendiente</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Consents List */}
+        <div className="space-y-4">
+          {filteredConsents.map((consent) => (
+            <Card key={consent.id} className="rounded-xl border border-slate-100 shadow-sm bg-white hover:shadow-md transition-shadow">
+              <CardContent className="flex items-center justify-between p-5">
+                <div className="flex items-center gap-4">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-blue-50/80">
+                    <FileText className="h-6 w-6 text-blue-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-slate-800 text-[16px] leading-tight">{consent.title}</h3>
+                    <p className="text-sm text-slate-500 mt-1">Paciente: {consent.patient}</p>
+                    <div className="mt-1 flex items-center gap-2 text-sm text-slate-500 flex-wrap">
+                      <span>Fecha: {consent.date}</span>
                       {consent.status === "firmado" ? (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-green-600 dark:bg-green-950/30 dark:text-green-400">
-                          <CheckCircle className="h-3.5 w-3.5" />
+                        <button
+                          onClick={() => handleToggleSignature(consent.id, false)}
+                          className="inline-flex items-center gap-1 text-xs font-semibold text-[#22c55e] cursor-pointer hover:opacity-80 transition-opacity ml-1 bg-green-50/50 px-2 py-0.5 rounded-full border border-green-100/50"
+                          title="Haga clic para cambiar a Pendiente"
+                        >
+                          <CheckCircle className="h-4 w-4 stroke-[2.5]" />
                           Firmado
-                        </span>
+                        </button>
                       ) : (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-600 dark:bg-amber-950/30 dark:text-amber-400">
-                          <Clock className="h-3.5 w-3.5" />
+                        <button
+                          onClick={() => handleToggleSignature(consent.id, true)}
+                          className="inline-flex items-center gap-1 text-xs font-semibold text-[#f97316] cursor-pointer hover:opacity-80 transition-opacity ml-1 bg-amber-50/50 px-2 py-0.5 rounded-full border border-amber-100/50"
+                          title="Haga clic para cambiar a Firmado"
+                        >
+                          <Clock className="h-4 w-4 stroke-[2.5]" />
                           Pendiente
-                        </span>
+                        </button>
                       )}
                     </div>
                   </div>
                 </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
-                  <Eye className="h-5 w-5" />
-                </Button>
-                <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
-                  <Download className="h-5 w-5" />
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-
-        {filteredConsents.length === 0 && (
-          <Card>
-            <CardContent className="flex flex-col items-center justify-center py-12 text-center">
-              <FileText className="h-12 w-12 text-muted-foreground/50" />
-              <h3 className="mt-4 text-lg font-medium text-foreground">No se encontraron consentimientos</h3>
-              <p className="text-sm text-muted-foreground">Ajusta los filtros o crea un nuevo consentimiento</p>
-            </CardContent>
-          </Card>
-        )}
-      </div>
-
-      {/* Templates Section */}
-      <div className="space-y-4">
-        <h2 className="text-lg font-semibold text-foreground">Plantillas Disponibles</h2>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          {templates.map((template) => (
-            <Card key={template.id} className="cursor-pointer transition-shadow hover:shadow-md">
-              <CardContent className="flex items-center gap-3 p-4">
-                <div
-                  className={`flex h-10 w-10 items-center justify-center rounded-lg ${
-                    template.icon === "green" ? "bg-green-50" : "bg-blue-50"
-                  }`}
-                >
-                  <FileIcon
-                    className={`h-5 w-5 ${template.icon === "green" ? "text-green-600" : "text-primary"}`}
-                  />
+                <div className="flex items-center gap-2">
+                  <Button variant="ghost" size="icon" className="h-9 w-9 text-blue-600 hover:text-blue-700 hover:bg-blue-50/50 rounded-lg">
+                    <Eye className="h-5 w-5" />
+                  </Button>
+                  <Button variant="ghost" size="icon" className="h-9 w-9 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-lg">
+                    <Download className="h-5 w-5" />
+                  </Button>
                 </div>
-                <span className="font-medium text-foreground">{template.title}</span>
               </CardContent>
             </Card>
           ))}
+
+          {filteredConsents.length === 0 && (
+            <Card className="rounded-xl border border-slate-100 shadow-sm bg-white">
+              <CardContent className="flex flex-col items-center justify-center py-12 text-center">
+                <FileText className="h-12 w-12 text-slate-300" />
+                <h3 className="mt-4 text-[16px] font-semibold text-slate-700">No se encontraron consentimientos</h3>
+                <p className="text-sm text-slate-500 mt-1">Ajusta los filtros o crea un nuevo consentimiento</p>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+
+        {/* Templates Section */}
+        <div className="space-y-4 pt-2">
+          <h2 className="text-lg font-semibold text-slate-800">Plantillas Disponibles</h2>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            {templates.map((template) => (
+              <Card key={template.id} className="cursor-pointer border border-slate-100 rounded-xl bg-white shadow-sm hover:shadow-md transition-shadow">
+                <CardContent className="flex items-center gap-3.5 p-4">
+                  <div
+                    className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${
+                      template.icon === "green"
+                        ? "bg-green-50/80 text-green-600"
+                        : template.icon === "purple"
+                        ? "bg-purple-50/80 text-purple-600"
+                        : "bg-blue-50/80 text-blue-600"
+                    }`}
+                  >
+                    <FileText
+                      className={`h-5 w-5 ${
+                        template.icon === "green"
+                          ? "text-green-600"
+                          : template.icon === "purple"
+                          ? "text-purple-600"
+                          : "text-blue-600"
+                      }`}
+                    />
+                  </div>
+                  <span className="font-semibold text-[15px] text-slate-700">{template.title}</span>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
       </div>
 
