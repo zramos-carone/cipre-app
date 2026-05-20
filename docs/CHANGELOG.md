@@ -5,6 +5,13 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/) y este proyecto se adhiere a nuestra convención local definida en `docs/COMMIT.md`.
 
 ## [Unreleased]
+
+### [2026-05-20]
+#### Added (Añadido)
+- **DB:** [Task 5.1.1] Reestructuración del modelo de citas (`Appointment`) en base de datos agregando campos `type`, `modality`, `duration` y `sendReminder`.
+---
+
+## [0.2.0] - 2026-05-10
 ### Added (Añadido)
 - **DB:** Inicialización del ORM Prisma en el proyecto (`prisma/schema.prisma` y dependencias base).
 - **DB:** Definición completa del esquema de base de datos en `schema.prisma` (Modelos RBAC, Pacientes, Citas, Notas, Pagos, Asistencia).
@@ -14,27 +21,29 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 - **Auth:** Implementación de funciones seguras para hashing y comparación de contraseñas (`bcryptjs`).
 - **Auth:** Configuración del API Route handler y transición de Mock a validación real con base de datos en `authOptions`.
 - **Auth:** Creación del Server Action de Login con validación robusta mediante `Zod`.
-- [Task 3.1.5] Refinamiento de Middleware para RBAC dinámico.
-- [Task 3.1.6] Integración de perfil de usuario real y logout en Sidebar (UI + Tests).
-- [Task 4.1.1] Creación de esquema de validación `PatientSchema` con Zod.
-- [Task 4.1.2] Implementación de Server Action `createPatient` para registro de pacientes.
-- [Task 4.1.3] Implementación de Server Action `getPatients` con soporte para búsqueda y paginación.
-- [Task 4.1.4] Implementación de Server Action `updatePatient` para edición de pacientes.
-- [Task 4.1.5] Implementación de Server Action `deletePatient` (desactivación lógica/soft delete).
-- [Task 4.1.6] Finalización de cobertura de pruebas unitarias para Server Actions de pacientes (12 casos de prueba).
-- [Task 4.2.1] Desarrollo del componente `PatientTable` con diseño premium y soporte responsivo.
-- [Task 4.2.2] Creación del formulario `PatientForm` y el modal `PatientDialog` con validaciones integradas.
-- [Task 4.2.3] Integración de búsqueda en tiempo real (debounced) y paginación en la UI de pacientes.
-- [Task 4.3.1] Implementación de Skeletons de carga y sistema de notificaciones (Toasts) con Sonner.
-- **Infraestructura & Hardening (Retroactivo Feature 3):**
-    - [Task 3.2.1] Corrección de bug de sincronización de nombres en la sesión (`fullName`).
-    - [Task 3.2.2] Migración a Driver Adapter (`pg`) para compatibilidad total con Prisma 7 y TCP directo.
-    - [Task 3.2.3] Sincronización de usuarios base (Admin, Psicóloga, Recepción) en la base de datos.
-    - [Task 3.2.4] Configuración y validación de variables de entorno de seguridad (`NEXTAUTH_SECRET`).
-- **Despliegue & DevOps:**
-    - Creación de `docs/DEPLOYMENT.md` con guía completa para Vercel.
-    - Configuración de script `postinstall` en `package.json` para generación automática de Prisma en CI/CD.
+- **UI:** [Task 3.1.6] Integración de perfil de usuario real y logout en Sidebar (UI + Tests).
+- **Patients:** [Task 4.1.1] Creación de esquema de validación `PatientSchema` con Zod.
+- **Patients:** [Task 4.1.2] Implementación de Server Action `createPatient` para registro de pacientes.
+- **Patients:** [Task 4.1.3] Implementación de Server Action `getPatients` con soporte para búsqueda y paginación.
+- **Patients:** [Task 4.1.4] Implementación de Server Action `updatePatient` para edición de pacientes.
+- **Patients:** [Task 4.1.5] Implementación de Server Action `deletePatient` (desactivación lógica/soft delete).
+- **QA:** [Task 4.1.6] Finalización de cobertura de pruebas unitarias para Server Actions de pacientes (12 casos de prueba).
+- **UI:** [Task 4.2.1] Desarrollo del componente `PatientTable` con diseño premium y soporte responsivo.
+- **UI:** [Task 4.2.2] Creación del formulario `PatientForm` y el modal `PatientDialog` con validaciones integradas.
+- **UI:** [Task 4.2.3] Integración de búsqueda en tiempo real (debounced) y paginación en la UI de pacientes.
+- **UI:** [Task 4.3.1] Implementación de Skeletons de carga y sistema de notificaciones (Toasts) con Sonner.
+- **Infraestructura:** [Task 3.2.3] Sincronización de usuarios base (Admin, Psicóloga, Recepción) en la base de datos.
+- **Infraestructura:** [Task 3.2.4] Configuración y validación de variables de entorno de seguridad (`NEXTAUTH_SECRET`).
+- **DevOps:** Creación de `docs/DEPLOYMENT.md` con guía completa para Vercel.
+- **DevOps:** Configuración de script `postinstall` en `package.json` para generación automática de Prisma en CI/CD.
+
+### Changed (Modificado)
+- **Auth:** [Task 3.1.5] Refinamiento de Middleware para RBAC dinámico.
+- **Infraestructura:** [Task 3.2.2] Migración a Driver Adapter (`pg`) para compatibilidad total con Prisma 7 y TCP directo.
 - **Auth:** Refinamiento del Middleware de seguridad con reglas RBAC dinámicas para proteger rutas sensibles (Historial, Usuarios).
+
+### Fixed (Corregido)
+- **Infraestructura:** [Task 3.2.1] Corrección de bug de sincronización de nombres en la sesión (`fullName`).
 
 ---
 

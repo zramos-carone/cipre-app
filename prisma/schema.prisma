@@ -63,6 +63,10 @@ model Appointment {
   scheduledAt    DateTime
   status         String   @default("Pendiente")
   notes          String?
+  type           String   @default("seguimiento") // "primera" | "seguimiento" | "cierre"
+  modality       String   @default("Presencial")   // "Presencial" | "En línea"
+  duration       Int      @default(60)             // Duración en minutos
+  sendReminder   Boolean  @default(false)          // Enviar recordatorios
   patient        Patient  @relation(fields: [patientId], references: [id])
   psychologist   User     @relation(fields: [psychologistId], references: [id])
 }
