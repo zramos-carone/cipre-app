@@ -1,4 +1,5 @@
 import prisma from '../lib/prisma'
+import { hashPassword } from '../lib/password'
 
 async function main() {
   console.log('🌱 Iniciando seeding de base de datos local...')
@@ -34,14 +35,16 @@ async function main() {
   console.log('✅ Roles creados.')
 
   // 2. Crear Usuario Admin Base
-  // Nota: La contraseña 'Psipre1!' es solo para desarrollo local
+  const hashedPassword = await hashPassword('Psipre1!')
   await prisma.user.upsert({
     where: { email: 'admin@psipre.mx' },
-    update: {},
+    update: {
+      password: hashedPassword,
+    },
     create: {
       email: 'admin@psipre.mx',
       fullName: 'Administrador PSIPRE',
-      password: 'Psipre1!', // En producción se usa bcrypt
+      password: hashedPassword,
       roleId: adminRole.id,
     },
   })
