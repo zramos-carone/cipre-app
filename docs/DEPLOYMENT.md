@@ -69,12 +69,23 @@ El proyecto está configurado para ejecutar `prisma generate` automáticamente t
 }
 ```
 
-### 2. Migraciones
-Antes del primer despliegue, debes sincronizar el esquema de la base de datos cloud con tu modelo actual:
-```bash
-# Cambia temporalmente tu .env local a la URL de la nube y ejecuta:
-npx prisma db push
-```
+### 2. Migraciones y Sincronización en Producción
+Cuando agregues nuevos campos o cambies la estructura de la base de datos (como al reestructurar los modelos `Patient` o `Appointment`), la base de datos en la nube quedará desactualizada. Esto provocará que Vercel arroje errores en tiempo de ejecución como `PrismaClientKnownRequestError` con el código `P2022` o errores `ColumnNotFound` (ej. *The column 'Appointment.type' does not exist*).
+
+Para sincronizar de manera segura la base de datos de producción (Neon/Vercel Postgres) con tu esquema local de Prisma actual sin necesidad de alterar tu archivo `.env` de desarrollo, puedes inyectar directamente la variable de entorno en la línea de comandos:
+
+*   **En Windows (PowerShell):**
+    ```powershell
+    $env:DATABASE_URL="tu_url_de_conexion_de_produccion"; npx prisma db push
+    ```
+
+*   **En Linux / Mac (Bash o Zsh):**
+    ```bash
+    DATABASE_URL="tu_url_de_conexion_de_produccion" npx prisma db push
+    ```
+
+> [!IMPORTANT]
+> **Definición de valores por defecto**: Asegúrate siempre de definir valores por defecto en el esquema (ej. `@default("seguimiento")` o `@default(false)`) para cualquier columna nueva. Esto permite que Prisma actualice automáticamente todos los registros preexistentes en producción sin producir errores de integridad ni pérdida de datos.
 
 ### 3. Middleware de Next.js
 En la versión actual de Next.js (15/16), asegúrate de que el `middleware.ts` no intente realizar operaciones pesadas de base de datos que puedan ralentizar el Edge Runtime.
