@@ -9,6 +9,7 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 ### [2026-05-20]
 #### Added (Añadido)
 - **DB:** [Task 5.1.1] Reestructuración del modelo de citas (`Appointment`) en base de datos agregando campos `type`, `modality`, `duration` y `sendReminder`.
+- **Agenda:** [Task 5.1.2] Creación del esquema de validación `AppointmentSchema` con Zod y sus correspondientes pruebas unitarias con cobertura del 100%.
 ---
 
 ## [0.2.0] - 2026-05-10
