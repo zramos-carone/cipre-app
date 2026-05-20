@@ -76,11 +76,17 @@ Para asegurar la calidad del proyecto, **ninguna Tarea (Task) se marca como comp
   * [x] **Task 5.1.11:** Integrar Skeletons para estados de carga y Toasts (`sonner`) en el Frontend para alertar éxitos, errores o choques de horarios de manera visual y premium.
   * [x] **Task 5.1.12:** Ejecutar y asegurar que el 100% de la suite de pruebas del proyecto pase limpiamente, cumpliendo estrictamente con el Definition of Done (DoD).
 
-### 📊 Feature 6: Dashboard Principal
-**Objetivo:** Centralizar los indicadores más importantes de la clínica.
-* **User Story 6.1:** Como administrador, quiero ver métricas clave del día al entrar al sistema.
-  * [ ] **Task 6.1.1:** Crear queries SQL optimizadas para KPIs (pacientes activos, citas de hoy).
-  * [ ] **Task 6.1.2:** Enlazar los datos obtenidos con las tarjetas de métricas del Dashboard.
+### 📝 Feature 6: Consentimientos Informados
+**Objetivo:** Gestionar el estatus legal y documental de los pacientes.
+* **User Story 6.1:** Como administración, quiero almacenar digitalmente las firmas y permisos.
+  * [ ] **Task 6.1.1:** Configurar proveedor de almacenamiento cloud (AWS S3, Vercel Blob) para PDFs.
+  * [ ] **Task 6.1.2:** Crear API para subir y enlazar la URL de los documentos a un paciente.
+  * [ ] **Task 6.1.3:** Desarrollar un Switch/Toggle en el Frontend para actualizar el campo `isSigned`.
+* **User Story 6.2:** Como administración, quiero generar un nuevo consentimiento informado en la interfaz completando un formulario con el paciente, la plantilla y la fecha (según la maqueta visual `nuevo_consentimiento.png`).
+  * [ ] **Task 6.2.1:** Desarrollar el modal interactivo `InformedConsentForm` en el Frontend con selectores para Paciente (autocomplete), Plantilla (select) y Fecha (datepicker), aplicando botones premium con sombras y micro-animaciones dinámicas (`active:scale-95`).
+  * [ ] **Task 6.2.2:** Validar los campos del formulario en el Frontend usando un esquema de Zod.
+  * [ ] **Task 6.2.3:** Crear el Server Action `generateInformedConsent` para guardar el registro de consentimiento vinculado al paciente en la base de datos de Prisma.
+  * [ ] **Task 6.2.4:** Programar pruebas unitarias completas con Vitest en `lib/actions/consent.test.ts` para verificar la robustez de las reglas de negocio del Server Action.
 
 ### 🩺 Feature 7: Historial Clínico Seguro
 **Objetivo:** Proteger la confidencialidad absoluta de las notas médicas.
@@ -89,12 +95,11 @@ Para asegurar la calidad del proyecto, **ninguna Tarea (Task) se marca como comp
   * [ ] **Task 7.1.2:** Implementar filtro a nivel BD para que un psicólogo solo lea sus propias notas.
   * [ ] **Task 7.1.3:** Conectar formulario del Frontend con un editor de texto enriquecido.
 
-### 📝 Feature 8: Consentimientos Informados
-**Objetivo:** Gestionar el estatus legal y documental de los pacientes.
-* **User Story 8.1:** Como administración, quiero almacenar digitalmente las firmas y permisos.
-  * [ ] **Task 8.1.1:** Configurar proveedor de almacenamiento cloud (AWS S3, Vercel Blob) para PDFs.
-  * [ ] **Task 8.1.2:** Crear API para subir y enlazar la URL de los documentos a un paciente.
-  * [ ] **Task 8.1.3:** Desarrollar un Switch/Toggle en el Frontend para actualizar el campo `isSigned`.
+### 📊 Feature 8: Dashboard Principal
+**Objetivo:** Centralizar los indicadores más importantes de la clínica.
+* **User Story 8.1:** Como administrador, quiero ver métricas clave del día al entrar al sistema.
+  * [ ] **Task 8.1.1:** Crear queries SQL optimizadas para KPIs (pacientes activos, citas de hoy).
+  * [ ] **Task 8.1.2:** Enlazar los datos obtenidos con las tarjetas de métricas del Dashboard.
 
 ### 💳 Feature 9: Pagos y Devoluciones
 **Objetivo:** Llevar control transaccional preciso y auditable.
