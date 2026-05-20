@@ -6,6 +6,12 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 
 ## [Unreleased]
 
+## [0.4.2] - 2026-05-20
+### Added (Añadido)
+- **Consent:** [Task 6.1.3] Desarrollo de un control Switch interactivo y animado en el Frontend (`app/dashboard/consentimientos/page.tsx`) para alternar dinámicamente el estado de firma del consentimiento informado, con soporte para actualizaciones optimistas del cliente, integración asíncrona del Server Action `toggleConsentSignature` y notificaciones Toast animadas de `sonner`.
+- **QA:** Cobertura de pruebas unitarias al 100% para la lógica del Server Action `toggleConsentSignature` en `lib/actions/consent.test.ts` sumando 4 nuevos tests (para un total de 115 tests exitosos en la suite).
+- **Consent:** Creación del Server Action `toggleConsentSignature(id, isSigned)` en `lib/actions/consent.ts` para posibilitar la alternancia del estado y fecha de la firma en la base de datos de Prisma de forma trazable y segura.
+
 ## [0.4.1] - 2026-05-20
 ### Added (Añadido)
 - **Consent:** [Task 6.1.2] Creación de Server Actions para subir y enlazar la URL de los documentos de consentimiento a un paciente (`uploadInformedConsent` con lógica de upsert 1-1 y `getInformedConsents`).

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterAll } from "vitest"
-import { uploadInformedConsent, getInformedConsents } from "./consent"
+import { uploadInformedConsent, getInformedConsents, toggleConsentSignature } from "./consent"
 import prisma from "@/lib/prisma"
 import { uploadFile } from "@/lib/storage"
 
@@ -12,6 +12,7 @@ vi.mock("@/lib/prisma", () => ({
     informedConsent: {
       upsert: vi.fn(),
       findMany: vi.fn(),
+      update: vi.fn(),
     },
   },
 }))
@@ -164,3 +165,69 @@ describe("Consent Server Actions - getInformedConsents", () => {
     consoleSpy.mockRestore()
   })
 })
+
+describe("Consent Server Actions - toggleConsentSignature", () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  afterAll(() => {
+    vi.restoreAllMocks()
+  })
+
+  it("debería firmar un consentimiento exitosamente", async () => {
+    const mockConsent = { id: "consent-123", isSigned: true, signedAt: new Date() }
+    vi.mocked(prisma.informedConsent.update).mockResolvedValue(mockConsent as any)
+
+    const result = await toggleConsentSignature("consent-123", true)
+
+    expect(result.success).toBe(true)
+    expect(result.data).toEqual(mockConsent)
+    expect(prisma.informedConsent.update).toHaveBeenCalledWith({
+      where: { id: "consent-123" },
+      data: {
+        isSigned: true,
+        signedAt: expect.any(Date)
+      }
+    })
+  })
+
+  it("debería quitar la firma de un consentimiento exitosamente", async () => {
+    const mockConsent = { id: "consent-123", isSigned: false, signedAt: null }
+    vi.mocked(prisma.informedConsent.update).mockResolvedValue(mockConsent as any)
+
+    const result = await toggleConsentSignature("consent-123", false)
+
+    expect(result.success).toBe(true)
+    expect(result.data).toEqual(mockConsent)
+    expect(prisma.informedConsent.update).toHaveBeenCalledWith({
+      where: { id: "consent-123" },
+      data: {
+        isSigned: false,
+        signedAt: null
+      }
+    })
+  })
+
+  it("debería fallar si falta el ID del consentimiento", async () => {
+    const result = await toggleConsentSignature("", true)
+
+    expect(result.success).toBe(false)
+    expect(result.error).toBe("El ID del consentimiento es requerido")
+    expect(prisma.informedConsent.update).not.toHaveBeenCalled()
+  })
+
+  it("debería manejar errores al actualizar en la base de datos", async () => {
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {})
+    vi.mocked(prisma.informedConsent.update).mockRejectedValue(new Error("Database write failed"))
+
+    const result = await toggleConsentSignature("consent-123", true)
+
+    expect(result.success).toBe(false)
+    expect(result.error).toBe("Error interno al actualizar el estado de firma")
+    expect(consoleSpy).toHaveBeenCalled()
+
+    consoleSpy.mockRestore()
+  })
+})
+

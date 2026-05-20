@@ -111,3 +111,40 @@ export async function getInformedConsents(): Promise<ActionResponse> {
     }
   }
 }
+
+/**
+ * Server Action para alternar (firmar/desfirmar) el estado de firma de un consentimiento.
+ */
+export async function toggleConsentSignature(id: string, isSigned: boolean): Promise<ActionResponse> {
+  if (!id) {
+    return {
+      success: false,
+      error: "El ID del consentimiento es requerido"
+    }
+  }
+
+  try {
+    const updatedConsent = await prisma.informedConsent.update({
+      where: { id },
+      data: {
+        isSigned,
+        signedAt: isSigned ? new Date() : null
+      }
+    })
+
+    revalidatePath("/dashboard/consentimientos")
+    revalidatePath("/dashboard/pacientes")
+
+    return {
+      success: true,
+      data: updatedConsent
+    }
+  } catch (error) {
+    console.error("Error in toggleConsentSignature:", error)
+    return {
+      success: false,
+      error: "Error interno al actualizar el estado de firma"
+    }
+  }
+}
+

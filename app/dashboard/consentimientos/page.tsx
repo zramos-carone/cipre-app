@@ -11,6 +11,9 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { FileText, Eye, Download, Plus, CheckCircle, Clock, FileIcon } from "lucide-react"
+import { Switch } from "@/components/ui/switch"
+import { toast } from "sonner"
+import { toggleConsentSignature } from "@/lib/actions/consent"
 
 type ConsentStatus = "firmado" | "pendiente"
 
@@ -71,20 +74,60 @@ function getFormattedDate() {
 }
 
 export default function ConsentimientosPage() {
+  const [consents, setConsents] = useState<Consent[]>(consentsData)
   const [patientFilter, setPatientFilter] = useState<string>("all")
   const [typeFilter, setTypeFilter] = useState<string>("all")
   const [statusFilter, setStatusFilter] = useState<string>("all")
   const formattedDate = getFormattedDate()
 
-  const filteredConsents = consentsData.filter((consent) => {
+  const handleToggleSignature = async (id: string | number, checked: boolean) => {
+    // Update local state first for instant UI feedback (optimistic update)
+    setConsents((prevConsents) =>
+      prevConsents.map((c) =>
+        c.id === id ? { ...c, status: checked ? "firmado" : "pendiente" } : c
+      )
+    )
+
+    const newStatus = checked ? "Firmado" : "Pendiente"
+    
+    // If it's a database UUID (string containing letters/numbers with hyphens)
+    if (typeof id === "string" && id.includes("-")) {
+      try {
+        const res = await toggleConsentSignature(id, checked)
+        if (res.success) {
+          toast.success(`Estado actualizado a ${newStatus} exitosamente`)
+        } else {
+          // Revert on error
+          setConsents((prevConsents) =>
+            prevConsents.map((c) =>
+              c.id === id ? { ...c, status: !checked ? "firmado" : "pendiente" } : c
+            )
+          )
+          toast.error(res.error || "No se pudo actualizar el estado de firma")
+        }
+      } catch (err) {
+        setConsents((prevConsents) =>
+          prevConsents.map((c) =>
+            c.id === id ? { ...c, status: !checked ? "firmado" : "pendiente" } : c
+          )
+        )
+        toast.error("Error al conectar con el servidor")
+      }
+    } else {
+      // Mock success for local static items
+      toast.success(`[Simulado] Estado de firma actualizado a ${newStatus}`)
+    }
+  }
+
+  const filteredConsents = consents.filter((consent) => {
     if (patientFilter !== "all" && consent.patient !== patientFilter) return false
     if (typeFilter !== "all" && consent.title !== typeFilter) return false
     if (statusFilter !== "all" && consent.status !== statusFilter) return false
     return true
   })
 
-  const uniquePatients = [...new Set(consentsData.map((c) => c.patient))]
-  const uniqueTypes = [...new Set(consentsData.map((c) => c.title))]
+  const uniquePatients = [...new Set(consents.map((c) => c.patient))]
+  const uniqueTypes = [...new Set(consents.map((c) => c.title))]
 
   return (
     <div className="p-6 lg:p-8">
@@ -177,19 +220,28 @@ export default function ConsentimientosPage() {
                 <div>
                   <h3 className="font-medium text-foreground">{consent.title}</h3>
                   <p className="text-sm text-muted-foreground">Paciente: {consent.patient}</p>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <div className="mt-1.5 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
                     <span>Fecha: {consent.date}</span>
-                    {consent.status === "firmado" ? (
-                      <span className="inline-flex items-center gap-1 text-green-600">
-                        <CheckCircle className="h-4 w-4" />
-                        Firmado
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1 text-orange-500">
-                        <Clock className="h-4 w-4" />
-                        Pendiente
-                      </span>
-                    )}
+                    <span className="text-muted-foreground/30">•</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-muted-foreground">Firma:</span>
+                      <Switch
+                        checked={consent.status === "firmado"}
+                        onCheckedChange={(checked) => handleToggleSignature(consent.id, checked)}
+                        className="scale-90"
+                      />
+                      {consent.status === "firmado" ? (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-green-600 dark:bg-green-950/30 dark:text-green-400">
+                          <CheckCircle className="h-3.5 w-3.5" />
+                          Firmado
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-600 dark:bg-amber-950/30 dark:text-amber-400">
+                          <Clock className="h-3.5 w-3.5" />
+                          Pendiente
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
