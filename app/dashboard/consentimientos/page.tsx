@@ -227,31 +227,34 @@ export default function ConsentimientosPage() {
   const uniqueTypes = [...new Set(consents.map((c) => c.title))]
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] flex flex-col">
-      {/* Clinic Header (Full Width Top Bar) */}
-      <header className="border-b border-slate-200/80 bg-white px-6 py-4 lg:px-8 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between shrink-0">
+    <div className="p-6 lg:p-8 space-y-6 animate-in fade-in duration-500">
+      {/* Clinic Header */}
+      <header className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-md font-semibold text-slate-800">Clínica Preventiva CIPRE</h1>
+          <h1 className="text-lg font-semibold text-foreground/80">Clínica Preventiva CIPRE</h1>
         </div>
-        <p className="text-sm capitalize text-slate-500 font-medium">{formattedDate}</p>
+        <p className="text-sm capitalize text-muted-foreground bg-muted/30 px-3 py-1 rounded-full border border-muted-foreground/10">
+          {formattedDate}
+        </p>
       </header>
 
-      {/* Main Content Container */}
-      <div className="p-6 lg:p-8 space-y-6 max-w-[1400px] w-full mx-auto flex-1">
-        {/* Title */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between mb-2">
-          <div>
-            <h2 className="text-2xl font-bold text-slate-800 tracking-tight">Consentimientos Informados</h2>
-            <p className="text-sm text-slate-500 mt-1">Gestión de documentos de autorización</p>
-          </div>
-          <Button 
-            className="bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm transition-all hover:shadow active:scale-95 px-4 h-10 gap-2 shrink-0 self-start sm:self-auto"
-            onClick={() => setIsDialogOpen(true)}
-          >
-            <FileText className="h-4 w-4" />
-            Nuevo Consentimiento
-          </Button>
+      {/* Header Titulo & Boton */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h2 className="text-3xl font-extrabold tracking-tight text-foreground flex items-center gap-2">
+            Consentimientos Informados
+            <FileText className="w-5 h-5 text-primary animate-pulse" />
+          </h2>
+          <p className="text-muted-foreground">Gestión de documentos de autorización, control de firmas y plantillas.</p>
         </div>
+        <Button 
+          onClick={() => setIsDialogOpen(true)}
+          className="gap-2 bg-primary hover:bg-primary/95 text-primary-foreground font-semibold px-5 shadow-lg shadow-primary/25 transition-all hover:-translate-y-0.5 active:translate-y-0 active:scale-95"
+        >
+          <Plus className="h-5 w-5" />
+          Nuevo Consentimiento
+        </Button>
+      </div>
 
         {/* Filters */}
         <Card className="rounded-xl border border-slate-200/60 shadow-sm bg-white overflow-hidden">
@@ -399,7 +402,6 @@ export default function ConsentimientosPage() {
             ))}
           </div>
         </div>
-      </div>
 
       <InformedConsentDialog
         open={isDialogOpen}

@@ -4,6 +4,13 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/) y este proyecto se adhiere a nuestra convención local definida en `docs/COMMIT.md`.
 
+## [0.4.8] - 2026-05-20
+### Changed (Modificado)
+- **UI:** Estandarización y refinamiento estético de la cabecera y el contenedor de diseño del módulo de consentimientos informados (`app/dashboard/consentimientos/page.tsx`) para unificarse completamente con el diseño de la Agenda de Citas:
+  - Reemplazo del banner superior de ancho completo por un encabezado en línea con el nombre de la clínica y una insignia de fecha formateada tipo cápsula estilizada.
+  - Rediseño de la fila de título principal y descripción con la tipografía e interlineados unificados, incorporando el icono animado de `FileText`.
+  - Estilización premium y micro-animaciones del botón "Nuevo Consentimiento" para heredar la sombra de acento y transiciones de traslación del botón original de la Agenda de Citas.
+
 ## [0.4.7] - 2026-05-20
 ### Changed (Modificado)
 - **UI:** Rediseño estético y de márgenes del módulo de consentimientos informados basado en el mockup visual:
