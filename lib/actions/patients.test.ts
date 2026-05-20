@@ -30,11 +30,28 @@ describe('Patient Server Actions - createPatient', () => {
 
   it('debería crear un paciente exitosamente con datos válidos', async () => {
     const formData = new FormData()
-    formData.append('fullName', 'Juan Pérez')
+    formData.append('name', 'Juan')
+    formData.append('lastName', 'Pérez')
     formData.append('email', 'juan@example.com')
     formData.append('phone', '1234567890')
+    formData.append('birthDate', '1995-10-10')
+    formData.append('age', '30')
+    formData.append('gender', 'Masculino')
+    formData.append('address', 'Calle Falsa 123')
+    formData.append('emergencyContact', 'María - 1112223334')
 
-    const mockPatient = { id: '1', fullName: 'Juan Pérez' }
+    const mockPatient = { 
+      id: '1', 
+      name: 'Juan', 
+      lastName: 'Pérez',
+      email: 'juan@example.com',
+      phone: '1234567890',
+      birthDate: new Date('1995-10-10'),
+      age: 30,
+      gender: 'Masculino',
+      address: 'Calle Falsa 123',
+      emergencyContact: 'María - 1112223334'
+    }
     vi.mocked(prisma.patient.create).mockResolvedValue(mockPatient as any)
 
     const result = await createPatient(formData)
@@ -46,19 +63,21 @@ describe('Patient Server Actions - createPatient', () => {
 
   it('debería retornar error si la validación falla (nombre corto)', async () => {
     const formData = new FormData()
-    formData.append('fullName', 'Ju')
+    formData.append('name', 'J')
+    formData.append('lastName', 'Pérez')
 
     const result = await createPatient(formData)
 
     expect(result.success).toBe(false)
-    expect(result.error).toBe('El nombre completo debe tener al menos 3 caracteres')
+    expect(result.error).toBe('El nombre debe tener al menos 2 caracteres')
     expect(prisma.patient.create).not.toHaveBeenCalled()
   })
 
   it('debería manejar errores de la base de datos', async () => {
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
     const formData = new FormData()
-    formData.append('fullName', 'Juan Pérez')
+    formData.append('name', 'Juan')
+    formData.append('lastName', 'Pérez')
 
     vi.mocked(prisma.patient.create).mockRejectedValue(new Error('DB Error'))
 
@@ -81,7 +100,10 @@ describe('Patient Server Actions - getPatients', () => {
   })
 
   it('debería retornar el listado de pacientes y el conteo total', async () => {
-    const mockPatients = [{ id: '1', fullName: 'Juan' }, { id: '2', fullName: 'Maria' }]
+    const mockPatients = [
+      { id: '1', name: 'Juan', lastName: 'Pérez' }, 
+      { id: '2', name: 'Maria', lastName: 'Gomez' }
+    ]
     vi.mocked(prisma.patient.findMany).mockResolvedValue(mockPatients as any)
     vi.mocked(prisma.patient.count).mockResolvedValue(2)
 
@@ -103,7 +125,8 @@ describe('Patient Server Actions - getPatients', () => {
       where: expect.objectContaining({
         active: true,
         OR: expect.arrayContaining([
-          expect.objectContaining({ fullName: expect.any(Object) })
+          expect.objectContaining({ name: expect.any(Object) }),
+          expect.objectContaining({ lastName: expect.any(Object) })
         ])
       })
     }))
@@ -145,15 +168,16 @@ describe('Patient Server Actions - updatePatient', () => {
 
   it('debería actualizar un paciente exitosamente', async () => {
     const formData = new FormData()
-    formData.append('fullName', 'Juan Editado')
+    formData.append('name', 'Juan')
+    formData.append('lastName', 'Editado')
     
-    const mockPatient = { id: '1', fullName: 'Juan Editado' }
+    const mockPatient = { id: '1', name: 'Juan', lastName: 'Editado' }
     vi.mocked(prisma.patient.update).mockResolvedValue(mockPatient as any)
 
     const result = await updatePatient('1', formData)
 
     expect(result.success).toBe(true)
-    expect(result.data.fullName).toBe('Juan Editado')
+    expect(result.data.lastName).toBe('Editado')
     expect(prisma.patient.update).toHaveBeenCalledWith(expect.objectContaining({
       where: { id: '1' }
     }))
@@ -161,7 +185,8 @@ describe('Patient Server Actions - updatePatient', () => {
 
   it('debería fallar si los datos de actualización son inválidos', async () => {
     const formData = new FormData()
-    formData.append('fullName', 'J') // Muy corto
+    formData.append('name', 'J') // Muy corto
+    formData.append('lastName', 'Pérez')
 
     const result = await updatePatient('1', formData)
 
@@ -173,7 +198,8 @@ describe('Patient Server Actions - updatePatient', () => {
   it('debería manejar errores de base de datos al actualizar', async () => {
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
     const formData = new FormData()
-    formData.append('fullName', 'Juan Editado')
+    formData.append('name', 'Juan')
+    formData.append('lastName', 'Editado')
     vi.mocked(prisma.patient.update).mockRejectedValue(new Error('Update Error'))
 
     const result = await updatePatient('1', formData)
@@ -197,7 +223,7 @@ describe('Patient Server Actions - deletePatient', () => {
   })
 
   it('debería desactivar un paciente exitosamente (soft delete)', async () => {
-    const mockPatient = { id: '1', fullName: 'Juan', active: false }
+    const mockPatient = { id: '1', name: 'Juan', lastName: 'Pérez', active: false }
     vi.mocked(prisma.patient.update).mockResolvedValue(mockPatient as any)
 
     const result = await deletePatient('1')

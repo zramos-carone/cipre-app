@@ -21,9 +21,15 @@ export type GetPatientsParams = {
  */
 export async function createPatient(formData: FormData): Promise<ActionResponse> {
   const rawData = {
-    fullName: (formData.get("fullName") as string) || "",
-    email: (formData.get("email") as string) || "",
+    name: (formData.get("name") as string) || "",
+    lastName: (formData.get("lastName") as string) || "",
+    birthDate: (formData.get("birthDate") as string) || "",
+    age: formData.get("age") !== null && formData.get("age") !== "" ? (formData.get("age") as string) : undefined,
+    gender: (formData.get("gender") as string) || "",
+    address: (formData.get("address") as string) || "",
     phone: (formData.get("phone") as string) || "",
+    email: (formData.get("email") as string) || "",
+    emergencyContact: (formData.get("emergencyContact") as string) || "",
   }
 
   // 1. Validar datos con Zod
@@ -40,9 +46,15 @@ export async function createPatient(formData: FormData): Promise<ActionResponse>
     // 2. Guardar en la base de datos
     const patient = await prisma.patient.create({
       data: {
-        fullName: validation.data.fullName,
-        email: validation.data.email || null,
+        name: validation.data.name,
+        lastName: validation.data.lastName,
+        birthDate: validation.data.birthDate ? new Date(validation.data.birthDate) : null,
+        age: validation.data.age ?? null,
+        gender: validation.data.gender || null,
+        address: validation.data.address || null,
         phone: validation.data.phone || null,
+        email: validation.data.email || null,
+        emergencyContact: validation.data.emergencyContact || null,
       }
     })
 
@@ -77,7 +89,8 @@ export async function getPatients({
       active: true,
       ...(query ? {
         OR: [
-          { fullName: { contains: query, mode: "insensitive" as const } },
+          { name: { contains: query, mode: "insensitive" as const } },
+          { lastName: { contains: query, mode: "insensitive" as const } },
           { email: { contains: query, mode: "insensitive" as const } },
           { phone: { contains: query, mode: "insensitive" as const } },
         ]
@@ -117,9 +130,15 @@ export async function getPatients({
  */
 export async function updatePatient(id: string, formData: FormData): Promise<ActionResponse> {
   const rawData = {
-    fullName: (formData.get("fullName") as string) || "",
-    email: (formData.get("email") as string) || "",
+    name: (formData.get("name") as string) || "",
+    lastName: (formData.get("lastName") as string) || "",
+    birthDate: (formData.get("birthDate") as string) || "",
+    age: formData.get("age") !== null && formData.get("age") !== "" ? (formData.get("age") as string) : undefined,
+    gender: (formData.get("gender") as string) || "",
+    address: (formData.get("address") as string) || "",
     phone: (formData.get("phone") as string) || "",
+    email: (formData.get("email") as string) || "",
+    emergencyContact: (formData.get("emergencyContact") as string) || "",
   }
 
   // 1. Validar datos con Zod
@@ -137,9 +156,15 @@ export async function updatePatient(id: string, formData: FormData): Promise<Act
     const patient = await prisma.patient.update({
       where: { id },
       data: {
-        fullName: validation.data.fullName,
-        email: validation.data.email || null,
+        name: validation.data.name,
+        lastName: validation.data.lastName,
+        birthDate: validation.data.birthDate ? new Date(validation.data.birthDate) : null,
+        age: validation.data.age ?? null,
+        gender: validation.data.gender || null,
+        address: validation.data.address || null,
         phone: validation.data.phone || null,
+        email: validation.data.email || null,
+        emergencyContact: validation.data.emergencyContact || null,
       }
     })
 
