@@ -4,6 +4,10 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/) y este proyecto se adhiere a nuestra convención local definida en `docs/COMMIT.md`.
 
+## [0.5.0] - 2026-05-21
+### Added (Añadido)
+- **Consent:** [Feature 6] Implementación de la funcionalidad completa del botón "Ver" (👁️) para abrir el PDF del consentimiento informado en una nueva pestaña del navegador, propagando el campo `documentUrl` desde la base de datos hasta el frontend a través de la interfaz `Consent`.
+
 ## [0.4.9] - 2026-05-21
 ### Changed (Modificado)
 - **UI:** Estandarización completa del botón "Generar Consentimiento" en el modal de consentimientos informados (`components/dashboard/consentimientos/informed-consent-form.tsx`) para unificar el patrón visual con los modales de pacientes y agenda:
