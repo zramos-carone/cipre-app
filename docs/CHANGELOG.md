@@ -4,6 +4,10 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/) y este proyecto se adhiere a nuestra convención local definida en `docs/COMMIT.md`.
 
+## [0.4.12] - 2026-05-21
+### Changed (Modificado)
+- **Consent:** Mejora del diseño profesional de los 3 PDFs de plantillas de consentimiento (`tratamiento.pdf`, `datos.pdf`, `evaluacion.pdf`) utilizando `pdfkit` con encabezado de clínica, líneas divisorias azules, contenido estructurado con cláusulas numeradas, y pie de página con ID de documento.
+
 ## [0.4.11] - 2026-05-21
 ### Added (Añadido)
 - **Consent:** [Feature 6] Implementación de la funcionalidad completa del botón "Descargar" (⬇️) para descargar el PDF del consentimiento informado directamente al dispositivo del usuario, creando un enlace `<a download>` programático con el nombre del archivo extraído de la URL del documento.
