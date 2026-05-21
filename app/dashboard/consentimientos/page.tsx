@@ -34,7 +34,7 @@ const consentsData: Consent[] = [
     patient: "María González",
     date: "2026-03-15",
     status: "firmado",
-    documentUrl: "/uploads/test.pdf",
+    documentUrl: "/uploads/tratamiento.pdf",
   },
   {
     id: 2,
@@ -42,7 +42,7 @@ const consentsData: Consent[] = [
     patient: "Juan Pérez",
     date: "2026-04-01",
     status: "firmado",
-    documentUrl: "/uploads/test.pdf",
+    documentUrl: "/uploads/datos.pdf",
   },
   {
     id: 3,
@@ -50,7 +50,7 @@ const consentsData: Consent[] = [
     patient: "Ana Martínez",
     date: "2026-03-20",
     status: "firmado",
-    documentUrl: "/uploads/test.pdf",
+    documentUrl: "/uploads/tratamiento.pdf",
   },
   {
     id: 4,
@@ -58,7 +58,7 @@ const consentsData: Consent[] = [
     patient: "Carlos López",
     date: "2026-04-02",
     status: "pendiente",
-    documentUrl: "/uploads/test.pdf",
+    documentUrl: "/uploads/evaluacion.pdf",
   },
 ]
 
@@ -134,7 +134,7 @@ export default function ConsentimientosPage() {
               ? new Date(c.signedAt).toISOString().split('T')[0]
               : new Date().toISOString().split('T')[0],
             status: isSigned ? ("firmado" as const) : ("pendiente" as const),
-            documentUrl: c.documentUrl || "/uploads/test.pdf",
+            documentUrl: c.documentUrl || `/uploads/${c.templateId || "tratamiento"}.pdf`,
           }
         })
 
@@ -167,7 +167,7 @@ export default function ConsentimientosPage() {
           patient: selectedPatient ? `${selectedPatient.name} ${selectedPatient.lastName}` : "Paciente Nuevo",
           date: data.date,
           status: "pendiente",
-          documentUrl: res.data.documentUrl || "/uploads/test.pdf",
+          documentUrl: res.data.documentUrl || `/uploads/${data.templateId}.pdf`,
         }
 
         setConsents((prev) => [newConsent, ...prev])
@@ -391,18 +391,18 @@ export default function ConsentimientosPage() {
               <CardContent className="flex items-center gap-3.5 p-4">
                 <div
                   className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${template.icon === "green"
-                      ? "bg-green-50/80 text-green-600"
-                      : template.icon === "purple"
-                        ? "bg-purple-50/80 text-purple-600"
-                        : "bg-blue-50/80 text-blue-600"
+                    ? "bg-green-50/80 text-green-600"
+                    : template.icon === "purple"
+                      ? "bg-purple-50/80 text-purple-600"
+                      : "bg-blue-50/80 text-blue-600"
                     }`}
                 >
                   <FileText
                     className={`h-5 w-5 ${template.icon === "green"
-                        ? "text-green-600"
-                        : template.icon === "purple"
-                          ? "text-purple-600"
-                          : "text-blue-600"
+                      ? "text-green-600"
+                      : template.icon === "purple"
+                        ? "text-purple-600"
+                        : "text-blue-600"
                       }`}
                   />
                 </div>
