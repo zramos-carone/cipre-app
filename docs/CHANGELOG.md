@@ -4,6 +4,14 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/) y este proyecto se adhiere a nuestra convención local definida en `docs/COMMIT.md`.
 
+## [0.4.9] - 2026-05-21
+### Changed (Modificado)
+- **UI:** Estandarización completa del botón "Generar Consentimiento" en el modal de consentimientos informados (`components/dashboard/consentimientos/informed-consent-form.tsx`) para unificar el patrón visual con los modales de pacientes y agenda:
+  - Reemplazo del icono `FileText` por el icono estándar `Save` con margen derecho (`mr-2 h-4 w-4`).
+  - Implementación del spinner de carga `Loader2` con animación `animate-spin` en lugar del elemento `<span>` personalizado.
+  - Aplicación de clases CSS idénticas a los otros modales: `w-full h-11 bg-primary hover:bg-primary/90 text-primary-foreground font-bold shadow-lg shadow-primary/20 transition-all active:scale-95 cursor-pointer`.
+  - Reestructuración del layout de botones: botón de submit de ancho completo en la parte superior, botón "Cancelar" (outline) debajo con separador `border-t` consistente con el patrón establecido.
+
 ## [0.4.8] - 2026-05-20
 ### Changed (Modificado)
 - **UI:** Estandarización y refinamiento estético de la cabecera y el contenedor de diseño del módulo de consentimientos informados (`app/dashboard/consentimientos/page.tsx`) para unificarse completamente con el diseño de la Agenda de Citas:
