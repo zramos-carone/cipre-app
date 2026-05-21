@@ -23,13 +23,14 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command"
-import { 
-  FileText, 
-  User, 
-  Calendar, 
-  Check, 
-  ChevronsUpDown, 
-  X,
+import {
+  FileText,
+  User,
+  Calendar,
+  Check,
+  ChevronsUpDown,
+  Save,
+  Loader2,
   FileIcon
 } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -64,7 +65,7 @@ export function InformedConsentForm({
     const day = String(d.getDate()).padStart(2, "0")
     return `${year}-${month}-${day}`
   })
-  
+
   const [openPatientPopover, setOpenPatientPopover] = useState(false)
   const [validationError, setValidationError] = useState<string>("")
 
@@ -124,9 +125,9 @@ export function InformedConsentForm({
               >
                 {patientId
                   ? (() => {
-                      const patient = patients.find((p) => p.id === patientId)
-                      return patient ? `${patient.name} ${patient.lastName}` : "Buscar o seleccionar paciente..."
-                    })()
+                    const patient = patients.find((p) => p.id === patientId)
+                    return patient ? `${patient.name} ${patient.lastName}` : "Buscar o seleccionar paciente..."
+                  })()
                   : "Buscar o seleccionar paciente..."}
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
@@ -207,32 +208,21 @@ export function InformedConsentForm({
         </div>
       </div>
 
-      {/* Botonera Premium */}
-      <div className="flex flex-col sm:flex-row items-center justify-end gap-3 pt-2">
-        {onCancel && (
-          <Button
-            type="button"
-            variant="outline"
-            onClick={onCancel}
-            disabled={isSubmitting}
-            className="w-full sm:w-auto h-11 px-5 border-input text-muted-foreground hover:text-foreground rounded-xl transition-all font-semibold active:scale-95 duration-150 shrink-0"
-          >
-            Cancelar
-          </Button>
-        )}
+      {/* Botonera */}
+      <div className="pt-4 border-t border-border/60 mt-2 space-y-3">
         <Button
           type="submit"
           disabled={isSubmitting}
-          className="w-full sm:w-auto h-11 px-6 bg-primary text-primary-foreground font-semibold rounded-xl shadow-md shadow-primary/20 hover:bg-primary/95 transition-all active:scale-95 duration-150 shrink-0 flex items-center justify-center gap-2"
+          className="w-full h-11 bg-primary hover:bg-primary/90 text-primary-foreground font-bold shadow-lg shadow-primary/20 transition-all active:scale-95 cursor-pointer flex items-center justify-center"
         >
           {isSubmitting ? (
             <>
-              <span className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               Generando...
             </>
           ) : (
             <>
-              <FileText className="h-4.5 w-4.5 shrink-0" />
+              <Save className="mr-2 h-4 w-4" />
               Generar Consentimiento
             </>
           )}
