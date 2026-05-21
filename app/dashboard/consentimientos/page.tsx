@@ -363,7 +363,19 @@ export default function ConsentimientosPage() {
                 >
                   <Eye className="h-5 w-5" />
                 </Button>
-                <Button variant="ghost" size="icon" className="h-9 w-9 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-lg">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-9 w-9 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-lg"
+                  onClick={() => {
+                    const link = document.createElement("a")
+                    link.href = consent.documentUrl
+                    link.download = consent.documentUrl.split("/").pop() || "consentimiento.pdf"
+                    document.body.appendChild(link)
+                    link.click()
+                    document.body.removeChild(link)
+                  }}
+                >
                   <Download className="h-5 w-5" />
                 </Button>
               </div>
