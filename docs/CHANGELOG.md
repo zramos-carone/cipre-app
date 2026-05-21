@@ -7,6 +7,9 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 ## [0.4.10] - 2026-05-21
 ### Added (Añadido)
 - **Consent:** [Feature 6] Implementación de la funcionalidad completa del botón "Ver" (👁️) para abrir el PDF del consentimiento informado en una nueva pestaña del navegador, propagando el campo `documentUrl` desde la base de datos hasta el frontend a través de la interfaz `Consent`.
+- **Consent:** Generación de archivos PDF reales para las 3 plantillas de consentimiento (`tratamiento.pdf`, `datos.pdf`, `evaluacion.pdf`) en `public/uploads/`, reemplazando la referencia genérica `/uploads/test.pdf`.
+### Fixed (Corregido)
+- **QA:** Corrección de la prueba unitaria en `components/dashboard/consentimientos/informed-consent.test.tsx` para reflejar la estandarización del botón "Generar Consentimiento" y la eliminación del botón "Cancelar" del formulario.
 
 ## [0.4.9] - 2026-05-21
 ### Changed (Modificado)
