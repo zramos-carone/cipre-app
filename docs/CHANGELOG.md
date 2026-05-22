@@ -10,6 +10,7 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 
 ### Changed (Modificado)
 - **A11y:** Incorporación de atributos de accesibilidad `aria-label="Ver"` y `aria-label="Descargar"` en los botones de acción del listado de consentimientos.
+- **QA:** Solución de las advertencias de React `act(...)` en las pruebas de `page.test.tsx` mediante el uso de un helper asíncrono de renderizado (`renderPage`) que espera la resolución de las llamadas de carga de datos iniciales.
 
 ## [0.4.12] - 2026-05-21
 ### Changed (Modificado)
