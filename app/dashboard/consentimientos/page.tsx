@@ -360,6 +360,7 @@ export default function ConsentimientosPage() {
                   size="icon"
                   className="h-9 w-9 text-blue-600 hover:text-blue-700 hover:bg-blue-50/50 rounded-lg"
                   onClick={() => window.open(consent.documentUrl, "_blank")}
+                  aria-label="Ver"
                 >
                   <Eye className="h-5 w-5" />
                 </Button>
@@ -375,6 +376,7 @@ export default function ConsentimientosPage() {
                     link.click()
                     document.body.removeChild(link)
                   }}
+                  aria-label="Descargar"
                 >
                   <Download className="h-5 w-5" />
                 </Button>
