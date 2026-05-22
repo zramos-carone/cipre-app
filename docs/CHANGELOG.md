@@ -4,6 +4,13 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/) y este proyecto se adhiere a nuestra convención local definida en `docs/COMMIT.md`.
 
+## [0.4.13] - 2026-05-22
+### Added (Añadido)
+- **QA:** Integración de la suite completa de pruebas unitarias/integración para la página principal de consentimientos (`app/dashboard/consentimientos/page.test.tsx`), logrando que el 100% de los 138 tests del sistema pasen exitosamente.
+
+### Changed (Modificado)
+- **A11y:** Incorporación de atributos de accesibilidad `aria-label="Ver"` y `aria-label="Descargar"` en los botones de acción del listado de consentimientos.
+
 ## [0.4.12] - 2026-05-21
 ### Changed (Modificado)
 - **Consent:** Mejora del diseño profesional de los 3 PDFs de plantillas de consentimiento (`tratamiento.pdf`, `datos.pdf`, `evaluacion.pdf`) utilizando `pdfkit` con encabezado de clínica, líneas divisorias azules, contenido estructurado con cláusulas numeradas, y pie de página con ID de documento.
