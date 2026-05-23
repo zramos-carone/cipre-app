@@ -4,6 +4,13 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/) y este proyecto se adhiere a nuestra convención local definida en `docs/COMMIT.md`.
 
+## [0.5.1] - 2026-05-23
+### Added (Añadido)
+- **QA:** [Task 7.1.2] Creación del esquema de validación Zod (`lib/validations/clinical-note.ts`) para asegurar la integridad de los 8 campos obligatorios y estructurados de las sesiones clínicas.
+- **QA:** [Task 7.1.2] Cobertura de pruebas unitarias con Vitest (`lib/validations/clinical-note.test.ts`) verificando escenarios de éxito y múltiples casos de fallo en campos y formatos.
+
+---
+
 ## [0.5.0] - 2026-05-23
 ### Added (Añadido)
 - **DB:** Reestructuración y extensión del modelo `ClinicalNote` en `prisma/schema.prisma` agregando columnas estructuradas (`sessionDate`, `sessionTime`, `duration`, `reason`, `observations`, `emotionalState`, `actionPlan`, `nextSession`) para el Historial Clínico Seguro (Opción A).
