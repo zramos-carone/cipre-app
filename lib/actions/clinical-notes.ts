@@ -159,7 +159,18 @@ export async function getClinicalNotesByPatient(patientId: string): Promise<Acti
 
     // 3. Consultar notas ordenadas cronológicamente por la fecha de sesión
     const notes = await prisma.clinicalNote.findMany({
-      where: { patientId },
+      where: {
+        patientId,
+        ...(userRole === "Psicología" ? {
+          patient: {
+            appointments: {
+              some: {
+                psychologistId: userId
+              }
+            }
+          }
+        } : {})
+      },
       include: {
         psychologist: {
           select: {

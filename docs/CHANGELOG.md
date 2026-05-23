@@ -4,6 +4,12 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/) y este proyecto se adhiere a nuestra convención local definida en `docs/COMMIT.md`.
 
+## [0.5.4] - 2026-05-23
+### Added (Añadido)
+- **DB:** Implementación de filtro de relación en la consulta de base de datos (`prisma.clinicalNote.findMany`) para forzar la confidencialidad absoluta a nivel de base de datos (los psicólogos solo pueden recuperar notas de pacientes con quienes tienen citas agendadas).
+
+---
+
 ## [0.5.3] - 2026-05-23
 ### Added (Añadido)
 - **Auth:** Implementación de Server Actions (`createClinicalNote`, `getClinicalNotesByPatient`, `getLinkedPatients`) en `lib/actions/clinical-notes.ts` protegidos por rol de usuario mediante NextAuth. Bloqueo estricto al rol de "Recepción".
