@@ -4,6 +4,19 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/) y este proyecto se adhiere a nuestra convención local definida en `docs/COMMIT.md`.
 
+## [0.4.14] - 2026-05-22
+### Added (Añadido)
+- **Consent:** Generación dinámica de PDFs de consentimiento informado personalizados con los datos reales del paciente (`lib/pdf/consent-generator.ts`): nombre completo rellenado automáticamente, fecha formateada en español, ID único del documento en el pie de página, tabla de datos del paciente estructurada y sección de firma con nombre pre-impreso.
+- **Consent:** Ruta dinámica API (`app/api/consentimientos/[id]/pdf/route.ts`) que resuelve y genera el reporte PDF en memoria bajo demanda al hacer clic en "Ver" o "Descargar" (con soporte asíncrono `await params` compatible con Next.js 16, IDs de mock `1` al `4` y auto-resolución de registros heredados).
+
+### Changed (Modificado)
+- **Consent:** Refactorización del Server Action `generateInformedConsent` en `lib/actions/consent.ts` para crear únicamente el registro de metadatos en la base de datos con una URL dinámica, eliminando el paso de creación de archivos físicos en disco y su subida a almacenamiento (`uploadFile`) en el momento de creación.
+- **Consent:** Transición definitiva a generación de PDFs 100% bajo demanda, mapeando y reescribiendo URLs locales `/uploads/` en caliente a su formato API dinámico en el listado de consentimientos (`app/dashboard/consentimientos/page.tsx`), eliminando la necesidad de persistir PDFs estáticos locales.
+- **Config:** Configuración de `serverExternalPackages: ["pdfkit"]` en `next.config.mjs` para excluir `pdfkit` del empaquetado del servidor, corrigiendo el error de resolución de fuentes (`ENOENT Helvetica.afm`) en el entorno de desarrollo y producción.
+- **QA:** Actualización de los tests unitarios de `lib/actions/consent.test.ts` para validar el nuevo flujo asíncrono y la generación de enlaces dinámicos sin llamadas a `uploadFile` en tiempo de creación.
+
+---
+
 ## [0.4.13] - 2026-05-22
 ### Added (Añadido)
 - **QA:** Integración de la suite completa de pruebas unitarias/integración para la página principal de consentimientos (`app/dashboard/consentimientos/page.test.tsx`), logrando que el 100% de los 138 tests del sistema pasen exitosamente.
