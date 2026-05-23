@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterAll } from "vitest"
-import { uploadInformedConsent, getInformedConsents, toggleConsentSignature, generateInformedConsent } from "./consent"
+import { uploadInformedConsent, getInformedConsents, toggleConsentSignature, generateInformedConsent, deleteInformedConsent } from "./consent"
 import prisma from "@/lib/prisma"
 import { uploadFile } from "@/lib/storage"
 
@@ -14,6 +14,7 @@ vi.mock("@/lib/prisma", () => ({
       findMany: vi.fn(),
       update: vi.fn(),
       create: vi.fn(),
+      delete: vi.fn(),
     },
   },
 }))
@@ -364,6 +365,48 @@ describe("Consent Server Actions - generateInformedConsent", () => {
 
     expect(result.success).toBe(false)
     expect(result.error).toBe("Error interno al generar el consentimiento informado")
+    expect(consoleSpy).toHaveBeenCalled()
+
+    consoleSpy.mockRestore()
+  })
+})
+
+describe("Consent Server Actions - deleteInformedConsent", () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  afterAll(() => {
+    vi.restoreAllMocks()
+  })
+
+  it("debería eliminar un consentimiento exitosamente", async () => {
+    vi.mocked(prisma.informedConsent.delete).mockResolvedValue({ id: "consent-123" } as any)
+
+    const result = await deleteInformedConsent("consent-123")
+
+    expect(result.success).toBe(true)
+    expect(prisma.informedConsent.delete).toHaveBeenCalledWith({
+      where: { id: "consent-123" }
+    })
+  })
+
+  it("debería fallar si no se proporciona ID", async () => {
+    const result = await deleteInformedConsent("")
+
+    expect(result.success).toBe(false)
+    expect(result.error).toBe("El ID del consentimiento es requerido")
+    expect(prisma.informedConsent.delete).not.toHaveBeenCalled()
+  })
+
+  it("debería manejar errores de base de datos de manera segura", async () => {
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {})
+    vi.mocked(prisma.informedConsent.delete).mockRejectedValue(new Error("Database delete error"))
+
+    const result = await deleteInformedConsent("consent-123")
+
+    expect(result.success).toBe(false)
+    expect(result.error).toBe("Error interno al eliminar el consentimiento informado")
     expect(consoleSpy).toHaveBeenCalled()
 
     consoleSpy.mockRestore()

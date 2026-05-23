@@ -8,12 +8,14 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 ### Added (Añadido)
 - **Consent:** Generación dinámica de PDFs de consentimiento informado personalizados con los datos reales del paciente (`lib/pdf/consent-generator.ts`): nombre completo rellenado automáticamente, fecha formateada en español, ID único del documento en el pie de página, tabla de datos del paciente estructurada y sección de firma con nombre pre-impreso.
 - **Consent:** Ruta dinámica API (`app/api/consentimientos/[id]/pdf/route.ts`) que resuelve y genera el reporte PDF en memoria bajo demanda al hacer clic en "Ver" o "Descargar" (con soporte asíncrono `await params` compatible con Next.js 16, IDs de mock `1` al `4` y auto-resolución de registros heredados).
+- **Consent:** Server Action `deleteInformedConsent` en `lib/actions/consent.ts` para eliminar registros de la base de datos de Prisma de forma segura y liberar la restricción 1-1 en el paciente.
+- **Consent:** Botón de eliminación física en las tarjetas de consentimiento del listado (`app/dashboard/consentimientos/page.tsx`) protegido por un modal de confirmación (`AlertDialog`) de Radix, previniendo borrados accidentales y permitiendo corregir errores de captura de psicólogos.
 
 ### Changed (Modificado)
 - **Consent:** Refactorización del Server Action `generateInformedConsent` en `lib/actions/consent.ts` para crear únicamente el registro de metadatos en la base de datos con una URL dinámica, eliminando el paso de creación de archivos físicos en disco y su subida a almacenamiento (`uploadFile`) en el momento de creación.
 - **Consent:** Transición definitiva a generación de PDFs 100% bajo demanda, mapeando y reescribiendo URLs locales `/uploads/` en caliente a su formato API dinámico en el listado de consentimientos (`app/dashboard/consentimientos/page.tsx`), eliminando la necesidad de persistir PDFs estáticos locales.
 - **Config:** Configuración de `serverExternalPackages: ["pdfkit"]` en `next.config.mjs` para excluir `pdfkit` del empaquetado del servidor, corrigiendo el error de resolución de fuentes (`ENOENT Helvetica.afm`) en el entorno de desarrollo y producción.
-- **QA:** Actualización de los tests unitarios de `lib/actions/consent.test.ts` para validar el nuevo flujo asíncrono y la generación de enlaces dinámicos sin llamadas a `uploadFile` en tiempo de creación.
+- **QA:** Actualización de los tests unitarios de `lib/actions/consent.test.ts` para validar el nuevo flujo asíncrono, la generación de enlaces dinámicos sin llamadas a `uploadFile` en tiempo de creación y el mockeo/aserciones del nuevo Server Action `deleteInformedConsent` (3 nuevos casos de prueba añadidos).
 
 ---
 

@@ -222,3 +222,34 @@ export async function generateInformedConsent(data: {
     }
   }
 }
+
+/**
+ * Server Action para eliminar un consentimiento informado por su ID.
+ */
+export async function deleteInformedConsent(id: string): Promise<ActionResponse> {
+  if (!id) {
+    return {
+      success: false,
+      error: "El ID del consentimiento es requerido"
+    }
+  }
+
+  try {
+    await prisma.informedConsent.delete({
+      where: { id }
+    })
+
+    revalidatePath("/dashboard/consentimientos")
+    revalidatePath("/dashboard/pacientes")
+
+    return {
+      success: true
+    }
+  } catch (error) {
+    console.error("Error in deleteInformedConsent:", error)
+    return {
+      success: false,
+      error: "Error interno al eliminar el consentimiento informado"
+    }
+  }
+}

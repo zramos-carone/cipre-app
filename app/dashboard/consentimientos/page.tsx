@@ -10,11 +10,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { FileText, Eye, Download, Plus, CheckCircle, Clock, FileIcon } from "lucide-react"
+import { FileText, Eye, Download, Plus, CheckCircle, Clock, FileIcon, Trash2 } from "lucide-react"
 import { toast } from "sonner"
 import { getPatients } from "@/lib/actions/patients"
-import { toggleConsentSignature, getInformedConsents, generateInformedConsent } from "@/lib/actions/consent"
+import { toggleConsentSignature, getInformedConsents, generateInformedConsent, deleteInformedConsent } from "@/lib/actions/consent"
 import { InformedConsentDialog } from "@/components/dashboard/consentimientos/informed-consent-dialog"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 type ConsentStatus = "firmado" | "pendiente"
 
@@ -234,6 +245,28 @@ export default function ConsentimientosPage() {
     }
   }
 
+  const handleDeleteConsent = async (id: string | number) => {
+    // Si es un ID mock (simulado)
+    if (typeof id === "string" && !id.includes("-")) {
+      setConsents((prev) => prev.filter((c) => c.id !== id))
+      toast.success("Consentimiento simulado eliminado correctamente")
+      return
+    }
+
+    try {
+      const res = await deleteInformedConsent(id.toString())
+      if (res.success) {
+        setConsents((prev) => prev.filter((c) => c.id !== id))
+        toast.success("Consentimiento eliminado exitosamente")
+      } else {
+        toast.error(res.error || "No se pudo eliminar el consentimiento")
+      }
+    } catch (err) {
+      console.error(err)
+      toast.error("Error al conectar con el servidor")
+    }
+  }
+
   const filteredConsents = consents.filter((consent) => {
     if (patientFilter !== "all" && consent.patient !== patientFilter) return false
     if (typeFilter !== "all" && consent.title !== typeFilter) return false
@@ -391,6 +424,35 @@ export default function ConsentimientosPage() {
                 >
                   <Download className="h-5 w-5" />
                 </Button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-9 w-9 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded-lg transition-colors"
+                      aria-label="Eliminar"
+                    >
+                      <Trash2 className="h-5 w-5" />
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>¿Está seguro de eliminar este consentimiento?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Esta acción es irreversible y eliminará de forma permanente el registro del consentimiento del paciente <strong>{consent.patient}</strong>.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                      <AlertDialogAction
+                        className="bg-rose-600 hover:bg-rose-700 text-white font-semibold"
+                        onClick={() => handleDeleteConsent(consent.id)}
+                      >
+                        Eliminar
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </div>
             </CardContent>
           </Card>
