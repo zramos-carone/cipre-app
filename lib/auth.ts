@@ -52,15 +52,17 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        // Inyectar el nombre del rol en el token JWT
+        // Inyectar el nombre del rol e id en el token JWT
         token.role = (user as any).role;
+        token.id = user.id;
       }
       return token;
     },
     async session({ session, token }) {
       if (session?.user) {
-        // Exponer el nombre del rol en el objeto de la sesión en el cliente
+        // Exponer el nombre del rol e id en el objeto de la sesión en el cliente
         (session.user as any).role = token.role;
+        (session.user as any).id = token.id;
       }
       return session;
     }
