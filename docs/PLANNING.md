@@ -89,11 +89,23 @@ Para asegurar la calidad del proyecto, **ninguna Tarea (Task) se marca como comp
   * [x] **Task 6.2.4:** Programar pruebas unitarias completas con Vitest en `lib/actions/consent.test.ts` para verificar la robustez de las reglas de negocio del Server Action.
 
 ### 🩺 Feature 7: Historial Clínico Seguro
-**Objetivo:** Proteger la confidencialidad absoluta de las notas médicas.
-* **User Story 7.1:** Como psicólogo, quiero redactar y ver notas clínicas de mis pacientes de forma privada.
-  * [ ] **Task 7.1.1:** Crear API de Historial Clínico con protección middleware (rechazar peticiones del rol Recepción).
-  * [ ] **Task 7.1.2:** Implementar filtro a nivel BD para que un psicólogo solo lea sus propias notas.
-  * [ ] **Task 7.1.3:** Conectar formulario del Frontend con un editor de texto enriquecido.
+**Objetivo:** Proteger la confidencialidad absoluta de las notas médicas y registrar las sesiones de forma estructurada.
+* **User Story 7.1:** Como psicólogo, quiero redactar, registrar y ver las sesiones clínicas estructuradas de mis pacientes de forma privada, de acuerdo a la maqueta `nueva_sesion.png`.
+  * [ ] **Task 7.1.1:** Extender el modelo `ClinicalNote` en `prisma/schema.prisma` o estructurar mediante serialización JSON el campo `content` para almacenar de forma obligatoria los campos de la sesión:
+    * `fecha` (Date picker / fecha de sesión)
+    * `hora` (Time picker / hora de inicio)
+    * `duracion` (Input numérico / duración de la sesión en minutos)
+    * `motivo` (Textarea / motivo principal de la consulta)
+    * `observaciones` (Textarea / desarrollo de la sesión, técnicas aplicadas y respuestas del paciente)
+    * `estadoEmocional` (Input o selector / estado emocional observado)
+    * `planAccion` (Textarea / plan de acción y tareas para el paciente)
+    * `proximaCita` (Input de fecha o texto / próxima cita sugerida)
+  * [ ] **Task 7.1.2:** Crear un esquema de validación con Zod en el backend y frontend para asegurar la integridad de los 8 campos obligatorios y estructurados.
+  * [ ] **Task 7.1.3:** Diseñar y desarrollar el componente modal interactivo `NuevaSesionDialog` en el Frontend que replique fielmente la maqueta `nueva_sesion.png`, aplicando estilos HSL premium, sombras difusas y micro-animaciones dinámicas en los botones Cancelar y Guardar Sesión (`active:scale-95`).
+  * [ ] **Task 7.1.4:** Crear Server Actions (`createClinicalNote`, `getClinicalNotesByPatient`) protegidos por validación de rol y middleware, bloqueando por completo las solicitudes de usuarios con rol de Recepción.
+  * [ ] **Task 7.1.5:** Implementar filtro a nivel de consultas en base de datos para restringir la confidencialidad absoluta: los psicólogos solo deben poder leer y registrar notas de pacientes vinculados a ellos.
+  * [ ] **Task 7.1.6:** Desarrollar el listado histórico en forma de línea de tiempo (Timeline) en el panel de detalles del paciente para mostrar las notas clínicas previas estructuradas con opción de desglose rápido.
+  * [ ] **Task 7.1.7:** Programar cobertura completa de pruebas automatizadas con Vitest para verificar las restricciones de rol de la API, las reglas de negocio de guardado y los filtros de seguridad de datos.
 
 ### 📊 Feature 8: Dashboard Principal
 **Objetivo:** Centralizar los indicadores más importantes de la clínica.
