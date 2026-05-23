@@ -4,10 +4,17 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/) y este proyecto se adhiere a nuestra convención local definida en `docs/COMMIT.md`.
 
+## [0.5.2] - 2026-05-23
+### Added (Añadido)
+- **UI:** Creación del diálogo modal `NuevaSesionDialog` (`components/dashboard/historial/nueva-sesion-dialog.tsx`) para registrar sesiones clínicas con campos estructurados, validaciones integradas, transiciones y micro-animaciones premium (`active:scale-95`).
+- **QA:** Cobertura de pruebas unitarias con Vitest (`components/dashboard/historial/nueva-sesion-dialog.test.tsx`) para asegurar el correcto renderizado, manejo de estados de carga, despliegue de errores de Zod y control del estado del modal.
+
+---
+
 ## [0.5.1] - 2026-05-23
 ### Added (Añadido)
-- **QA:** [Task 7.1.2] Creación del esquema de validación Zod (`lib/validations/clinical-note.ts`) para asegurar la integridad de los 8 campos obligatorios y estructurados de las sesiones clínicas.
-- **QA:** [Task 7.1.2] Cobertura de pruebas unitarias con Vitest (`lib/validations/clinical-note.test.ts`) verificando escenarios de éxito y múltiples casos de fallo en campos y formatos.
+- **QA:** Creación del esquema de validación Zod (`lib/validations/clinical-note.ts`) para asegurar la integridad de los 8 campos obligatorios y estructurados de las sesiones clínicas.
+- **QA:** Cobertura de pruebas unitarias con Vitest (`lib/validations/clinical-note.test.ts`) verificando escenarios de éxito y múltiples casos de fallo en campos y formatos.
 
 ---
 

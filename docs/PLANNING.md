@@ -101,7 +101,7 @@ Para asegurar la calidad del proyecto, **ninguna Tarea (Task) se marca como comp
     * `planAccion` (Textarea / plan de acción y tareas para el paciente)
     * `proximaCita` (Input de fecha o texto / próxima cita sugerida)
   * [x] **Task 7.1.2:** Crear un esquema de validación con Zod en el backend y frontend para asegurar la integridad de los 8 campos obligatorios y estructurados.
-  * [ ] **Task 7.1.3:** Diseñar y desarrollar el componente modal interactivo `NuevaSesionDialog` en el Frontend que replique fielmente la maqueta `nueva_sesion.png`, aplicando estilos HSL premium, sombras difusas y micro-animaciones dinámicas en los botones Cancelar y Guardar Sesión (`active:scale-95`).
+  * [x] **Task 7.1.3:** Diseñar y desarrollar el componente modal interactivo `NuevaSesionDialog` en el Frontend que replique fielmente la maqueta `nueva_sesion.png`, aplicando estilos HSL premium, sombras difusas y micro-animaciones dinámicas en los botones Cancelar y Guardar Sesión (`active:scale-95`).
   * [ ] **Task 7.1.4:** Crear Server Actions (`createClinicalNote`, `getClinicalNotesByPatient`) protegidos por validación de rol y middleware, bloqueando por completo las solicitudes de usuarios con rol de Recepción.
   * [ ] **Task 7.1.5:** Implementar filtro a nivel de consultas en base de datos para restringir la confidencialidad absoluta: los psicólogos solo deben poder leer y registrar notas de pacientes vinculados a ellos.
   * [ ] **Task 7.1.6:** Desarrollar el listado histórico en forma de línea de tiempo (Timeline) en el panel de detalles del paciente para mostrar las notas clínicas previas estructuradas con opción de desglose rápido.
