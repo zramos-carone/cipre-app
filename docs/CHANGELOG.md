@@ -4,6 +4,13 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/) y este proyecto se adhiere a nuestra convención local definida en `docs/COMMIT.md`.
 
+## [0.5.3] - 2026-05-23
+### Added (Añadido)
+- **Auth:** Implementación de Server Actions (`createClinicalNote`, `getClinicalNotesByPatient`, `getLinkedPatients`) en `lib/actions/clinical-notes.ts` protegidos por rol de usuario mediante NextAuth. Bloqueo estricto al rol de "Recepción".
+- **QA:** Cobertura de pruebas unitarias robustas en `lib/actions/clinical-notes.test.ts` con mockeo de Prisma y NextAuth, validando la lógica de autorización por rol, reglas de negocio y restricciones.
+
+---
+
 ## [0.5.2] - 2026-05-23
 ### Added (Añadido)
 - **UI:** Creación del diálogo modal `NuevaSesionDialog` (`components/dashboard/historial/nueva-sesion-dialog.tsx`) para registrar sesiones clínicas con campos estructurados, validaciones integradas, transiciones y micro-animaciones premium (`active:scale-95`).
