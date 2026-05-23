@@ -4,12 +4,14 @@ import prisma from "@/lib/prisma"
 import { uploadFile } from "@/lib/storage"
 import { revalidatePath } from "next/cache"
 import { consentFormSchema } from "@/lib/validations/consent"
+import crypto from "crypto"
 
 export type ActionResponse<T = any> = {
   success: boolean
   data?: T
   error?: string
 }
+
 
 /**
  * Server Action para subir un PDF de consentimiento y enlazarlo a un paciente (upsert 1-1).
@@ -151,6 +153,7 @@ export async function toggleConsentSignature(id: string, isSigned: boolean): Pro
 
 /**
  * Server Action para generar un consentimiento informado en la base de datos de Prisma.
+ * Genera el registro con un enlace dinámico para resolver el PDF bajo demanda.
  */
 export async function generateInformedConsent(data: {
   patientId: string
@@ -166,7 +169,7 @@ export async function generateInformedConsent(data: {
     }
   }
 
-  const { patientId, templateId } = validation.data
+  const { patientId, templateId, date } = validation.data
 
   try {
     // 2. Verificar que el paciente exista
@@ -190,12 +193,16 @@ export async function generateInformedConsent(data: {
       }
     }
 
-    // 4. Crear el registro en la base de datos
-    // Usamos la plantilla en el path para poder deducir el título
+    // 4. Generar el UUID para el consentimiento y definir la URL dinámica
+    const consentId = crypto.randomUUID()
+    const documentUrl = `/api/consentimientos/${consentId}/pdf?template=${templateId}&date=${date}`
+
+    // 5. Crear el registro en la base de datos
     const consent = await prisma.informedConsent.create({
       data: {
+        id: consentId,
         patientId,
-        documentUrl: `/uploads/${templateId}.pdf`,
+        documentUrl,
         isSigned: false,
       }
     })
@@ -215,4 +222,3 @@ export async function generateInformedConsent(data: {
     }
   }
 }
-

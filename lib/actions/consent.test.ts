@@ -28,6 +28,11 @@ vi.mock("@/lib/storage", () => ({
   uploadFile: vi.fn(),
 }))
 
+// Mock del generador de PDFs personalizados
+vi.mock("@/lib/pdf/consent-generator", () => ({
+  generateConsentPdf: vi.fn().mockResolvedValue(Buffer.from("pdf-content")),
+}))
+
 describe("Consent Server Actions - uploadInformedConsent", () => {
   beforeEach(() => {
     vi.clearAllMocks()
@@ -241,7 +246,7 @@ describe("Consent Server Actions - generateInformedConsent", () => {
     vi.restoreAllMocks()
   })
 
-  it("debería generar un consentimiento informado exitosamente", async () => {
+  it("debería generar un consentimiento informado con enlace dinámico exitosamente", async () => {
     const data = {
       patientId: "patient-123",
       templateId: "tratamiento",
@@ -255,31 +260,36 @@ describe("Consent Server Actions - generateInformedConsent", () => {
       informedConsent: null
     } as any)
 
-    const mockConsent = {
-      id: "consent-456",
-      patientId: "patient-123",
-      documentUrl: "/uploads/tratamiento.pdf",
-      isSigned: false,
-      signedAt: null
-    }
-
-    vi.mocked(prisma.informedConsent.create).mockResolvedValue(mockConsent as any)
+    // Simular creación del registro
+    vi.mocked(prisma.informedConsent.create).mockImplementation(async (args: any) => {
+      return {
+        id: args.data.id || "consent-mock-id",
+        patientId: args.data.patientId,
+        documentUrl: args.data.documentUrl,
+        isSigned: args.data.isSigned,
+        signedAt: null
+      } as any
+    })
 
     const result = await generateInformedConsent(data)
 
     expect(result.success).toBe(true)
-    expect(result.data).toEqual(mockConsent)
+    expect(result.data?.documentUrl).toMatch(/^\/api\/consentimientos\/[a-f0-9-]+\/pdf\?template=tratamiento&date=2026-05-20/)
     expect(prisma.patient.findUnique).toHaveBeenCalledWith({
       where: { id: "patient-123" },
       include: { informedConsent: true }
     })
     expect(prisma.informedConsent.create).toHaveBeenCalledWith({
       data: {
+        id: expect.any(String),
         patientId: "patient-123",
-        documentUrl: "/uploads/tratamiento.pdf",
+        documentUrl: expect.stringMatching(/^\/api\/consentimientos\/[a-f0-9-]+\/pdf\?template=tratamiento&date=2026-05-20/),
         isSigned: false
       }
     })
+    // No debe subir archivos ni actualizar el registro de nuevo
+    expect(uploadFile).not.toHaveBeenCalled()
+    expect(prisma.informedConsent.update).not.toHaveBeenCalled()
   })
 
   it("debería fallar si falla la validación del esquema de Zod (ej: templateId inválido)", async () => {
