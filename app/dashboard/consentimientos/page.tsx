@@ -29,36 +29,36 @@ interface Consent {
 
 const consentsData: Consent[] = [
   {
-    id: 1,
+    id: "1",
     title: "Tratamiento Psicológico",
     patient: "María González",
     date: "2026-03-15",
     status: "firmado",
-    documentUrl: "/uploads/tratamiento.pdf",
+    documentUrl: "/api/consentimientos/1/pdf?template=tratamiento&date=2026-03-15",
   },
   {
-    id: 2,
+    id: "2",
     title: "Manejo de Datos Personales",
     patient: "Juan Pérez",
     date: "2026-04-01",
     status: "firmado",
-    documentUrl: "/uploads/datos.pdf",
+    documentUrl: "/api/consentimientos/2/pdf?template=datos&date=2026-04-01",
   },
   {
-    id: 3,
+    id: "3",
     title: "Tratamiento Psicológico",
     patient: "Ana Martínez",
     date: "2026-03-20",
     status: "firmado",
-    documentUrl: "/uploads/tratamiento.pdf",
+    documentUrl: "/api/consentimientos/3/pdf?template=tratamiento&date=2026-03-20",
   },
   {
-    id: 4,
+    id: "4",
     title: "Evaluación Psicológica",
     patient: "Carlos López",
     date: "2026-04-02",
     status: "pendiente",
-    documentUrl: "/uploads/evaluacion.pdf",
+    documentUrl: "/api/consentimientos/4/pdf?template=evaluacion&date=2026-04-02",
   },
 ]
 
@@ -120,21 +120,32 @@ export default function ConsentimientosPage() {
         const dbConsents = consentsRes.data.map((c: any) => {
           const isSigned = c.isSigned
           let title = "Tratamiento Psicológico"
+          let templateId: "tratamiento" | "datos" | "evaluacion" = "tratamiento"
           if (c.documentUrl.includes("datos")) {
             title = "Manejo de Datos Personales"
+            templateId = "datos"
           } else if (c.documentUrl.includes("evaluacion")) {
             title = "Evaluación Psicológica"
+            templateId = "evaluacion"
+          }
+
+          const date = c.signedAt
+            ? new Date(c.signedAt).toISOString().split('T')[0]
+            : new Date().toISOString().split('T')[0]
+
+          let documentUrl = c.documentUrl
+          // Si es una URL vieja que apunta a /uploads/ (archivo local borrado), reescribir a la URL dinámica de la API
+          if (documentUrl && documentUrl.startsWith("/uploads/")) {
+            documentUrl = `/api/consentimientos/${c.id}/pdf?template=${templateId}&date=${date}`
           }
 
           return {
             id: c.id,
             title,
             patient: `${c.patient.name} ${c.patient.lastName}`,
-            date: c.signedAt
-              ? new Date(c.signedAt).toISOString().split('T')[0]
-              : new Date().toISOString().split('T')[0],
+            date,
             status: isSigned ? ("firmado" as const) : ("pendiente" as const),
-            documentUrl: c.documentUrl || `/uploads/${c.templateId || "tratamiento"}.pdf`,
+            documentUrl: documentUrl || `/api/consentimientos/${c.id}/pdf?template=${templateId}&date=${date}`,
           }
         })
 
@@ -167,7 +178,7 @@ export default function ConsentimientosPage() {
           patient: selectedPatient ? `${selectedPatient.name} ${selectedPatient.lastName}` : "Paciente Nuevo",
           date: data.date,
           status: "pendiente",
-          documentUrl: res.data.documentUrl || `/uploads/${data.templateId}.pdf`,
+          documentUrl: res.data.documentUrl || `/api/consentimientos/${res.data.id}/pdf?template=${data.templateId}&date=${data.date}`,
         }
 
         setConsents((prev) => [newConsent, ...prev])
