@@ -1,6 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useSession } from "next-auth/react"
+import { toast } from "sonner"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import {
@@ -10,293 +12,417 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Plus, User, Calendar } from "lucide-react"
+import { 
+  Plus, 
+  User, 
+  Calendar, 
+  ChevronDown, 
+  ChevronUp, 
+  Clock, 
+  Smile, 
+  FileText, 
+  ArrowRight,
+  Loader2,
+  AlertCircle
+} from "lucide-react"
+import { 
+  getLinkedPatients, 
+  getClinicalNotesByPatient, 
+  createClinicalNote 
+} from "@/lib/actions/clinical-notes"
+import { NuevaSesionDialog } from "@/components/dashboard/historial/nueva-sesion-dialog"
+import { ClinicalNoteInput } from "@/lib/validations/clinical-note"
 
-const patients = [
-  {
-    id: "1",
-    name: "María González",
-    totalSessions: 8,
-    firstSession: "2026-01-15",
-    lastSession: "2026-03-28",
-    psychologist: "Dr. Roberto Sánchez",
-  },
-  {
-    id: "2",
-    name: "Juan Pérez",
-    totalSessions: 5,
-    firstSession: "2026-02-01",
-    lastSession: "2026-03-25",
-    psychologist: "Dra. Carmen López",
-  },
-  {
-    id: "3",
-    name: "Ana Martínez",
-    totalSessions: 3,
-    firstSession: "2026-03-01",
-    lastSession: "2026-03-22",
-    psychologist: "Dr. Roberto Sánchez",
-  },
-]
-
-const sessionsByPatient: Record<string, Array<{
-  id: string
-  number: number
-  date: string
-  duration: string
-  status: "Completada" | "Pendiente" | "Cancelada"
-  reason: string
-  observations: string
-  actionPlan: string
-}>> = {
-  "1": [
-    {
-      id: "s8",
-      number: 8,
-      date: "2026-03-28",
-      duration: "50 min",
-      status: "Completada",
-      reason: "Seguimiento de síntomas de ansiedad. Paciente reporta mejoras significativas en manejo de situaciones estresantes.",
-      observations: "Se aplicaron técnicas de respiración y reestructuración cognitiva. Buena receptividad del paciente.",
-      actionPlan: "Continuar con ejercicios de mindfulness. Próxima sesión en 7 días.",
-    },
-    {
-      id: "s7",
-      number: 7,
-      date: "2026-03-21",
-      duration: "50 min",
-      status: "Completada",
-      reason: "Seguimiento de síntomas de ansiedad. Paciente reporta mejoras significativas en manejo de situaciones estresantes.",
-      observations: "Se aplicaron técnicas de respiración y reestructuración cognitiva. Buena receptividad del paciente.",
-      actionPlan: "Continuar con ejercicios de mindfulness. Próxima sesión en 7 días.",
-    },
-    {
-      id: "s6",
-      number: 6,
-      date: "2026-03-14",
-      duration: "50 min",
-      status: "Completada",
-      reason: "Revisión de avances en técnicas de relajación. Paciente muestra progreso constante.",
-      observations: "Se introdujeron nuevas técnicas de visualización. Paciente receptivo.",
-      actionPlan: "Practicar visualización guiada diariamente.",
-    },
-    {
-      id: "s5",
-      number: 5,
-      date: "2026-03-07",
-      duration: "50 min",
-      status: "Completada",
-      reason: "Trabajo en identificación de pensamientos automáticos negativos.",
-      observations: "Paciente logra identificar patrones de pensamiento disfuncionales.",
-      actionPlan: "Registro diario de pensamientos automáticos.",
-    },
-  ],
-  "2": [
-    {
-      id: "s5",
-      number: 5,
-      date: "2026-03-25",
-      duration: "45 min",
-      status: "Completada",
-      reason: "Seguimiento de terapia de pareja. Avances en comunicación.",
-      observations: "Pareja muestra mejoras en escucha activa.",
-      actionPlan: "Ejercicios de comunicación asertiva.",
-    },
-    {
-      id: "s4",
-      number: 4,
-      date: "2026-03-18",
-      duration: "45 min",
-      status: "Completada",
-      reason: "Trabajo en resolución de conflictos.",
-      observations: "Se establecieron acuerdos para manejo de desacuerdos.",
-      actionPlan: "Implementar técnicas de negociación.",
-    },
-  ],
-  "3": [
-    {
-      id: "s3",
-      number: 3,
-      date: "2026-03-22",
-      duration: "50 min",
-      status: "Completada",
-      reason: "Evaluación de estado de ánimo. Paciente reporta mejoría.",
-      observations: "Síntomas depresivos en remisión parcial.",
-      actionPlan: "Continuar con activación conductual.",
-    },
-  ],
-}
-
-function getStatusColor(status: string) {
-  switch (status) {
-    case "Completada":
-      return "bg-green-100 text-green-700"
-    case "Pendiente":
-      return "bg-orange-100 text-orange-700"
-    case "Cancelada":
-      return "bg-red-100 text-red-700"
-    default:
-      return "bg-muted text-muted-foreground"
-  }
-}
-
-function getFormattedDate() {
+function getFormattedDate(dateInput?: Date | string) {
   const options: Intl.DateTimeFormatOptions = {
     weekday: "long",
     day: "numeric",
     month: "long",
     year: "numeric",
   }
-  const date = new Date()
+  const date = dateInput ? new Date(dateInput) : new Date()
   return date.toLocaleDateString("es-ES", options)
 }
 
 export default function HistorialClinicoPage() {
-  const [selectedPatient, setSelectedPatient] = useState<string>("")
-  const formattedDate = getFormattedDate()
+  const { data: session } = useSession()
+  const [patients, setPatients] = useState<any[]>([])
+  const [selectedPatientId, setSelectedPatientId] = useState<string>("")
+  const [notes, setNotes] = useState<any[]>([])
+  const [expandedNotes, setExpandedNotes] = useState<Record<string, boolean>>({})
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
+  
+  // Estados de carga
+  const [loadingPatients, setLoadingPatients] = useState<boolean>(true)
+  const [loadingNotes, setLoadingNotes] = useState<boolean>(false)
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
 
-  const patient = patients.find((p) => p.id === selectedPatient)
-  const sessions = selectedPatient ? sessionsByPatient[selectedPatient] || [] : []
+  const formattedCurrentDate = getFormattedDate()
+
+  // 1. Cargar pacientes vinculados al montar el componente
+  useEffect(() => {
+    async function loadPatients() {
+      setLoadingPatients(true)
+      const res = await getLinkedPatients()
+      if (res.success && res.data) {
+        setPatients(res.data)
+      } else {
+        toast.error(res.error || "Error al cargar la lista de pacientes")
+      }
+      setLoadingPatients(false)
+    }
+    loadPatients()
+  }, [])
+
+  // 2. Cargar notas clínicas del paciente seleccionado
+  useEffect(() => {
+    if (!selectedPatientId) {
+      setNotes([])
+      return
+    }
+
+    async function loadNotes() {
+      setLoadingNotes(true)
+      const res = await getClinicalNotesByPatient(selectedPatientId)
+      if (res.success && res.data) {
+        setNotes(res.data)
+        // Por defecto, expandir la nota más reciente (la primera)
+        if (res.data.length > 0) {
+          setExpandedNotes({ [res.data[0].id]: true })
+        } else {
+          setExpandedNotes({})
+        }
+      } else {
+        toast.error(res.error || "Error al cargar el historial del paciente")
+      }
+      setLoadingNotes(false)
+    }
+    loadNotes()
+  }, [selectedPatientId])
+
+  // Obtener datos del paciente seleccionado
+  const selectedPatient = patients.find((p) => p.id === selectedPatientId)
+
+  // Metadatos calculados de la sesión
+  const totalSessions = notes.length
+  const firstSessionDate = notes.length > 0 
+    ? new Date(notes[notes.length - 1].sessionDate).toLocaleDateString("es-ES") 
+    : "Ninguna"
+  const lastSessionDate = notes.length > 0 
+    ? new Date(notes[0].sessionDate).toLocaleDateString("es-ES") 
+    : "Ninguna"
+  const assignedPsychologist = notes.length > 0 
+    ? notes[0].psychologist.fullName 
+    : (session?.user?.name || "No asignado")
+
+  // Alternar el desglose rápido de una nota
+  const toggleNote = (id: string) => {
+    setExpandedNotes(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }))
+  }
+
+  // Manejar el guardado de una nueva sesión
+  const handleCreateNote = async (data: ClinicalNoteInput) => {
+    setIsSubmitting(true)
+    
+    // Crear FormData para enviar al Server Action
+    const formData = new FormData()
+    formData.append("patientId", data.patientId)
+    formData.append("sessionDate", data.sessionDate.toISOString().split('T')[0])
+    formData.append("sessionTime", data.sessionTime)
+    formData.append("duration", String(data.duration))
+    formData.append("reason", data.reason)
+    formData.append("observations", data.observations)
+    formData.append("emotionalState", data.emotionalState)
+    formData.append("actionPlan", data.actionPlan)
+    if (data.nextSession) {
+      formData.append("nextSession", data.nextSession)
+    }
+
+    const res = await createClinicalNote(formData)
+    
+    if (res.success) {
+      toast.success("Sesión clínica registrada correctamente")
+      setIsDialogOpen(false)
+      // Recargar notas del paciente para actualizar el Timeline
+      const notesRes = await getClinicalNotesByPatient(selectedPatientId)
+      if (notesRes.success && notesRes.data) {
+        setNotes(notesRes.data)
+        // Expandir la nota recién creada
+        if (notesRes.data.length > 0) {
+          setExpandedNotes({ [notesRes.data[0].id]: true })
+        }
+      }
+    } else {
+      toast.error(res.error || "Ocurrió un error al guardar la sesión")
+    }
+    
+    setIsSubmitting(false)
+  }
 
   return (
     <div className="p-6 lg:p-8">
       {/* Clinic Header */}
-      <header className="mb-8 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+      <header className="mb-8 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between select-none">
         <div>
           <h1 className="text-lg font-semibold text-foreground">Clínica Preventiva CIPRE</h1>
         </div>
-        <p className="text-sm capitalize text-muted-foreground">{formattedDate}</p>
+        <p className="text-sm capitalize text-muted-foreground">{formattedCurrentDate}</p>
       </header>
 
       {/* Title */}
       <div className="mb-6 flex items-start justify-between">
         <div>
-          <h2 className="text-2xl font-semibold text-foreground">Historial Clínico</h2>
-          <p className="text-muted-foreground">Viñetas de sesiones psicológicas</p>
+          <h2 className="text-2xl font-bold text-foreground">Historial Clínico</h2>
+          <p className="text-muted-foreground">Expediente y viñetas de sesiones clínicas</p>
         </div>
-        <Button className="bg-primary hover:bg-primary/90">
-          <Plus className="mr-2 h-4 w-4" />
-          Nueva Sesión
-        </Button>
+        {selectedPatientId && (
+          <Button 
+            onClick={() => setIsDialogOpen(true)}
+            className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold shadow-lg shadow-primary/20 transition-all active:scale-95 cursor-pointer flex items-center gap-2"
+          >
+            <Plus className="h-4 w-4" />
+            Nueva Sesión
+          </Button>
+        )}
       </div>
 
       {/* Patient Selector */}
-      <Card>
+      <Card className="mb-6 border-border/50 shadow-sm bg-card/50 backdrop-blur-sm">
         <CardContent className="pt-6">
           <div className="max-w-md">
-            <label className="mb-2 block text-sm font-medium text-foreground">
+            <label className="mb-2 block text-sm font-semibold text-foreground/80">
               Seleccionar Paciente
             </label>
-            <Select value={selectedPatient} onValueChange={setSelectedPatient}>
-              <SelectTrigger>
-                <SelectValue placeholder="Seleccione un paciente" />
-              </SelectTrigger>
-              <SelectContent>
-                {patients.map((p) => (
-                  <SelectItem key={p.id} value={p.id}>
-                    {p.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            {loadingPatients ? (
+              <div className="flex h-10 w-full items-center justify-center rounded-lg border border-input bg-background/50 text-muted-foreground text-sm">
+                <Loader2 className="mr-2 h-4 w-4 animate-spin text-primary" />
+                Cargando listado de pacientes...
+              </div>
+            ) : (
+              <Select value={selectedPatientId} onValueChange={setSelectedPatientId}>
+                <SelectTrigger className="w-full bg-background border-input h-10">
+                  <SelectValue placeholder="Seleccione un paciente" />
+                </SelectTrigger>
+                <SelectContent>
+                  {patients.length > 0 ? (
+                    patients.map((p) => (
+                      <SelectItem key={p.id} value={p.id}>
+                        {p.name} {p.lastName}
+                      </SelectItem>
+                    ))
+                  ) : (
+                    <SelectItem value="none" disabled>
+                      No se encontraron pacientes vinculados
+                    </SelectItem>
+                  )}
+                </SelectContent>
+              </Select>
+            )}
           </div>
         </CardContent>
       </Card>
 
       {/* Patient Info & Sessions */}
-      {patient && (
-        <>
+      {selectedPatientId && selectedPatient && (
+        <div className="space-y-6">
           {/* Patient Info Card */}
-          <Card>
+          <Card className="border-border/50 shadow-sm bg-card">
             <CardContent className="py-6">
-              <div className="flex items-center gap-6">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted">
-                  <User className="h-6 w-6 text-muted-foreground" />
+              <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 shadow-inner shrink-0 select-none">
+                  <User className="h-8 w-8 text-primary" />
                 </div>
-                <div className="flex-1">
-                  <h2 className="text-lg font-semibold text-foreground">{patient.name}</h2>
-                  <div className="mt-2 grid grid-cols-4 gap-8">
-                    <div>
-                      <p className="text-sm text-muted-foreground">Total de Sesiones</p>
-                      <p className="font-medium text-foreground">{patient.totalSessions} sesiones</p>
+                <div className="flex-1 w-full text-center md:text-left">
+                  <h3 className="text-xl font-bold text-foreground">
+                    {selectedPatient.name} {selectedPatient.lastName}
+                  </h3>
+                  
+                  {loadingNotes ? (
+                    <div className="mt-4 flex items-center justify-center md:justify-start text-sm text-muted-foreground animate-pulse">
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin text-primary" />
+                      Procesando expediente clínico...
                     </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground">Primera Sesión</p>
-                      <p className="font-medium text-foreground">{patient.firstSession}</p>
+                  ) : (
+                    <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-left border-t border-border/50 pt-4">
+                      <div>
+                        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Total de Sesiones</p>
+                        <p className="font-bold text-foreground mt-0.5 text-base">{totalSessions} sesiones</p>
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Primera Sesión</p>
+                        <p className="font-bold text-foreground mt-0.5 text-base">{firstSessionDate}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Última Sesión</p>
+                        <p className="font-bold text-foreground mt-0.5 text-base">{lastSessionDate}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Psicólogo Asignado</p>
+                        <p className="font-bold text-foreground mt-0.5 text-base">{assignedPsychologist}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground">Última Sesión</p>
-                      <p className="font-medium text-foreground">{patient.lastSession}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground">Psicólogo Asignado</p>
-                      <p className="font-medium text-foreground">{patient.psychologist}</p>
-                    </div>
-                  </div>
+                  )}
                 </div>
               </div>
             </CardContent>
           </Card>
 
           {/* Sessions Timeline */}
-          <div className="space-y-0">
-            {sessions.map((session, index) => (
-              <div key={session.id} className="relative flex gap-6">
-                {/* Timeline Line */}
-                <div className="flex flex-col items-center">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground font-semibold">
-                    {session.number}
-                  </div>
-                  {index < sessions.length - 1 && (
-                    <div className="w-0.5 flex-1 bg-border" />
-                  )}
-                </div>
-
-                {/* Session Content */}
-                <Card className="mb-6 flex-1">
-                  <CardContent className="py-4">
-                    <div className="mb-3 flex items-center gap-4">
-                      <h3 className="font-semibold text-foreground">Sesión #{session.number}</h3>
-                      <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                        <Calendar className="h-4 w-4" />
-                        {session.date}
-                      </div>
-                      <span className="text-sm text-muted-foreground">{session.duration}</span>
-                      <span className={`rounded-full px-3 py-1 text-xs font-medium ${getStatusColor(session.status)}`}>
-                        {session.status}
-                      </span>
-                    </div>
-
-                    <div className="space-y-3">
-                      <div>
-                        <p className="text-sm font-medium text-foreground">Motivo de Consulta:</p>
-                        <p className="text-sm text-muted-foreground">{session.reason}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-foreground">Observaciones:</p>
-                        <p className="text-sm text-muted-foreground">{session.observations}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-foreground">Plan de Acción:</p>
-                        <p className="text-sm text-muted-foreground">{session.actionPlan}</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+          <div className="space-y-4">
+            <h3 className="text-lg font-bold text-foreground/95 flex items-center gap-2 mb-2 select-none">
+              <Calendar className="w-5 h-5 text-primary" />
+              Línea de Tiempo de Sesiones
+            </h3>
+            
+            {loadingNotes ? (
+              <div className="py-12 flex flex-col items-center justify-center bg-card rounded-xl border border-border/50">
+                <Loader2 className="h-8 w-8 animate-spin text-primary mb-2" />
+                <p className="text-sm text-muted-foreground">Cargando sesiones del historial...</p>
               </div>
-            ))}
+            ) : notes.length > 0 ? (
+              <div className="space-y-0 relative border-l border-primary/20 ml-5 pl-8 py-2">
+                {notes.map((session, index) => {
+                  const isExpanded = !!expandedNotes[session.id]
+                  return (
+                    <div key={session.id} className="relative mb-6 last:mb-0">
+                      
+                      {/* Timeline Node Icon (Sesión Número) */}
+                      <span className="absolute -left-[53px] top-1 flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold shadow-md shadow-primary/25 border-4 border-background select-none">
+                        {notes.length - index}
+                      </span>
+
+                      {/* Session Card */}
+                      <Card className="border-border/50 shadow-sm bg-card hover:border-primary/30 transition-all duration-200">
+                        
+                        {/* Header Colapsable */}
+                        <div 
+                          onClick={() => toggleNote(session.id)}
+                          className="px-5 py-4 flex items-center justify-between cursor-pointer select-none"
+                        >
+                          <div className="flex flex-wrap items-center gap-3 md:gap-4">
+                            <h4 className="font-bold text-foreground">Sesión #{notes.length - index}</h4>
+                            <div className="flex items-center gap-1.5 text-sm text-muted-foreground font-medium">
+                              <Calendar className="h-4 w-4 text-primary shrink-0" />
+                              {new Date(session.sessionDate).toLocaleDateString("es-ES")}
+                            </div>
+                            <div className="flex items-center gap-1 text-sm text-muted-foreground font-medium">
+                              <Clock className="h-4 w-4 text-primary shrink-0" />
+                              {session.sessionTime} ({session.duration} min)
+                            </div>
+                            <span className="rounded-full px-2.5 py-0.5 text-xs font-semibold bg-primary/10 text-primary uppercase tracking-wider">
+                              {session.emotionalState}
+                            </span>
+                          </div>
+                          
+                          <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground">
+                            {isExpanded ? (
+                              <ChevronUp className="h-5 w-5" />
+                            ) : (
+                              <ChevronDown className="h-5 w-5" />
+                            )}
+                          </Button>
+                        </div>
+
+                        {/* Contenido Expandido (Desglose) */}
+                        {isExpanded && (
+                          <CardContent className="px-5 pb-5 pt-0 border-t border-border/50 divide-y divide-border/50 space-y-4">
+                            <div className="pt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div className="space-y-1">
+                                <span className="text-xs font-bold text-primary uppercase tracking-wider flex items-center gap-1.5">
+                                  <User className="w-3.5 h-3.5" />
+                                  Psicólogo
+                                </span>
+                                <p className="text-sm font-medium text-foreground">{session.psychologist.fullName}</p>
+                              </div>
+                              {session.nextSession && (
+                                <div className="space-y-1">
+                                  <span className="text-xs font-bold text-primary uppercase tracking-wider flex items-center gap-1.5">
+                                    <ArrowRight className="w-3.5 h-3.5" />
+                                    Próxima Sesión Sugerida
+                                  </span>
+                                  <p className="text-sm font-medium text-foreground">{session.nextSession}</p>
+                                </div>
+                              )}
+                            </div>
+
+                            <div className="pt-4 space-y-3">
+                              <div className="space-y-1.5">
+                                <span className="text-xs font-bold text-primary uppercase tracking-wider flex items-center gap-1.5">
+                                  <Smile className="w-3.5 h-3.5" />
+                                  Motivo de Consulta
+                                </span>
+                                <p className="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">{session.reason}</p>
+                              </div>
+                            </div>
+
+                            <div className="pt-4 space-y-3">
+                              <div className="space-y-1.5">
+                                <span className="text-xs font-bold text-primary uppercase tracking-wider flex items-center gap-1.5">
+                                  <FileText className="w-3.5 h-3.5" />
+                                  Observaciones Clínicas y Técnicas
+                                </span>
+                                <p className="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">{session.observations}</p>
+                              </div>
+                            </div>
+
+                            <div className="pt-4 space-y-3">
+                              <div className="space-y-1.5">
+                                <span className="text-xs font-bold text-primary uppercase tracking-wider flex items-center gap-1.5">
+                                  <FileText className="w-3.5 h-3.5" />
+                                  Plan de Acción (Tareas)
+                                </span>
+                                <p className="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">{session.actionPlan}</p>
+                              </div>
+                            </div>
+                          </CardContent>
+                        )}
+
+                      </Card>
+                    </div>
+                  )
+                })}
+              </div>
+            ) : (
+              <Card className="border-border/50 bg-muted/5 dark:bg-card/50">
+                <CardContent className="flex flex-col items-center justify-center py-12 text-center select-none">
+                  <AlertCircle className="mb-3 h-10 w-10 text-muted-foreground/60" />
+                  <h4 className="font-bold text-foreground/80 mb-1">Sin historial registrado</h4>
+                  <p className="text-sm text-muted-foreground max-w-xs">
+                    Este paciente aún no cuenta con sesiones clínicas registradas. Presione "Nueva Sesión" para comenzar.
+                  </p>
+                </CardContent>
+              </Card>
+            )}
           </div>
-        </>
+        </div>
       )}
 
       {/* Empty State */}
-      {!selectedPatient && (
-        <Card>
-          <CardContent className="flex flex-col items-center justify-center py-12">
-            <User className="mb-4 h-12 w-12 text-muted-foreground" />
-            <p className="text-muted-foreground">Seleccione un paciente para ver su historial clínico</p>
+      {!selectedPatientId && (
+        <Card className="border-border/50 bg-muted/5 dark:bg-card/50">
+          <CardContent className="flex flex-col items-center justify-center py-16 text-center select-none">
+            <User className="mb-4 h-14 w-14 text-muted-foreground/60 p-3 bg-primary/5 rounded-2xl border border-primary/10" />
+            <h3 className="text-lg font-bold text-foreground/80 mb-1">Ningún paciente seleccionado</h3>
+            <p className="text-sm text-muted-foreground max-w-xs">
+              Por favor, seleccione un paciente de la lista superior para desplegar su expediente e historial clínico de sesiones.
+            </p>
           </CardContent>
         </Card>
+      )}
+
+      {/* Nueva Sesión Modal Form */}
+      {selectedPatientId && selectedPatient && (
+        <NuevaSesionDialog
+          open={isDialogOpen}
+          onOpenChange={setIsDialogOpen}
+          patientId={selectedPatientId}
+          patientName={`${selectedPatient.name} ${selectedPatient.lastName}`}
+          onSubmit={handleCreateNote}
+          isSubmitting={isSubmitting}
+        />
       )}
     </div>
   )

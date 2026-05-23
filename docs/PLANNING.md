@@ -104,8 +104,8 @@ Para asegurar la calidad del proyecto, **ninguna Tarea (Task) se marca como comp
   * [x] **Task 7.1.3:** Diseñar y desarrollar el componente modal interactivo `NuevaSesionDialog` en el Frontend que replique fielmente la maqueta `nueva_sesion.png`, aplicando estilos HSL premium, sombras difusas y micro-animaciones dinámicas en los botones Cancelar y Guardar Sesión (`active:scale-95`).
   * [x] **Task 7.1.4:** Crear Server Actions (`createClinicalNote`, `getClinicalNotesByPatient`) protegidos por validación de rol y middleware, bloqueando por completo las solicitudes de usuarios con rol de Recepción.
   * [x] **Task 7.1.5:** Implementar filtro a nivel de consultas en base de datos para restringir la confidencialidad absoluta: los psicólogos solo deben poder leer y registrar notas de pacientes vinculados a ellos.
-  * [ ] **Task 7.1.6:** Desarrollar el listado histórico en forma de línea de tiempo (Timeline) en el panel de detalles del paciente para mostrar las notas clínicas previas estructuradas con opción de desglose rápido.
-  * [ ] **Task 7.1.7:** Programar cobertura completa de pruebas automatizadas con Vitest para verificar las restricciones de rol de la API, las reglas de negocio de guardado y los filtros de seguridad de datos.
+  * [x] **Task 7.1.6:** Desarrollar el listado histórico en forma de línea de tiempo (Timeline) en el panel de detalles del paciente para mostrar las notas clínicas previas estructuradas con opción de desglose rápido.
+  * [x] **Task 7.1.7:** Programar cobertura completa de pruebas automatizadas con Vitest para verificar las restricciones de rol de la API, las reglas de negocio de guardado y los filtros de seguridad de datos.
 
 ### 📊 Feature 8: Dashboard Principal
 **Objetivo:** Centralizar los indicadores más importantes de la clínica.
