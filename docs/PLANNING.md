@@ -91,7 +91,7 @@ Para asegurar la calidad del proyecto, **ninguna Tarea (Task) se marca como comp
 ### 🩺 Feature 7: Historial Clínico Seguro
 **Objetivo:** Proteger la confidencialidad absoluta de las notas médicas y registrar las sesiones de forma estructurada.
 * **User Story 7.1:** Como psicólogo, quiero redactar, registrar y ver las sesiones clínicas estructuradas de mis pacientes de forma privada, de acuerdo a la maqueta `nueva_sesion.png`.
-  * [ ] **Task 7.1.1:** Extender el modelo `ClinicalNote` en `prisma/schema.prisma` o estructurar mediante serialización JSON el campo `content` para almacenar de forma obligatoria los campos de la sesión:
+  * [x] **Task 7.1.1:** Extender el modelo `ClinicalNote` en `prisma/schema.prisma` o estructurar mediante serialización JSON el campo `content` para almacenar de forma obligatoria los campos de la sesión:
     * `fecha` (Date picker / fecha de sesión)
     * `hora` (Time picker / hora de inicio)
     * `duracion` (Input numérico / duración de la sesión en minutos)

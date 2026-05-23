@@ -4,6 +4,12 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/) y este proyecto se adhiere a nuestra convención local definida en `docs/COMMIT.md`.
 
+## [0.5.0] - 2026-05-23
+### Added (Añadido)
+- **DB:** Reestructuración y extensión del modelo `ClinicalNote` en `prisma/schema.prisma` agregando columnas estructuradas (`sessionDate`, `sessionTime`, `duration`, `reason`, `observations`, `emotionalState`, `actionPlan`, `nextSession`) para el Historial Clínico Seguro (Opción A).
+
+---
+
 ## [0.4.14] - 2026-05-22
 ### Added (Añadido)
 - **Consent:** Generación dinámica de PDFs de consentimiento informado personalizados con los datos reales del paciente (`lib/pdf/consent-generator.ts`): nombre completo rellenado automáticamente, fecha formateada en español, ID único del documento en el pie de página, tabla de datos del paciente estructurada y sección de firma con nombre pre-impreso.

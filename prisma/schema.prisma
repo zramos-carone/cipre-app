@@ -84,7 +84,14 @@ model ClinicalNote {
   id             String   @id @default(uuid())
   patientId      String
   psychologistId String
-  content        String   @db.Text
+  sessionDate    DateTime
+  sessionTime    String
+  duration       Int
+  reason         String   @db.Text
+  observations   String   @db.Text
+  emotionalState String
+  actionPlan     String   @db.Text
+  nextSession    String?
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
   patient        Patient  @relation(fields: [patientId], references: [id])
