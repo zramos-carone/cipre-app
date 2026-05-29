@@ -12,23 +12,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { 
-  Plus, 
-  User, 
-  Calendar, 
-  ChevronDown, 
-  ChevronUp, 
-  Clock, 
-  Smile, 
-  FileText, 
+import {
+  Plus,
+  User,
+  Calendar,
+  ChevronDown,
+  ChevronUp,
+  Clock,
+  Smile,
+  FileText,
   ArrowRight,
   Loader2,
   AlertCircle
 } from "lucide-react"
-import { 
-  getLinkedPatients, 
-  getClinicalNotesByPatient, 
-  createClinicalNote 
+import {
+  getLinkedPatients,
+  getClinicalNotesByPatient,
+  createClinicalNote
 } from "@/lib/actions/clinical-notes"
 import { NuevaSesionDialog } from "@/components/dashboard/historial/nueva-sesion-dialog"
 import { ClinicalNoteInput } from "@/lib/validations/clinical-note"
@@ -51,7 +51,7 @@ export default function HistorialClinicoPage() {
   const [notes, setNotes] = useState<any[]>([])
   const [expandedNotes, setExpandedNotes] = useState<Record<string, boolean>>({})
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
-  
+
   // Estados de carga
   const [loadingPatients, setLoadingPatients] = useState<boolean>(true)
   const [loadingNotes, setLoadingNotes] = useState<boolean>(false)
@@ -105,14 +105,14 @@ export default function HistorialClinicoPage() {
 
   // Metadatos calculados de la sesión
   const totalSessions = notes.length
-  const firstSessionDate = notes.length > 0 
-    ? new Date(notes[notes.length - 1].sessionDate).toLocaleDateString("es-ES") 
+  const firstSessionDate = notes.length > 0
+    ? new Date(notes[notes.length - 1].sessionDate).toLocaleDateString("es-ES")
     : "Ninguna"
-  const lastSessionDate = notes.length > 0 
-    ? new Date(notes[0].sessionDate).toLocaleDateString("es-ES") 
+  const lastSessionDate = notes.length > 0
+    ? new Date(notes[0].sessionDate).toLocaleDateString("es-ES")
     : "Ninguna"
-  const assignedPsychologist = notes.length > 0 
-    ? notes[0].psychologist.fullName 
+  const assignedPsychologist = notes.length > 0
+    ? notes[0].psychologist.fullName
     : (session?.user?.name || "No asignado")
 
   // Alternar el desglose rápido de una nota
@@ -126,7 +126,7 @@ export default function HistorialClinicoPage() {
   // Manejar el guardado de una nueva sesión
   const handleCreateNote = async (data: ClinicalNoteInput) => {
     setIsSubmitting(true)
-    
+
     // Crear FormData para enviar al Server Action
     const formData = new FormData()
     formData.append("patientId", data.patientId)
@@ -142,7 +142,7 @@ export default function HistorialClinicoPage() {
     }
 
     const res = await createClinicalNote(formData)
-    
+
     if (res.success) {
       toast.success("Sesión clínica registrada correctamente")
       setIsDialogOpen(false)
@@ -158,7 +158,7 @@ export default function HistorialClinicoPage() {
     } else {
       toast.error(res.error || "Ocurrió un error al guardar la sesión")
     }
-    
+
     setIsSubmitting(false)
   }
 
@@ -167,7 +167,7 @@ export default function HistorialClinicoPage() {
       {/* Clinic Header */}
       <header className="mb-8 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between select-none">
         <div>
-          <h1 className="text-lg font-semibold text-foreground">Clínica Preventiva CIPRE</h1>
+          <h1 className="text-lg font-semibold text-foreground">Clínica Preventiva PSIPRE</h1>
         </div>
         <p className="text-sm capitalize text-muted-foreground">{formattedCurrentDate}</p>
       </header>
@@ -179,7 +179,7 @@ export default function HistorialClinicoPage() {
           <p className="text-muted-foreground">Expediente y viñetas de sesiones clínicas</p>
         </div>
         {selectedPatientId && (
-          <Button 
+          <Button
             onClick={() => setIsDialogOpen(true)}
             className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold shadow-lg shadow-primary/20 transition-all active:scale-95 cursor-pointer flex items-center gap-2"
           >
@@ -229,39 +229,38 @@ export default function HistorialClinicoPage() {
       {selectedPatientId && selectedPatient && (
         <div className="space-y-6">
           {/* Patient Info Card */}
-          <Card className="border-border/50 shadow-sm bg-card">
+          <Card className="border-slate-100 shadow-sm bg-card">
             <CardContent className="py-6">
-              <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 shadow-inner shrink-0 select-none">
-                  <User className="h-8 w-8 text-primary" />
+              <div className="flex items-center gap-6">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-50 text-blue-500 shrink-0 select-none">
+                  <User className="h-6 w-6" />
                 </div>
-                <div className="flex-1 w-full text-center md:text-left">
-                  <h3 className="text-xl font-bold text-foreground">
-                    {selectedPatient.name} {selectedPatient.lastName}
-                  </h3>
-                  
+                <div className="flex-1 w-full">
                   {loadingNotes ? (
-                    <div className="mt-4 flex items-center justify-center md:justify-start text-sm text-muted-foreground animate-pulse">
+                    <div className="flex items-center text-sm text-muted-foreground animate-pulse">
                       <Loader2 className="mr-2 h-4 w-4 animate-spin text-primary" />
                       Procesando expediente clínico...
                     </div>
                   ) : (
-                    <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-left border-t border-border/50 pt-4">
-                      <div>
-                        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Total de Sesiones</p>
-                        <p className="font-bold text-foreground mt-0.5 text-base">{totalSessions} sesiones</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 w-full text-left">
+                      <div className="flex flex-col">
+                        <h3 className="text-lg font-bold text-slate-800 leading-tight">
+                          {selectedPatient.name} {selectedPatient.lastName}
+                        </h3>
+                        <p className="text-xs font-medium text-slate-400 mt-2">Total de Sesiones</p>
+                        <p className="font-bold text-slate-700 text-sm mt-0.5">{totalSessions} sesiones</p>
                       </div>
-                      <div>
-                        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Primera Sesión</p>
-                        <p className="font-bold text-foreground mt-0.5 text-base">{firstSessionDate}</p>
+                      <div className="flex flex-col justify-end">
+                        <p className="text-xs font-medium text-slate-400">Primera Sesión</p>
+                        <p className="font-bold text-slate-700 text-sm mt-0.5">{firstSessionDate}</p>
                       </div>
-                      <div>
-                        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Última Sesión</p>
-                        <p className="font-bold text-foreground mt-0.5 text-base">{lastSessionDate}</p>
+                      <div className="flex flex-col justify-end">
+                        <p className="text-xs font-medium text-slate-400">Última Sesión</p>
+                        <p className="font-bold text-slate-700 text-sm mt-0.5">{lastSessionDate}</p>
                       </div>
-                      <div>
-                        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Psicólogo Asignado</p>
-                        <p className="font-bold text-foreground mt-0.5 text-base">{assignedPsychologist}</p>
+                      <div className="flex flex-col justify-end">
+                        <p className="text-xs font-medium text-slate-400">Psicólogo Asignado</p>
+                        <p className="font-bold text-slate-700 text-sm mt-0.5">{assignedPsychologist}</p>
                       </div>
                     </div>
                   )}
@@ -272,116 +271,123 @@ export default function HistorialClinicoPage() {
 
           {/* Sessions Timeline */}
           <div className="space-y-4">
-            <h3 className="text-lg font-bold text-foreground/95 flex items-center gap-2 mb-2 select-none">
-              <Calendar className="w-5 h-5 text-primary" />
-              Línea de Tiempo de Sesiones
-            </h3>
-            
+            <h3 className="sr-only">Línea de Tiempo de Sesiones</h3>
+
             {loadingNotes ? (
               <div className="py-12 flex flex-col items-center justify-center bg-card rounded-xl border border-border/50">
                 <Loader2 className="h-8 w-8 animate-spin text-primary mb-2" />
                 <p className="text-sm text-muted-foreground">Cargando sesiones del historial...</p>
               </div>
             ) : notes.length > 0 ? (
-              <div className="space-y-0 relative border-l border-primary/20 ml-5 pl-8 py-2">
+              <div className="space-y-4">
                 {notes.map((session, index) => {
                   const isExpanded = !!expandedNotes[session.id]
                   return (
-                    <div key={session.id} className="relative mb-6 last:mb-0">
-                      
-                      {/* Timeline Node Icon (Sesión Número) */}
-                      <span className="absolute -left-[53px] top-1 flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold shadow-md shadow-primary/25 border-4 border-background select-none">
-                        {notes.length - index}
-                      </span>
+                    <Card key={session.id} className="border-slate-100 shadow-sm bg-card hover:border-blue-200 transition-all duration-200">
 
-                      {/* Session Card */}
-                      <Card className="border-border/50 shadow-sm bg-card hover:border-primary/30 transition-all duration-200">
-                        
-                        {/* Header Colapsable */}
-                        <div 
-                          onClick={() => toggleNote(session.id)}
-                          className="px-5 py-4 flex items-center justify-between cursor-pointer select-none"
-                        >
-                          <div className="flex flex-wrap items-center gap-3 md:gap-4">
-                            <h4 className="font-bold text-foreground">Sesión #{notes.length - index}</h4>
-                            <div className="flex items-center gap-1.5 text-sm text-muted-foreground font-medium">
-                              <Calendar className="h-4 w-4 text-primary shrink-0" />
-                              {new Date(session.sessionDate).toLocaleDateString("es-ES")}
-                            </div>
-                            <div className="flex items-center gap-1 text-sm text-muted-foreground font-medium">
-                              <Clock className="h-4 w-4 text-primary shrink-0" />
-                              {session.sessionTime} ({session.duration} min)
-                            </div>
-                            <span className="rounded-full px-2.5 py-0.5 text-xs font-semibold bg-primary/10 text-primary uppercase tracking-wider">
-                              {session.emotionalState}
-                            </span>
-                          </div>
-                          
-                          <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground">
-                            {isExpanded ? (
-                              <ChevronUp className="h-5 w-5" />
-                            ) : (
-                              <ChevronDown className="h-5 w-5" />
-                            )}
-                          </Button>
+                      <div className="p-6 flex items-start gap-4">
+                        {/* Indicador azul de número de sesión */}
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-600 text-white font-bold text-lg select-none">
+                          {notes.length - index}
                         </div>
 
-                        {/* Contenido Expandido (Desglose) */}
-                        {isExpanded && (
-                          <CardContent className="px-5 pb-5 pt-0 border-t border-border/50 divide-y divide-border/50 space-y-4">
-                            <div className="pt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                              <div className="space-y-1">
-                                <span className="text-xs font-bold text-primary uppercase tracking-wider flex items-center gap-1.5">
-                                  <User className="w-3.5 h-3.5" />
-                                  Psicólogo
+                        {/* Contenido derecho de la sesión */}
+                        <div className="flex-1 min-w-0">
+
+                          {/* Fila superior: Titulo y botón de expandir */}
+                          <div
+                            onClick={() => toggleNote(session.id)}
+                            className="flex items-center justify-between cursor-pointer select-none"
+                          >
+                            <div>
+                              <h4 className="text-base font-bold text-slate-800">Sesión #{notes.length - index}</h4>
+
+                              {/* Metadata de fecha, duración, estado emocional y completada */}
+                              <div className="mt-1 flex flex-wrap items-center gap-3 text-sm text-slate-400 font-medium">
+                                <div className="flex items-center gap-1">
+                                  <Calendar className="h-3.5 w-3.5 text-slate-400" />
+                                  {new Date(session.sessionDate).toISOString().split('T')[0]}
+                                </div>
+                                <div>{session.duration} min</div>
+                                {session.emotionalState && (
+                                  <div>• {session.emotionalState}</div>
+                                )}
+                                <span className="rounded-full px-2.5 py-0.5 text-xs font-semibold bg-emerald-50 text-emerald-700">
+                                  Completada
                                 </span>
-                                <p className="text-sm font-medium text-foreground">{session.psychologist.fullName}</p>
                               </div>
-                              {session.nextSession && (
-                                <div className="space-y-1">
-                                  <span className="text-xs font-bold text-primary uppercase tracking-wider flex items-center gap-1.5">
-                                    <ArrowRight className="w-3.5 h-3.5" />
-                                    Próxima Sesión Sugerida
-                                  </span>
-                                  <p className="text-sm font-medium text-foreground">{session.nextSession}</p>
+                            </div>
+
+                            <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-slate-600">
+                              {isExpanded ? (
+                                <ChevronUp className="h-5 w-5" />
+                              ) : (
+                                <ChevronDown className="h-5 w-5" />
+                              )}
+                            </Button>
+                          </div>
+
+                          {/* Contenido Expandido */}
+                          {isExpanded && (
+                            <div className="mt-4 pt-4 border-t border-slate-100 space-y-4">
+                              <div className="space-y-1">
+                                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                                  Motivo de Consulta:
+                                </span>
+                                <p className="text-sm text-slate-600 whitespace-pre-wrap leading-relaxed">
+                                  {session.reason}
+                                </p>
+                              </div>
+
+                              <div className="space-y-1">
+                                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                                  Observaciones:
+                                </span>
+                                <p className="text-sm text-slate-600 whitespace-pre-wrap leading-relaxed">
+                                  {session.observations}
+                                </p>
+                              </div>
+
+                              <div className="space-y-1">
+                                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                                  Plan de Acción:
+                                </span>
+                                <p className="text-sm text-slate-600 whitespace-pre-wrap leading-relaxed">
+                                  {session.actionPlan}
+                                </p>
+                              </div>
+
+                              {/* Mostrar detalles de psicólogo y próxima cita si existen */}
+                              {(session.psychologist?.fullName || session.nextSession) && (
+                                <div className="mt-4 pt-4 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                  {session.psychologist?.fullName && (
+                                    <div className="space-y-0.5">
+                                      <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                                        Psicólogo registrado:
+                                      </span>
+                                      <p className="text-sm text-slate-600 font-medium">
+                                        {session.psychologist.fullName}
+                                      </p>
+                                    </div>
+                                  )}
+                                  {session.nextSession && (
+                                    <div className="space-y-0.5">
+                                      <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                                        Próxima sesión sugerida:
+                                      </span>
+                                      <p className="text-sm text-slate-600 font-medium">
+                                        {session.nextSession}
+                                      </p>
+                                    </div>
+                                  )}
                                 </div>
                               )}
                             </div>
+                          )}
 
-                            <div className="pt-4 space-y-3">
-                              <div className="space-y-1.5">
-                                <span className="text-xs font-bold text-primary uppercase tracking-wider flex items-center gap-1.5">
-                                  <Smile className="w-3.5 h-3.5" />
-                                  Motivo de Consulta
-                                </span>
-                                <p className="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">{session.reason}</p>
-                              </div>
-                            </div>
-
-                            <div className="pt-4 space-y-3">
-                              <div className="space-y-1.5">
-                                <span className="text-xs font-bold text-primary uppercase tracking-wider flex items-center gap-1.5">
-                                  <FileText className="w-3.5 h-3.5" />
-                                  Observaciones Clínicas y Técnicas
-                                </span>
-                                <p className="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">{session.observations}</p>
-                              </div>
-                            </div>
-
-                            <div className="pt-4 space-y-3">
-                              <div className="space-y-1.5">
-                                <span className="text-xs font-bold text-primary uppercase tracking-wider flex items-center gap-1.5">
-                                  <FileText className="w-3.5 h-3.5" />
-                                  Plan de Acción (Tareas)
-                                </span>
-                                <p className="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">{session.actionPlan}</p>
-                              </div>
-                            </div>
-                          </CardContent>
-                        )}
-
-                      </Card>
-                    </div>
+                        </div>
+                      </div>
+                    </Card>
                   )
                 })}
               </div>

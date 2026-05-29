@@ -4,6 +4,12 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/) y este proyecto se adhiere a nuestra convención local definida en `docs/COMMIT.md`.
 
+## [0.5.7] - 2026-05-23
+### Changed (Modificado)
+- **UI:** Refinamiento estético del módulo de Historial Clínico para alinearse fielmente con la maqueta visual, incluyendo un diseño de fila horizontal para la cabecera del expediente del paciente, tarjetas de sesión sin línea divisoria de tiempo vertical y un badge indicador de número de sesión en bloque cuadrado azul sólido.
+
+---
+
 ## [0.5.6] - 2026-05-23
 ### Fixed (Corregido)
 - **Auth:** Propagación del ID del usuario (`id`) en los callbacks `jwt` y `session` de NextAuth en `lib/auth.ts`, asegurando que `session.user.id` esté definido y previniendo errores de validación de Prisma (`psychologistId` undefined) al registrar notas clínicas.

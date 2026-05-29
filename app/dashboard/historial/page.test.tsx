@@ -108,14 +108,14 @@ describe('HistorialClinicoPage Integration Tests', () => {
     fireEvent.click(await screen.findByText('María González'))
 
     // Esperar a que cargue la sesión (que se abre por defecto)
-    await screen.findByText('Motivo de Consulta')
+    await screen.findByText('Motivo de Consulta:')
     
     // Hacer clic en la cabecera de la sesión para colapsarla
     const sessionHeader = screen.getByText('Sesión #1')
     fireEvent.click(sessionHeader)
 
     // Los detalles extendidos deberían colapsarse y no estar presentes
-    expect(screen.queryByText('Motivo de Consulta')).toBeNull()
+    expect(screen.queryByText('Motivo de Consulta:')).toBeNull()
   })
 
   it('debería mostrar estado vacío si el paciente no tiene notas registradas', async () => {
