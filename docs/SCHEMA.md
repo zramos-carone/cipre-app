@@ -122,3 +122,36 @@ erDiagram
    - Control financiero de las citas. `Refund` se asocia directamente a un pago previo en caso de una devolución por cita cancelada.
 7. **`AttendanceRegistry` (Control de Acceso / Asistencia)**
    - Registra la trazabilidad operativa de tu equipo de trabajo para las horas de entrada y salida con su ubicación.
+
+---
+
+## 🔄 Guía de Sincronización y Mantenimiento de la Base de Datos
+
+Para sincronizar los cambios del esquema de Prisma (`schema.prisma`) con las bases de datos de desarrollo (local) y producción (cloud), sigue estas pautas:
+
+### 1. Sincronización de Base de Datos Local (Desarrollo)
+En el entorno de desarrollo local (apuntando a PostgreSQL en local mediante `.env`), sincroniza la base de datos directamente con:
+```bash
+npx prisma db push
+```
+
+### 2. Sincronización de Base de Datos Cloud (Producción / Neon)
+Si la aplicación está corriendo en producción o pruebas remotas que apuntan a la base de datos cloud (Neon PostgreSQL), debes inyectar la variable de entorno `DATABASE_URL` de producción antes de ejecutar el push.
+
+En **Windows (PowerShell)**:
+```powershell
+$env:DATABASE_URL="postgresql://neondb_owner:..."; npx prisma db push
+```
+*(Reemplaza con la cadena de conexión completa extraída de tu archivo `.env.production`)*
+
+En **Unix/macOS/Bash**:
+```bash
+DATABASE_URL="postgresql://neondb_owner:..." npx prisma db push
+```
+
+### 3. Regeneración del Cliente de Prisma
+Después de cualquier modificación al archivo `prisma/schema.prisma` y su posterior sincronización con la base de datos, debes reconstruir el SDK del cliente de Prisma en tu espacio de trabajo local para actualizar las firmas de TypeScript y objetos de consulta:
+```bash
+npx prisma generate
+```
+*Nota: Si el servidor de desarrollo (`npm run dev`) sigue reportando errores de validación de columnas o campos inexistentes tras haber ejecutado la sincronización, reinícialo para limpiar la caché de compilación.*
