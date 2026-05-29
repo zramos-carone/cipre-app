@@ -22,15 +22,15 @@ import {
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
-import { 
-  Loader2, 
-  Save, 
-  User, 
-  Calendar, 
-  Clock, 
-  Smile, 
-  FileText, 
-  ArrowRight 
+import {
+  Loader2,
+  Save,
+  User,
+  Calendar,
+  Clock,
+  Smile,
+  FileText,
+  ArrowRight
 } from "lucide-react"
 
 // Schema interno para el formulario adaptando sessionDate a string (yyyy-MM-dd) para el input de fecha HTML5
@@ -77,7 +77,7 @@ export function NuevaSesionDialog({
   onSubmit,
   isSubmitting = false,
 }: NuevaSesionDialogProps) {
-  
+
   // Inicializamos la fecha de hoy en formato local YYYY-MM-DD
   const getTodayDateString = () => {
     const d = new Date()
@@ -161,7 +161,7 @@ export function NuevaSesionDialog({
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6 py-4">
-            
+
             {/* Cabecera / Paciente Asignado */}
             <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/5 border border-primary/10 select-none">
               <User className="w-5 h-5 text-primary shrink-0" />
@@ -174,7 +174,7 @@ export function NuevaSesionDialog({
             <div className="space-y-4">
               {/* Grid 1: Datos de Sesión (Fecha, Hora, Duración, Estado Emocional) */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                
+
                 {/* Fecha de Sesión */}
                 <FormField
                   control={form.control}
@@ -186,10 +186,10 @@ export function NuevaSesionDialog({
                         Fecha de la Sesión
                       </FormLabel>
                       <FormControl>
-                        <Input 
+                        <Input
                           type="date"
-                          className="bg-background h-10 border-input focus-visible:ring-primary/50" 
-                          {...field} 
+                          className="bg-background h-10 border-input focus-visible:ring-primary/50"
+                          {...field}
                         />
                       </FormControl>
                       <FormMessage />
@@ -208,10 +208,10 @@ export function NuevaSesionDialog({
                         Hora de la Sesión
                       </FormLabel>
                       <FormControl>
-                        <Input 
+                        <Input
                           type="time"
-                          className="bg-background h-10 border-input focus-visible:ring-primary/50" 
-                          {...field} 
+                          className="bg-background h-10 border-input focus-visible:ring-primary/50"
+                          {...field}
                         />
                       </FormControl>
                       <FormMessage />
@@ -230,11 +230,11 @@ export function NuevaSesionDialog({
                         Duración (minutos)
                       </FormLabel>
                       <FormControl>
-                        <Input 
+                        <Input
                           type="number"
-                          placeholder="Ej. 50" 
-                          className="bg-background h-10 border-input focus-visible:ring-primary/50" 
-                          {...field} 
+                          placeholder="Ej. 50"
+                          className="bg-background h-10 border-input focus-visible:ring-primary/50"
+                          {...field}
                         />
                       </FormControl>
                       <FormMessage />
@@ -253,10 +253,10 @@ export function NuevaSesionDialog({
                         Estado Emocional Observado
                       </FormLabel>
                       <FormControl>
-                        <Input 
-                          placeholder="Ej. Receptivo, irritable, ansioso..." 
-                          className="bg-background h-10 border-input focus-visible:ring-primary/50" 
-                          {...field} 
+                        <Input
+                          placeholder="Ej. Receptivo, irritable, ansioso..."
+                          className="bg-background h-10 border-input focus-visible:ring-primary/50"
+                          {...field}
                         />
                       </FormControl>
                       <FormMessage />
@@ -268,7 +268,7 @@ export function NuevaSesionDialog({
 
               {/* Grid 2: Notas y Descripciones (Motivo, Observaciones, Plan de Acción) */}
               <div className="space-y-4">
-                
+
                 {/* Motivo de Consulta */}
                 <FormField
                   control={form.control}
@@ -347,10 +347,10 @@ export function NuevaSesionDialog({
                         Próxima Sesión Sugerida
                       </FormLabel>
                       <FormControl>
-                        <Input 
-                          placeholder="Ej. En 7 días, Siguiente martes, Pendiente..." 
-                          className="bg-background h-10 border-input focus-visible:ring-primary/50" 
-                          {...field} 
+                        <Input
+                          placeholder="Ej. En 7 días, Siguiente martes, Pendiente..."
+                          className="bg-background h-10 border-input focus-visible:ring-primary/50"
+                          {...field}
                         />
                       </FormControl>
                       <FormMessage />
@@ -363,19 +363,11 @@ export function NuevaSesionDialog({
             </div>
 
             {/* Fila de Botones de Acción */}
-            <div className="pt-4 border-t border-border flex flex-col md:flex-row gap-3">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => onOpenChange(false)}
-                className="w-full md:w-1/3 h-11 border-input hover:bg-accent hover:text-accent-foreground transition-all duration-200"
-              >
-                Cancelar
-              </Button>
+            <div className="pt-4 border-t border-border/60 mt-2 flex flex-col gap-3">
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full md:w-2/3 h-11 bg-primary hover:bg-primary/90 text-primary-foreground font-bold shadow-lg shadow-primary/20 transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-2"
+                className="w-full h-11 bg-primary hover:bg-primary/90 text-primary-foreground font-bold shadow-lg shadow-primary/20 transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-2"
               >
                 {isSubmitting ? (
                   <>

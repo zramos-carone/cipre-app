@@ -4,9 +4,10 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/) y este proyecto se adhiere a nuestra convención local definida en `docs/COMMIT.md`.
 
-## [0.5.7] - 2026-05-23
+## [0.5.7] - 2026-05-28
 ### Changed (Modificado)
 - **UI:** Refinamiento estético del módulo de Historial Clínico para alinearse fielmente con la maqueta visual, incluyendo un diseño de fila horizontal para la cabecera del expediente del paciente, tarjetas de sesión sin línea divisoria de tiempo vertical y un badge indicador de número de sesión en bloque cuadrado azul sólido.
+- **UI:** Estandarización de los botones de acción en `NuevaSesionDialog` para apilar verticalmente a ancho completo el botón de "Guardar Sesión", implementando escala activa (`active:scale-95`), sombras y transiciones premium consistentes.
 - **Docs:** Actualización de `SCHEMA.md` con la guía detallada de mantenimiento, generación y sincronización de base de datos local y Neon Cloud.
 
 ---
