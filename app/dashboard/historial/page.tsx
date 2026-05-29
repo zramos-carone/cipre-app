@@ -163,34 +163,39 @@ export default function HistorialClinicoPage() {
   }
 
   return (
-    <div className="p-6 lg:p-8">
+    <div className="p-6 lg:p-8 space-y-6 animate-in fade-in duration-500">
       {/* Clinic Header */}
-      <header className="mb-8 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between select-none">
+      <header className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between select-none">
         <div>
-          <h1 className="text-lg font-semibold text-foreground">Clínica Preventiva PSIPRE</h1>
+          <h1 className="text-lg font-semibold text-foreground/80">Clínica Preventiva PSIPRE</h1>
         </div>
-        <p className="text-sm capitalize text-muted-foreground">{formattedCurrentDate}</p>
+        <p className="text-sm capitalize text-muted-foreground bg-muted/30 px-3 py-1 rounded-full border border-muted-foreground/10">
+          {formattedCurrentDate}
+        </p>
       </header>
 
-      {/* Title */}
-      <div className="mb-6 flex items-start justify-between">
+      {/* Header Titulo & Boton */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-foreground">Historial Clínico</h2>
+          <h2 className="text-3xl font-extrabold tracking-tight text-foreground flex items-center gap-2">
+            Historial Clínico
+            <FileText className="w-5 h-5 text-primary animate-pulse" />
+          </h2>
           <p className="text-muted-foreground">Expediente y viñetas de sesiones clínicas</p>
         </div>
         {selectedPatientId && (
           <Button
             onClick={() => setIsDialogOpen(true)}
-            className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold shadow-lg shadow-primary/20 transition-all active:scale-95 cursor-pointer flex items-center gap-2"
+            className="gap-2 bg-primary hover:bg-primary/95 text-primary-foreground font-semibold px-5 shadow-lg shadow-primary/25 transition-all hover:-translate-y-0.5 active:translate-y-0 active:scale-95 cursor-pointer flex items-center justify-center"
           >
-            <Plus className="h-4 w-4" />
+            <Plus className="h-5 w-5" />
             Nueva Sesión
           </Button>
         )}
       </div>
 
       {/* Patient Selector */}
-      <Card className="mb-6 border-border/50 shadow-sm bg-card/50 backdrop-blur-sm">
+      <Card className="border-border/50 shadow-sm bg-card/50 backdrop-blur-sm">
         <CardContent className="pt-6">
           <div className="max-w-md">
             <label className="mb-2 block text-sm font-semibold text-foreground/80">
