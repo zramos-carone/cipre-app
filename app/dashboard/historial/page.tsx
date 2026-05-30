@@ -167,7 +167,7 @@ export default function HistorialClinicoPage() {
       {/* Clinic Header */}
       <header className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between select-none">
         <div>
-          <h1 className="text-lg font-semibold text-foreground/80">Clínica Preventiva PSIPRE</h1>
+          <h1 className="text-lg font-semibold text-foreground/80">Clínica Preventiva CIPRE</h1>
         </div>
         <p className="text-sm capitalize text-muted-foreground bg-muted/30 px-3 py-1 rounded-full border border-muted-foreground/10">
           {formattedCurrentDate}
@@ -196,7 +196,7 @@ export default function HistorialClinicoPage() {
 
       {/* Patient Selector */}
       <Card className="border-border/50 shadow-sm bg-card/50 backdrop-blur-sm">
-        <CardContent className="pt-6">
+        <CardContent className="py-3 px-4 sm:py-3 sm:px-6">
           <div className="max-w-md">
             <label className="mb-2 block text-sm font-semibold text-foreground/80">
               Seleccionar Paciente
@@ -232,10 +232,10 @@ export default function HistorialClinicoPage() {
 
       {/* Patient Info & Sessions */}
       {selectedPatientId && selectedPatient && (
-        <div className="space-y-6">
+        <div className="space-y-4">
           {/* Patient Info Card */}
           <Card className="border-slate-100 shadow-sm bg-card">
-            <CardContent className="py-6">
+            <CardContent className="py-3 px-4 sm:py-3 sm:px-6">
               <div className="flex items-center gap-6">
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-50 text-blue-500 shrink-0 select-none">
                   <User className="h-6 w-6" />
@@ -247,25 +247,27 @@ export default function HistorialClinicoPage() {
                       Procesando expediente clínico...
                     </div>
                   ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 w-full text-left">
-                      <div className="flex flex-col">
-                        <h3 className="text-lg font-bold text-slate-800 leading-tight">
-                          {selectedPatient.name} {selectedPatient.lastName}
-                        </h3>
-                        <p className="text-xs font-medium text-slate-400 mt-2">Total de Sesiones</p>
-                        <p className="font-bold text-slate-700 text-sm mt-0.5">{totalSessions} sesiones</p>
-                      </div>
-                      <div className="flex flex-col justify-end">
-                        <p className="text-xs font-medium text-slate-400">Primera Sesión</p>
-                        <p className="font-bold text-slate-700 text-sm mt-0.5">{firstSessionDate}</p>
-                      </div>
-                      <div className="flex flex-col justify-end">
-                        <p className="text-xs font-medium text-slate-400">Última Sesión</p>
-                        <p className="font-bold text-slate-700 text-sm mt-0.5">{lastSessionDate}</p>
-                      </div>
-                      <div className="flex flex-col justify-end">
-                        <p className="text-xs font-medium text-slate-400">Psicólogo Asignado</p>
-                        <p className="font-bold text-slate-700 text-sm mt-0.5">{assignedPsychologist}</p>
+                    <div className="flex flex-col gap-2 w-full text-left">
+                      <h3 className="text-lg font-bold text-slate-800 leading-tight">
+                        {selectedPatient.name} {selectedPatient.lastName}
+                      </h3>
+                      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 w-full">
+                        <div className="flex flex-col">
+                          <p className="text-xs font-medium text-slate-400">Total de Sesiones</p>
+                          <p className="font-bold text-slate-500 text-sm mt-0.5">{totalSessions} sesiones</p>
+                        </div>
+                        <div className="flex flex-col">
+                          <p className="text-xs font-medium text-slate-400">Primera Sesión</p>
+                          <p className="font-bold text-slate-500 text-sm mt-0.5">{firstSessionDate}</p>
+                        </div>
+                        <div className="flex flex-col">
+                          <p className="text-xs font-medium text-slate-400">Última Sesión</p>
+                          <p className="font-bold text-slate-500 text-sm mt-0.5">{lastSessionDate}</p>
+                        </div>
+                        <div className="flex flex-col">
+                          <p className="text-xs font-medium text-slate-400">Psicólogo Asignado</p>
+                          <p className="font-bold text-slate-500 text-sm mt-0.5">{assignedPsychologist}</p>
+                        </div>
                       </div>
                     </div>
                   )}
@@ -290,7 +292,7 @@ export default function HistorialClinicoPage() {
                   return (
                     <Card key={session.id} className="border-slate-100 shadow-sm bg-card hover:border-blue-200 transition-all duration-200">
 
-                      <div className="p-6 flex items-start gap-4">
+                      <div className="py-3 px-4 sm:py-3 sm:px-6 flex items-start gap-4">
                         {/* Indicador azul de número de sesión */}
                         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-600 text-white font-bold text-lg select-none">
                           {notes.length - index}
@@ -314,9 +316,6 @@ export default function HistorialClinicoPage() {
                                   {new Date(session.sessionDate).toISOString().split('T')[0]}
                                 </div>
                                 <div>{session.duration} min</div>
-                                {session.emotionalState && (
-                                  <div>• {session.emotionalState}</div>
-                                )}
                                 <span className="rounded-full px-2.5 py-0.5 text-xs font-semibold bg-emerald-50 text-emerald-700">
                                   Completada
                                 </span>
@@ -334,8 +333,8 @@ export default function HistorialClinicoPage() {
 
                           {/* Contenido Expandido */}
                           {isExpanded && (
-                            <div className="mt-4 pt-4 border-t border-slate-100 space-y-4">
-                              <div className="space-y-1">
+                            <div className="mt-3 pt-3 border-t border-slate-100 space-y-3">
+                              <div className="space-y-0.5">
                                 <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
                                   Motivo de Consulta:
                                 </span>
@@ -344,7 +343,7 @@ export default function HistorialClinicoPage() {
                                 </p>
                               </div>
 
-                              <div className="space-y-1">
+                              <div className="space-y-0.5">
                                 <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
                                   Observaciones:
                                 </span>
@@ -353,7 +352,7 @@ export default function HistorialClinicoPage() {
                                 </p>
                               </div>
 
-                              <div className="space-y-1">
+                              <div className="space-y-0.5">
                                 <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
                                   Plan de Acción:
                                 </span>
@@ -362,31 +361,6 @@ export default function HistorialClinicoPage() {
                                 </p>
                               </div>
 
-                              {/* Mostrar detalles de psicólogo y próxima cita si existen */}
-                              {(session.psychologist?.fullName || session.nextSession) && (
-                                <div className="mt-4 pt-4 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                  {session.psychologist?.fullName && (
-                                    <div className="space-y-0.5">
-                                      <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-                                        Psicólogo registrado:
-                                      </span>
-                                      <p className="text-sm text-slate-600 font-medium">
-                                        {session.psychologist.fullName}
-                                      </p>
-                                    </div>
-                                  )}
-                                  {session.nextSession && (
-                                    <div className="space-y-0.5">
-                                      <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-                                        Próxima sesión sugerida:
-                                      </span>
-                                      <p className="text-sm text-slate-600 font-medium">
-                                        {session.nextSession}
-                                      </p>
-                                    </div>
-                                  )}
-                                </div>
-                              )}
                             </div>
                           )}
 

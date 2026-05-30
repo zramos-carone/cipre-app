@@ -6,9 +6,10 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 
 ## [0.5.7] - 2026-05-28
 ### Changed (Modificado)
-- **UI:** Refinamiento estético del módulo de Historial Clínico para alinearse fielmente con la maqueta visual, incluyendo un diseño de fila horizontal para la cabecera del expediente del paciente, tarjetas de sesión sin línea divisoria de tiempo vertical y un badge indicador de número de sesión en bloque cuadrado azul sólido.
-- **UI:** Estandarización de los botones de acción en `NuevaSesionDialog` para apilar verticalmente a ancho completo el botón de "Guardar Sesión", implementando escala activa (`active:scale-95`), sombras y transiciones premium consistentes.
-- **UI:** Estandarización del encabezado de la página de Historial Clínico para unificar la cabecera de la clínica, el título principal, las descripciones, los iconos y los márgenes de distribución con los otros módulos del sistema.
+- **UI:** Estandarización de la cabecera y el encabezado de la página de Historial Clínico para unificar el contexto de clínica, título principal, descripción y distribución espacial con los otros módulos del sistema.
+- **UI:** Restructuración de la tarjeta del expediente del paciente (ubicación del nombre en su propia fila superior, alineando las 4 columnas de métricas abajo) y ajuste de las fuentes a `font-bold text-slate-500` para optimizar la legibilidad y contraste.
+- **UI:** Homogeneización de los paddings de todas las tarjetas del módulo (Selector, Tarjeta del Expediente, y Tarjetas de Sesión de la Línea de Tiempo) con una clase unificada (`py-3 px-4 sm:py-3 sm:px-6`) para resolver la proporcionalidad en el eje Y.
+- **UI:** Simplificación visual de las tarjetas de sesión del timeline (removiendo campos secundarios redundantes para enfocar la lectura en los campos clínicos principales) y estandarización de los botones de acción en `NuevaSesionDialog` para apilar verticalmente a ancho completo con escala activa (`active:scale-95`).
 - **Docs:** Actualización de `SCHEMA.md` con la guía detallada de mantenimiento, generación y sincronización de base de datos local y Neon Cloud.
 
 ---
